@@ -99,6 +99,7 @@ namespace Grafika
 
                     switch (SHAPE_MODE)
                     {
+                        //tworzenie linii
                         case 1:
                             shape = new Line
                             {
@@ -110,6 +111,7 @@ namespace Grafika
                                 Stroke = Brushes.Red
                             };
                             break;
+                        //tworzenie prostokąta
                         case 2:
                             shape = new Rectangle
                             {
@@ -123,6 +125,7 @@ namespace Grafika
                             shape.SetValue(Canvas.LeftProperty, currentPosXRec);
                             shape.SetValue(Canvas.TopProperty, currentPosYRec);
                             break;
+                        //tworzenie ellipsy
                         case 3:
                             shape = new Ellipse
                             {
@@ -167,6 +170,17 @@ namespace Grafika
                     dragShape.RenderTransform = new TranslateTransform(transform.X, transform.Y);
                 }
             }
+            if(ACTION_MODE == 3 && e.LeftButton == MouseButtonState.Pressed)
+            {
+                var changeShape = sender as Shape;
+                if(changeShape != null)
+                {
+                    if(changeShape is Line)
+                    {
+                        Point currentPosition = e.GetPosition(CanvasField);
+                    }
+                }
+            }
         }
 
         private void Select_Shape(object sender, MouseEventArgs e)
@@ -181,8 +195,6 @@ namespace Grafika
                     shape.CaptureMouse();
                 }
             }
-
-            
         }
 
         private void drawLine_Click(object sender, RoutedEventArgs e)
@@ -294,25 +306,26 @@ namespace Grafika
                 }
                 
                 double currentLenght = Math.Sqrt(Math.Pow(Math.Abs(line.X1 - line.X2), 2) + Math.Pow(Math.Abs(line.Y1 - line.Y2), 2));
-                double sin = line.ActualHeight / currentLenght;
                 double cos = line.ActualWidth / currentLenght;
 
                 double newLenght = currentLenght + value;
+                
+                // width/currentLenght = (width + a)/newLenght
+                //          (width + a)
+                //  cos = -------------  => cos * newLenght = width + a => a = (cos * newLenght) - width
+                //          newLenght
+                double a = (cos * newLenght) - line.ActualWidth;
 
-                //double a = (line.ActualWidth * newLenght / currentLenght) - line.ActualWidth;
-                double a = cos * newLenght - line.ActualWidth;
-                double b = (line.ActualHeight * newLenght / currentLenght) - line.ActualHeight;
                 //wzór ogólny linii to ax + by = d
-                //wzór kierunkowy na linię to {y = mx + c} => {c = y - mx}
+                //wzór kierunkowy na linię to y = mx + c => c = y - mx
                 //m > 0 funkcja rośnie
                 //m < 0 funkcja maleje
                 //m == 0 funkcja stała
-                //{m = (y2-y1)/(x2-x1)}
+                //m = (y2-y1)/(x2-x1)
                 double m = (line.Y2 - line.Y1) / (line.X2 - line.X1);
                 double c = line.Y1 - m * line.X1;
 
                 line.X2 = line.X2 + a/2;
-                //line.Y2 = line.Y2 + b/2;
                 line.Y2 = m * line.X2 + c;
             }
             else
