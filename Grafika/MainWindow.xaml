@@ -1,0 +1,133 @@
+﻿<Window x:Class="Grafika.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Grafika"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="800" Width="1200" FontSize="12">
+    <Grid>
+        <TabControl>
+            <TabItem Header="PS1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="900"/>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="130"/>
+                        <RowDefinition Height="130"/>
+                        <RowDefinition Height="115"/>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="110"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="1"/>
+                    <Border CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="1"/>
+                    <Border CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Margin="1"/>
+                    <Border CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Margin="1"/>
+                    <Border CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Margin="1"/>
+                    <Border CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="5" Margin="1"/>
+                    <Border CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="6" Margin="1"/>
+                    <Border CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.RowSpan="7" Margin="1"/>
+                    <StackPanel Grid.Column="1" Grid.Row="0" Margin="5" VerticalAlignment="Center">
+                        <RadioButton Name="drawing" Checked="drawing_Checked">Rysowanie</RadioButton>
+                        <RadioButton Name="moving" Checked="moving_Checked">Przesuwanie</RadioButton>
+                        <RadioButton Name="changeShape" Checked="changeShape_Checked">Zmiana kształtu</RadioButton>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Grid.Row="0" Margin="5" VerticalAlignment="Center">
+                        <RadioButton Name="line" Checked="line_Checked">Linia</RadioButton>
+                        <RadioButton Name="rectangle" Checked="rectangle_Checked">Prostokąt</RadioButton>
+                        <RadioButton Name="ellipse" Checked="ellipse_Checked">Okrąg</RadioButton>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" VerticalAlignment="Center">
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Współrzędna x1:" Margin="1"></TextBlock>
+                            <TextBox Name="x1line" Margin="1"></TextBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Współrzędna y1:" Margin="1"></TextBlock>
+                            <TextBox Name="y1line" Margin="1"></TextBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1" >
+                            <TextBlock Text="Współrzędna x2:" Margin="1"></TextBlock>
+                            <TextBox Name="x2line" Margin="1"></TextBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Współrzędna y2:" Margin="1"></TextBlock>
+                            <TextBox Name="y2line" Margin="1"></TextBox>
+                        </DockPanel>
+                        <Button Name="drawLine" Click="drawLine_Click">Stwórz linię</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" Margin="5" VerticalAlignment="Center">
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Współrzędna x1:" Margin="1"></TextBlock>
+                            <TextBox Name="x1rectangle" Margin="1"></TextBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Współrzędna y1:" Margin="1"></TextBlock>
+                            <TextBox Name="y1rectangle" Margin="1"></TextBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Szerokość:" Margin="1"></TextBlock>
+                            <TextBox Name="widthRectangle" Margin="1"></TextBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Wysokość:" Margin="1"></TextBlock>
+                            <TextBox Name="heightRectangle" Margin="1"></TextBox>
+                        </DockPanel>
+                        <Button Name="drawRectangle" Click="drawRectangle_Click" Margin="1">Stwórz prostokąt</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Margin="5" VerticalAlignment="Center">
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Współrzędna x1:" Margin="1"></TextBlock>
+                            <TextBox Name="x1ellipse" Margin="1"></TextBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Współrzędna y1:" Margin="1"></TextBlock>
+                            <TextBox Name="y1ellipse" Margin="1"></TextBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Promień:" Margin="1"></TextBlock>
+                            <TextBox Name="radiusellipse" Margin="1"></TextBox>
+                        </DockPanel>
+                        <Button Name="drawEllipse" Click="drawEllipse_Click" Margin="1">Stwórz okrąg</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Margin="5" VerticalAlignment="Center">
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Zmiana długości linii o:" Margin="1"></TextBlock>
+                            <TextBox Name="changeLineValue" Margin="1"></TextBox>
+                        </DockPanel>
+                        <Button Name="lineBigger" Click="lineBigger_Click" Margin="1">Zmiana długości linii</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="5" Margin="5" VerticalAlignment="Center">
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Szerokość zmieniona o:" Margin="1"></TextBlock>
+                            <TextBox Name="changeWidth" Margin="1"></TextBox>
+                        </DockPanel>
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Wysokość zmieniona o:" Margin="1"></TextBlock>
+                            <TextBox Name="changeHeight" Margin="1"></TextBox>
+                        </DockPanel>
+                        <Button Name="changeRectangle" Click="changeRectangle_Click" Margin="1">Zmiana rozmiaru prostokąta</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="6" Margin="5" VerticalAlignment="Center">
+                        <DockPanel HorizontalAlignment="Stretch" Margin="1">
+                            <TextBlock Text="Promień zmieniony o:" Margin="1"></TextBlock>
+                            <TextBox Name="changeRadius" Margin="1"></TextBox>
+                        </DockPanel>
+                        <Button Name="changeEllipse" Click="changeEllipse_Click" Margin="1">Zmiana rozmiaru okręgu</Button>
+                    </StackPanel>
+                    <Canvas Name="CanvasField" Grid.Column="0" Grid.RowSpan="7" Margin="5" Background="WhiteSmoke" 
+                            MouseDown="CanvasField_MouseDown" MouseMove="CanvasField_MouseMove" ClipToBounds="True"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="PS2">
+
+            </TabItem>
+        </TabControl>
+        
+    </Grid>
+</Window>
