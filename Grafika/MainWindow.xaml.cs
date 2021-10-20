@@ -430,6 +430,9 @@ namespace Grafika
             {
                 try
                 {
+                    zoomScale = 1;
+                    ScaleTransform scale = new ScaleTransform(zoomScale, zoomScale);
+                    Image.LayoutTransform = scale;
                     string extension = Path.GetExtension(openFileDialog.FileName);
                     if (!extension.ToLower().Equals(".ppm"))
                     {
@@ -446,7 +449,7 @@ namespace Grafika
                 }
                 catch (Exception ex)
                 {
-                    
+                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
                 }
             }
         }
@@ -502,7 +505,7 @@ namespace Grafika
                 }
                 catch
                 {
-
+                    MessageBoxResult result = MessageBox.Show("Podczas próby zapisu pliku coś poszło nie tak.");
                 }
             }
             
@@ -650,7 +653,59 @@ namespace Grafika
             if (fileType.Equals("P3"))
             {
                 Bitmap bitmap = new Bitmap(width, height);
+                List<System.Drawing.Color> colors = new List<System.Drawing.Color>();
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    List<string> splitedLine = lines[i].Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    if (splitedLine.Count % 3 != 0)
+                    {
+                        List<string> nextLine = lines[i + 1].Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        for(int k = 0; k < nextLine.Count; k++)
+                        {
+                            splitedLine.Add(nextLine[k]);
+                        }
+                        i++;
+                        nextLine.Clear();
+                        continue;
+                    }
+                    if(splitedLine.Count % 3 == 0)
+                    {
+                        for (int j = 0; j < splitedLine.Count; j += 3)
+                        {
+                            int Red = Int32.Parse(splitedLine[j]) * (255 / maxColor);
+                            int Green = Int32.Parse(splitedLine[j + 1]) * (255 / maxColor);
+                            int Blue = Int32.Parse(splitedLine[j + 2]) * (255 / maxColor);
 
+                            System.Drawing.Color newColor = System.Drawing.Color.FromArgb(Red, Green, Blue);
+                            colors.Add(newColor);
+                        }
+                    }
+                }
+
+                int row = 0;
+                int column = 0;
+
+                foreach (var color in colors)
+                {
+                    if (column < width)
+                    {
+                        bitmap.SetPixel(column, row, color);
+                        column++;
+                    }
+                    else if (row < height)
+                    {
+                        column = 0;
+                        row++;
+                        bitmap.SetPixel(column, row, color);
+                        column++;
+                    }
+                    else
+                    {
+                        MessageBoxResult result = MessageBox.Show("Plik jest większy niż zostało to zapisane w pliku.");
+                    }
+                }
+                return bitmap;
+                
             }
             else if(fileType.Equals("P6"))
             {
@@ -686,6 +741,36 @@ namespace Grafika
                 return bitmap;
             }
             return new Bitmap(0, 0);
+        }
+
+        public double zoomScale = 1;
+
+        private void zoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            if (Image.Source == null)
+                return;
+            
+            if(zoomScale < 20)
+            {
+                zoomScale += 2;
+            }
+
+            ScaleTransform scale = new ScaleTransform(zoomScale, zoomScale);
+            Image.LayoutTransform = scale;
+        }
+
+        private void zoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            if (Image.Source == null)
+                return;
+
+            if (zoomScale > 0.5)
+            {
+                zoomScale -= 2;
+            }
+
+            ScaleTransform scale = new ScaleTransform(zoomScale, zoomScale);
+            Image.LayoutTransform = scale;
         }
     }
 }
