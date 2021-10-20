@@ -125,7 +125,29 @@
                 </Grid>
             </TabItem>
             <TabItem Header="PS2">
-
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Row="1"></Border>
+                    <StackPanel Margin="5" Grid.Row="0" HorizontalAlignment="Left" Orientation="Vertical">
+                        <Button Name="uploadFile" Margin="5" Click="uploadFile_Click">Wczytaj plik</Button>
+                        <Button Name="saveFile" Margin="5" Click="saveFile_Click">Zapisz plik</Button>
+                        <DockPanel HorizontalAlignment="Stretch" >
+                            <TextBlock Text="Wybierz poziom kompresji do zapisu" Margin="5"></TextBlock>
+                            <ComboBox Margin="5" MinWidth="100">
+                                <ComboBoxItem Name="compression1L">1L</ComboBoxItem>
+                                <ComboBoxItem Name="compression25L">25L</ComboBoxItem>
+                                <ComboBoxItem Name="compression50L">50L</ComboBoxItem>
+                                <ComboBoxItem Name="compression75L">75L</ComboBoxItem>
+                                <ComboBoxItem Name="compression100L">100L</ComboBoxItem>
+                            </ComboBox>
+                        </DockPanel>
+                        
+                    </StackPanel>
+                    <Image Name="Image" Grid.Row="1" Margin="5" Stretch="Uniform"/>
+                </Grid>
             </TabItem>
         </TabControl>
         

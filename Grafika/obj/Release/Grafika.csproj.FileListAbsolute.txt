@@ -1,0 +1,15 @@
+C:\Users\User\source\repos\Grafika\Grafika\bin\Release\Grafika.exe.config
+C:\Users\User\source\repos\Grafika\Grafika\bin\Release\Grafika.exe
+C:\Users\User\source\repos\Grafika\Grafika\bin\Release\Grafika.pdb
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\Grafika.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\MainWindow.g.cs
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\App.g.cs
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\Grafika_MarkupCompile.cache
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\Grafika_MarkupCompile.lref
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\MainWindow.baml
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\Grafika.g.resources
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\Grafika.Properties.Resources.resources
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\Grafika.csproj.GenerateResource.cache
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\Grafika.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\Grafika.exe
+C:\Users\User\source\repos\Grafika\Grafika\obj\Release\Grafika.pdb

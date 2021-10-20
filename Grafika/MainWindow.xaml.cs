@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using Encoder = System.Drawing.Imaging.Encoder;
+using Path = System.IO.Path;
+using System.Drawing;
+using System.Collections;
 
 namespace Grafika
 {
@@ -31,10 +38,10 @@ namespace Grafika
         //ACTION_MODE = 2 => move
         //ACTION_MODE = 3 => change shape
 
-        private Point startPoints = new Point();
-        private Point endPoints = new Point();
+        private System.Windows.Point startPoints = new System.Windows.Point();
+        private System.Windows.Point endPoints = new System.Windows.Point();
         private TranslateTransform TranslateTransform;
-        private Point clickPosition = new Point();
+        private System.Windows.Point clickPosition = new System.Windows.Point();
         public MainWindow()
         {
             InitializeComponent();
@@ -108,17 +115,17 @@ namespace Grafika
                                 X2 = endPoints.X,
                                 Y2 = endPoints.Y,
                                 StrokeThickness = 5,
-                                Stroke = Brushes.Red
+                                Stroke = System.Windows.Media.Brushes.Red
                             };
                             break;
                         //tworzenie prostokąta
                         case 2:
-                            shape = new Rectangle
+                            shape = new System.Windows.Shapes.Rectangle
                             {
                                 Width = Math.Abs(startPoints.X - endPoints.X),
                                 Height = Math.Abs(startPoints.Y - endPoints.Y),
                                 StrokeThickness = 5,
-                                Stroke = Brushes.Green
+                                Stroke = System.Windows.Media.Brushes.Green
                             };
                             var currentPosXRec = startPoints.X < endPoints.X ? startPoints.X : endPoints.X;
                             var currentPosYRec = startPoints.Y < endPoints.Y ? startPoints.Y : endPoints.Y;
@@ -130,9 +137,9 @@ namespace Grafika
                             shape = new Ellipse
                             {
                                 Width = Math.Abs(startPoints.X - endPoints.X),
-                                Height = Math.Abs(startPoints.Y - endPoints.Y),
+                                Height = Math.Abs(startPoints.X - endPoints.X),
                                 StrokeThickness = 5,
-                                Stroke = Brushes.Yellow
+                                Stroke = System.Windows.Media.Brushes.Yellow
                             };
                             var currentPosXEli = startPoints.X < endPoints.X ? startPoints.X : endPoints.X;
                             var currentPosYEli = startPoints.Y < endPoints.Y ? startPoints.Y : endPoints.Y;
@@ -163,7 +170,7 @@ namespace Grafika
                 var dragShape = sender as Shape;
                 if (dragShape != null)
                 {
-                    Point currentPosition = e.GetPosition(CanvasField);
+                    System.Windows.Point currentPosition = e.GetPosition(CanvasField);
                     var transform = dragShape.RenderTransform as TranslateTransform ?? new TranslateTransform();
                     transform.X = TranslateTransform.X + (currentPosition.X - clickPosition.X);
                     transform.Y = TranslateTransform.Y + (currentPosition.Y - clickPosition.Y);
@@ -177,7 +184,7 @@ namespace Grafika
                 {
                     if(changeShape is Line)
                     {
-                        Point currentPosition = e.GetPosition(CanvasField);
+                        System.Windows.Point currentPosition = e.GetPosition(CanvasField);
                     }
                 }
             }
@@ -213,7 +220,7 @@ namespace Grafika
                     X2 = x2,
                     Y2 = y2,
                     StrokeThickness = 5,
-                    Stroke = Brushes.Red
+                    Stroke = System.Windows.Media.Brushes.Red
                 };
                 shape.MouseDown += Select_Shape; //event do zaznaczenia wybranej figury
                 shape.MouseMove += Move_Shape; //event do przesuwania myszą figury
@@ -235,12 +242,12 @@ namespace Grafika
 
             if (x1Point && y1Point && x2Point && y2Point)
             {
-                shape = new Rectangle
+                shape = new System.Windows.Shapes.Rectangle
                 {
                     Width = width,
                     Height = height,
                     StrokeThickness = 5,
-                    Stroke = Brushes.Green
+                    Stroke = System.Windows.Media.Brushes.Green
                 };
                 shape.SetValue(Canvas.LeftProperty, x1);
                 shape.SetValue(Canvas.TopProperty, y1);
@@ -271,7 +278,7 @@ namespace Grafika
                     Width = Math.Abs(r*2),
                     Height = Math.Abs(r*2),
                     StrokeThickness = 5,
-                    Stroke = Brushes.Yellow
+                    Stroke = System.Windows.Media.Brushes.Yellow
                 };
 
                 shape.SetValue(Canvas.LeftProperty, x1);
@@ -346,7 +353,7 @@ namespace Grafika
 
             if(width && height)
             {
-                Rectangle rectangle = shape as Rectangle;
+                System.Windows.Shapes.Rectangle rectangle = shape as System.Windows.Shapes.Rectangle;
                 //nowe wartości nie mogą spowodować że szerokość/wysokość będzie mniejsza od zera
                 if(rectangle.Width + newWidth <= 0 || rectangle.Height + newHeight <= 0)
                 {
@@ -376,7 +383,7 @@ namespace Grafika
 
         private void changeEllipse_Click(object sender, RoutedEventArgs e)
         {
-            if (ACTION_MODE != 3 || shape == null || shape is Line || shape is Rectangle)
+            if (ACTION_MODE != 3 || shape == null || shape is Line || shape is System.Windows.Shapes.Rectangle)
             {
                 return;
             }
@@ -412,6 +419,273 @@ namespace Grafika
             {
                 MessageBoxResult result = MessageBox.Show("Wprowadzone dane są niepoprawne!");
             }
+        }
+
+        private void uploadFile_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg|PPM Image|*.ppm";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    string extension = Path.GetExtension(openFileDialog.FileName);
+                    if (!extension.ToLower().Equals(".ppm"))
+                    {
+                        Bitmap bitmap = new Bitmap(openFileDialog.FileName);
+                        BitmapImage bitmapImage = FromBitmapToBitmapImage(bitmap);
+                        Image.Source = bitmapImage;
+                    }
+                    else
+                    {
+                        Bitmap bitmap = PPMToBitmap(openFileDialog.FileName);
+                        BitmapImage bitmapImage = FromBitmapToBitmapImage(bitmap);
+                        Image.Source = bitmapImage;
+                    }              
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            }
+        }
+
+        private void saveFile_Click(object sender, RoutedEventArgs e)
+        {
+            if(Image.Source == null)
+            {
+                return;
+            }
+
+            SaveFileDialog saveFile = new SaveFileDialog
+            {
+                Filter = "JPEG Image|*.jpg"
+            };
+
+            var save = new JpegBitmapEncoder();
+            if(saveFile.ShowDialog() != false)
+            {
+                try
+                {
+                    if (compression1L.IsSelected)
+                    {
+                        save.QualityLevel = (int)1L;
+                    }
+                    else if (compression25L.IsSelected)
+                    {
+                        save.QualityLevel = (int)25L;
+                    }
+                    else if (compression50L.IsSelected)
+                    {
+                        save.QualityLevel = (int)50L;
+                    }
+                    else if (compression75L.IsSelected)
+                    {
+                        save.QualityLevel = (int)75L;
+                    }
+                    else if (compression100L.IsSelected)
+                    {
+                        save.QualityLevel = (int)100L;
+                    }
+                    else
+                    {
+                        save.QualityLevel = (int)50L;
+                    }
+
+                    save.Frames.Add(BitmapFrame.Create((BitmapSource)Image.Source));
+                    using(var stream = saveFile.OpenFile())
+                    {
+                        save.Save(stream);
+                    }
+
+                }
+                catch
+                {
+
+                }
+            }
+            
+        }
+
+        private BitmapImage FromBitmapToBitmapImage(Bitmap bitmap)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            using(MemoryStream memoryStream = new MemoryStream())
+            {
+                bitmap.Save(memoryStream, ImageFormat.Bmp);
+                memoryStream.Position = 0;
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+            }
+            return bitmapImage;
+        }
+
+        private Bitmap PPMToBitmap(string file)
+        {
+            string fileType = "";
+            int width = 0;
+            int height = 0;
+            int maxColor = 0;
+            int linesToAvoidP6 = 0;
+
+            List<string> lines = new List<string>();
+
+            long previousLength = 0;
+            using (var fs = File.OpenRead(file))
+            {
+                fs.Position = previousLength;
+                previousLength = fs.Length;
+                using (var streamRead = new StreamReader(fs))
+                {
+                    
+                    while (!streamRead.EndOfStream)
+                    {
+                        if (fileType.Equals("P6") && width != 0 && height != 0 && maxColor != 0)
+                        {
+                            break;
+                        }
+                        var line = streamRead.ReadLine();
+                        if(!String.IsNullOrEmpty(line) && line.StartsWith("#"))
+                        {
+                            int index = line.IndexOf("#");
+                            if (index >= 0)
+                            {
+                                line = line.Substring(0, index);
+                                linesToAvoidP6++;
+                            }
+                        }
+                        
+                        if (!String.IsNullOrEmpty(line) && !line.StartsWith("#") && !fileType.Equals("") )
+                        {
+                            if (width != 0 && height != 0 && maxColor != 0 && !fileType.Equals(""))
+                            {
+                                lines.Add(line);
+                            }
+                            if (width == 0 && width == 0 && !fileType.Equals(""))
+                            {
+                                linesToAvoidP6++;
+                                List<int> correctValues = new List<int>(); //ostateczne wartości
+                                List<string> splitedList = line.Split(new char[]{' ','\t' },StringSplitOptions.RemoveEmptyEntries).ToList();
+                                foreach (var element in splitedList)
+                                {
+                                    if (Int32.TryParse(element, out int value))
+                                        correctValues.Add(value);
+                                }
+                                if(correctValues.Count == 1)
+                                {
+                                    width = correctValues[0];
+                                }
+                                if(correctValues.Count == 2)
+                                {
+                                    width = correctValues[0];
+                                    height = correctValues[1];
+                                }
+                                if (correctValues.Count == 3)
+                                {
+                                    width = correctValues[0];
+                                    height = correctValues[1];
+                                    maxColor = correctValues[2];
+                                }
+                            }
+                            else if(height == 0 && width != 0 && !fileType.Equals(""))
+                            {
+                                linesToAvoidP6++;
+                                List<int> correctValues = new List<int>(); //ostateczne wartości
+                                List<string> splitedList = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                                foreach (var element in splitedList)
+                                {
+                                    if (Int32.TryParse(element, out int value))
+                                        correctValues.Add(value);
+                                }
+                                if (correctValues.Count == 1)
+                                {
+                                    height = correctValues[0];
+                                }
+                                if (correctValues.Count == 2)
+                                {
+                                    height = correctValues[0];
+                                    maxColor = correctValues[1];
+                                }
+                            }
+                            else if(height != 0 && width != 0 && maxColor == 0 && !fileType.Equals(""))
+                            {
+                                linesToAvoidP6++;
+                                List<int> correctValues = new List<int>(); //ostateczne wartości
+                                List<string> splitedList = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                                foreach (var element in splitedList)
+                                {
+                                    if (Int32.TryParse(element, out int value))
+                                        correctValues.Add(value);
+                                }
+                                if (correctValues.Count == 1)
+                                {
+                                    maxColor = correctValues[0];
+                                }
+                            }
+                        }
+                        if (line.StartsWith("P") && fileType.Equals(""))
+                        {
+                            if (line.StartsWith("P3"))
+                            {
+                                fileType = "P3";
+                            }
+                            else if (line.StartsWith("P6"))
+                            {
+                                fileType = "P6";
+                                linesToAvoidP6++;
+                            }
+                            else
+                            {
+                                MessageBoxResult result = MessageBox.Show("Zły format pliku PPM!");
+                                return new Bitmap(width, height);
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (fileType.Equals("P3"))
+            {
+                Bitmap bitmap = new Bitmap(width, height);
+
+            }
+            else if(fileType.Equals("P6"))
+            {
+                Bitmap bitmap = new Bitmap(width, height);
+                var binRead = new BinaryReader(new FileStream(file, FileMode.Open));
+
+                //ile linii z początku pliku muszę ominąć
+                int counter = 0;
+                for (int i = 0; i < width * height; i++)
+                {
+                    if (binRead.ReadByte() == '\n')
+                    {
+                        counter++;
+                    }  
+                    if (counter == linesToAvoidP6)
+                    {
+                        break;
+                    }
+                        
+                }
+                for (int i = 0; i < height; i++)
+                {
+                    for(int j = 0; j < width; j++)
+                    {
+                        int Red = (int)(binRead.ReadByte() * (double)(255 / maxColor));
+                        int Green = (int)(binRead.ReadByte() * (double)(255 / maxColor));
+                        int Blue = (int)(binRead.ReadByte() * (double)(255 / maxColor));
+
+                        System.Drawing.Color newColor = System.Drawing.Color.FromArgb(Red, Green, Blue);
+                        bitmap.SetPixel(j, i,newColor);
+                    }
+                }
+                return bitmap;
+            }
+            return new Bitmap(0, 0);
         }
     }
 }
