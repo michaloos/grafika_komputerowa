@@ -182,41 +182,62 @@
                         <StackPanel HorizontalAlignment="Center" Margin="5">
                             <DockPanel HorizontalAlignment="Stretch">
                                 <TextBlock Text="R:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="redRGB" Width="40" Margin="5"/>
-                                <Slider x:Name="redSlider" Width="450" Margin="5"></Slider>
+                                <TextBox x:Name="redRGB" Width="40" Margin="5" PreviewTextInput="redRGB_PreviewTextInput"
+                                         Text="{Binding ElementName=redSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
+                                         TextChanged="redRGB_TextChanged"/>
+                                <Slider x:Name="redSlider" Width="450" Margin="5" Minimum="0" Maximum="255" TickFrequency="1"
+                                        Value="{Binding ElementName=redRGB, Mode=TwoWay, Path=Text}"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="G:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="greenRGB" Width="40" Margin="5"/>
-                                <Slider x:Name="greenSlider" Width="450" Margin="5"></Slider>
+                                <TextBox x:Name="greenRGB" Width="40" Margin="5" PreviewTextInput="greenRGB_PreviewTextInput"
+                                         Text="{Binding ElementName=greenSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
+                                         TextChanged="greenRGB_TextChanged"/>
+                                <Slider x:Name="greenSlider" Width="450" Margin="5" Minimum="0" Maximum="255" TickFrequency="1"
+                                        Value="{Binding ElementName=greenRGB, Mode=TwoWay, Path=Text}"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="B:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="blueRGB" Width="40" Margin="5"/>
-                                <Slider x:Name="blueSlider"  Width="450" Margin="5"></Slider>
+                                <TextBox x:Name="blueRGB" Width="40" Margin="5" PreviewTextInput="blueRGB_PreviewTextInput"
+                                         Text="{Binding ElementName=blueSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
+                                         TextChanged="blueRGB_TextChanged"/>
+                                <Slider x:Name="blueSlider"  Width="450" Margin="5" Minimum="0" Maximum="255" TickFrequency="1"
+                                        Value="{Binding ElementName=blueRGB, Mode=TwoWay, Path=Text}"></Slider>
                             </DockPanel>
                         </StackPanel>
                         <TextBlock HorizontalAlignment="Center" Text="CMYK Colors" Margin="15,15,5,5"/>
                         <StackPanel HorizontalAlignment="Center" Margin="5">
                             <DockPanel>
                                 <TextBlock Text="C:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="cyanCMYK" Width="40" Margin="5"/>
-                                <Slider x:Name="cyanSlider" Width="450" Margin="5"></Slider>
+                                <TextBox x:Name="cyanCMYK" Width="40" Margin="5" PreviewTextInput="cyanCMYK_PreviewTextInput"
+                                         Text="{Binding ElementName=cyanSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
+                                         TextChanged="cyanCMYK_TextChanged"/>
+                                <Slider x:Name="cyanSlider" Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
+                                        Value="{Binding ElementName=cyanCMYK, Mode=TwoWay, Path=Text}"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="M:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="magentaCMYK" Width="40" Margin="5"/>
-                                <Slider x:Name="magentaSlider" Width="450" Margin="5"></Slider>
+                                <TextBox x:Name="magentaCMYK" Width="40" Margin="5" PreviewTextInput="magentaCMYK_PreviewTextInput"
+                                         Text="{Binding ElementName=magentaSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
+                                         TextChanged="magentaCMYK_TextChanged"/>
+                                <Slider x:Name="magentaSlider" Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
+                                        Value="{Binding ElementName=magentaCMYK, Mode=TwoWay, Path=Text}"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Y:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="yellowCMYK" Width="40" Margin="5"/>
-                                <Slider x:Name="yellowSlider"  Width="450" Margin="5"></Slider>
+                                <TextBox x:Name="yellowCMYK" Width="40" Margin="5" PreviewTextInput="yellowCMYK_PreviewTextInput"
+                                         Text="{Binding ElementName=yellowSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
+                                         TextChanged="yellowCMYK_TextChanged"/>
+                                <Slider x:Name="yellowSlider"  Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
+                                        Value="{Binding ElementName=yellowCMYK, Mode=TwoWay, Path=Text}"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="K:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="blackCMYK" Width="40" Margin="5"/>
-                                <Slider x:Name="blackSlider" Width="450" Margin="5"></Slider>
+                                <TextBox x:Name="blackCMYK" Width="40" Margin="5" PreviewTextInput="blackCMYK_PreviewTextInput"
+                                         Text="{Binding ElementName=blackSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
+                                         TextChanged="blackCMYK_TextChanged"/>
+                                <Slider x:Name="blackSlider" Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
+                                        Value="{Binding ElementName=blackCMYK, Mode=TwoWay, Path=Text}"></Slider>
                             </DockPanel>
                         </StackPanel>
                     </StackPanel>

@@ -19,6 +19,7 @@ using Encoder = System.Drawing.Imaging.Encoder;
 using Path = System.IO.Path;
 using System.Drawing;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace Grafika
 {
@@ -776,14 +777,6 @@ namespace Grafika
         private int colorMode = 0;
         //1 == RGB
         //2 == CMYK
-
-        private void color_Change(object sender, RoutedEventArgs e)
-        {
-            if(colorMode == 1)
-            {
-                MessageBoxResult result = MessageBox.Show("iadomsoc");
-            }
-        }
         
         private void selectRGB_Checked(object sender, RoutedEventArgs e)
         {
@@ -793,6 +786,135 @@ namespace Grafika
         private void selectCMYK_Checked(object sender, RoutedEventArgs e)
         {
             colorMode = 2;
+        }
+
+        private void redRGB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void greenRGB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void blueRGB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void cyanCMYK_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void magentaCMYK_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void yellowCMYK_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void blackCMYK_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void color_change_RGB()
+        {
+            var R = Int32.TryParse(redRGB.Text, out int red);
+            var G = Int32.TryParse(greenRGB.Text, out int green);
+            var B = Int32.TryParse(blueRGB.Text, out int blue);
+            if (colorMode == 1 && R && G && B)
+            {
+                colorCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)red, (byte)green, (byte)blue));
+            }
+        }
+
+        private void color_change_CMYK()
+        {
+            var R = Int32.TryParse(redRGB.Text, out int red);
+            var G = Int32.TryParse(greenRGB.Text, out int green);
+            var B = Int32.TryParse(blueRGB.Text, out int blue);
+            if (colorMode == 2 && R && G && B)
+            {
+                colorCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)red, (byte)green, (byte)blue));
+            }
+        }
+
+        private void fromRGBToCMYK()
+        {
+            if(colorMode == 1)
+            {
+                blackSlider.Value = Math.Min(1 - redSlider.Value, Math.Min(1 - greenSlider.Value, 1 - blueSlider.Value));
+                if (blackSlider.Value == 1)
+                    blackSlider.Value = 0;
+                cyanSlider.Value = (1 - redSlider.Value - blackSlider.Value) / (1 - blackSlider.Value);
+                magentaSlider.Value = (1 - greenSlider.Value - blackSlider.Value) / (1 - blackSlider.Value);
+                yellowSlider.Value = (1 - blueSlider.Value - blackSlider.Value) / (1 - blackSlider.Value);
+            }
+        }
+        
+        private void fromCMYKToRGB()
+        {
+            if(colorMode == 2)
+            {
+                redSlider.Value = 1 - Math.Min(1, cyanSlider.Value * (1 - blackSlider.Value) + blackSlider.Value);
+                greenSlider.Value = 1 - Math.Min(1, magentaSlider.Value * (1 - blackSlider.Value) + blackSlider.Value);
+                blueSlider.Value = 1 - Math.Min(1, yellowSlider.Value * (1 - blackSlider.Value) + blackSlider.Value);
+            }
+        } 
+
+        private void redRGB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            color_change_RGB();
+            fromRGBToCMYK();
+        }
+
+        private void greenRGB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            color_change_RGB();
+            fromRGBToCMYK();
+        }
+
+        private void blueRGB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            color_change_RGB();
+            fromRGBToCMYK();
+        }
+
+        private void cyanCMYK_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            fromCMYKToRGB();
+            color_change_CMYK();
+        }
+
+        private void magentaCMYK_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            fromCMYKToRGB();
+            color_change_CMYK();
+        }
+
+        private void yellowCMYK_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            fromCMYKToRGB();
+            color_change_CMYK();
+        }
+
+        private void blackCMYK_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            fromCMYKToRGB();
+            color_change_CMYK();
         }
     }
 }
