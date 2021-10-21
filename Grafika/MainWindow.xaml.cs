@@ -832,89 +832,109 @@ namespace Grafika
 
         private void color_change_RGB()
         {
-            var R = Int32.TryParse(redRGB.Text, out int red);
-            var G = Int32.TryParse(greenRGB.Text, out int green);
-            var B = Int32.TryParse(blueRGB.Text, out int blue);
-            if (colorMode == 1 && R && G && B)
+            var R = redSlider.Value;
+            var G = greenSlider.Value;
+            var B = blueSlider.Value;
+            if (colorMode == 1)
             {
-                colorCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)red, (byte)green, (byte)blue));
+                colorCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)R, (byte)G, (byte)B));
             }
         }
 
         private void color_change_CMYK()
         {
-            var R = Int32.TryParse(redRGB.Text, out int red);
-            var G = Int32.TryParse(greenRGB.Text, out int green);
-            var B = Int32.TryParse(blueRGB.Text, out int blue);
-            if (colorMode == 2 && R && G && B)
+            double cyan = cyanSlider.Value / 100;
+            double magenta = magentaSlider.Value / 100;
+            double yellow = yellowSlider.Value / 100;
+            double black = blackSlider.Value / 100;
+
+            if (colorMode == 2)
             {
-                colorCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)red, (byte)green, (byte)blue));
+                var tempRed = 1 - Math.Min(1, cyan * (1 - black) + black);
+                var tempGreen = 1 - Math.Min(1, magenta * (1 - black) + black);
+                var tempBlue = 1 - Math.Min(1, yellow * (1 - black) + black);
+
+                var R = 255 * tempRed;
+                var G = 255 * tempGreen;
+                var B = 255 * tempBlue;
+                colorCanvas.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)R, (byte)G, (byte)B));
             }
         }
 
         private void fromRGBToCMYK()
         {
-            if(colorMode == 1)
+            double red = redSlider.Value / 255;
+            double green = greenSlider.Value / 255;
+            double blue = blueSlider.Value / 255;
+
+            if(colorMode == 1 && (red > 0 || green > 0 || blue > 0))
             {
-                blackSlider.Value = Math.Min(1 - redSlider.Value, Math.Min(1 - greenSlider.Value, 1 - blueSlider.Value));
-                if (blackSlider.Value == 1)
-                    blackSlider.Value = 0;
-                cyanSlider.Value = (1 - redSlider.Value - blackSlider.Value) / (1 - blackSlider.Value);
-                magentaSlider.Value = (1 - greenSlider.Value - blackSlider.Value) / (1 - blackSlider.Value);
-                yellowSlider.Value = (1 - blueSlider.Value - blackSlider.Value) / (1 - blackSlider.Value);
+                double tempBlack = Math.Min(1 - red, Math.Min(1 - green, 1 - blue));
+                double tempCyan = (1 - red - tempBlack) / (1 - tempBlack);
+                double tempMagenta = (1 - green - tempBlack) / (1 - tempBlack);
+                double tempYellow = (1 - blue - tempBlack) / (1 - tempBlack);
+
+                blackSlider.Value = tempBlack * 100;
+                cyanSlider.Value = tempCyan * 100;
+                magentaSlider.Value = tempMagenta * 100;
+                yellowSlider.Value = tempYellow * 100;
             }
+            color_change_RGB();
         }
         
         private void fromCMYKToRGB()
         {
-            if(colorMode == 2)
+            double cyan = cyanSlider.Value / 100;
+            double magenta = magentaSlider.Value / 100;
+            double yellow = yellowSlider.Value / 100;
+            double black = blackSlider.Value / 100;
+
+            if(colorMode == 2 && (cyan > 0 || magenta > 0 || yellow > 0 || black > 0))
             {
-                redSlider.Value = 1 - Math.Min(1, cyanSlider.Value * (1 - blackSlider.Value) + blackSlider.Value);
-                greenSlider.Value = 1 - Math.Min(1, magentaSlider.Value * (1 - blackSlider.Value) + blackSlider.Value);
-                blueSlider.Value = 1 - Math.Min(1, yellowSlider.Value * (1 - blackSlider.Value) + blackSlider.Value);
+                var tempRed = 1 - Math.Min(1,cyan*(1-black)+black);
+                var tempGreen = 1 - Math.Min(1, magenta * (1 - black) + black);
+                var tempBlue = 1 - Math.Min(1, yellow * (1 - black) + black);
+
+                redSlider.Value = 255 * tempRed;
+                greenSlider.Value = 255 * tempGreen;
+                blueSlider.Value = 255 * tempBlue;
             }
+            color_change_CMYK();
         } 
 
         private void redRGB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            color_change_RGB();
             fromRGBToCMYK();
         }
 
         private void greenRGB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            color_change_RGB();
             fromRGBToCMYK();
         }
 
         private void blueRGB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            color_change_RGB();
             fromRGBToCMYK();
         }
 
         private void cyanCMYK_TextChanged(object sender, TextChangedEventArgs e)
         {
             fromCMYKToRGB();
-            color_change_CMYK();
         }
 
         private void magentaCMYK_TextChanged(object sender, TextChangedEventArgs e)
         {
             fromCMYKToRGB();
-            color_change_CMYK();
         }
 
         private void yellowCMYK_TextChanged(object sender, TextChangedEventArgs e)
         {
             fromCMYKToRGB();
-            color_change_CMYK();
         }
 
         private void blackCMYK_TextChanged(object sender, TextChangedEventArgs e)
         {
             fromCMYKToRGB();
-            color_change_CMYK();
         }
     }
 }

@@ -186,7 +186,7 @@
                                          Text="{Binding ElementName=redSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
                                          TextChanged="redRGB_TextChanged"/>
                                 <Slider x:Name="redSlider" Width="450" Margin="5" Minimum="0" Maximum="255" TickFrequency="1"
-                                        Value="{Binding ElementName=redRGB, Mode=TwoWay, Path=Text}"></Slider>
+                                        Value="{Binding ElementName=redRGB, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="G:" Width="20" Margin="15,5,0,5"/>
@@ -194,7 +194,7 @@
                                          Text="{Binding ElementName=greenSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
                                          TextChanged="greenRGB_TextChanged"/>
                                 <Slider x:Name="greenSlider" Width="450" Margin="5" Minimum="0" Maximum="255" TickFrequency="1"
-                                        Value="{Binding ElementName=greenRGB, Mode=TwoWay, Path=Text}"></Slider>
+                                        Value="{Binding ElementName=greenRGB, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="B:" Width="20" Margin="15,5,0,5"/>
@@ -202,7 +202,7 @@
                                          Text="{Binding ElementName=blueSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
                                          TextChanged="blueRGB_TextChanged"/>
                                 <Slider x:Name="blueSlider"  Width="450" Margin="5" Minimum="0" Maximum="255" TickFrequency="1"
-                                        Value="{Binding ElementName=blueRGB, Mode=TwoWay, Path=Text}"></Slider>
+                                        Value="{Binding ElementName=blueRGB, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                         </StackPanel>
                         <TextBlock HorizontalAlignment="Center" Text="CMYK Colors" Margin="15,15,5,5"/>
@@ -213,7 +213,7 @@
                                          Text="{Binding ElementName=cyanSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
                                          TextChanged="cyanCMYK_TextChanged"/>
                                 <Slider x:Name="cyanSlider" Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
-                                        Value="{Binding ElementName=cyanCMYK, Mode=TwoWay, Path=Text}"></Slider>
+                                        Value="{Binding ElementName=cyanCMYK, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="M:" Width="20" Margin="15,5,0,5"/>
@@ -221,7 +221,7 @@
                                          Text="{Binding ElementName=magentaSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
                                          TextChanged="magentaCMYK_TextChanged"/>
                                 <Slider x:Name="magentaSlider" Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
-                                        Value="{Binding ElementName=magentaCMYK, Mode=TwoWay, Path=Text}"></Slider>
+                                        Value="{Binding ElementName=magentaCMYK, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Y:" Width="20" Margin="15,5,0,5"/>
@@ -229,7 +229,7 @@
                                          Text="{Binding ElementName=yellowSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
                                          TextChanged="yellowCMYK_TextChanged"/>
                                 <Slider x:Name="yellowSlider"  Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
-                                        Value="{Binding ElementName=yellowCMYK, Mode=TwoWay, Path=Text}"></Slider>
+                                        Value="{Binding ElementName=yellowCMYK, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="K:" Width="20" Margin="15,5,0,5"/>
@@ -237,7 +237,7 @@
                                          Text="{Binding ElementName=blackSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
                                          TextChanged="blackCMYK_TextChanged"/>
                                 <Slider x:Name="blackSlider" Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
-                                        Value="{Binding ElementName=blackCMYK, Mode=TwoWay, Path=Text}"></Slider>
+                                        Value="{Binding ElementName=blackCMYK, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                         </StackPanel>
                     </StackPanel>
