@@ -447,7 +447,7 @@ namespace Grafika
                         Image.Source = bitmapImage;
                     }              
                 }
-                catch (Exception ex)
+                catch
                 {
                     MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
                 }
@@ -735,7 +735,7 @@ namespace Grafika
                         int Blue = (int)(binRead.ReadByte() * (double)(255 / maxColor));
 
                         System.Drawing.Color newColor = System.Drawing.Color.FromArgb(Red, Green, Blue);
-                        bitmap.SetPixel(j, i,newColor);
+                        bitmap.SetPixel(j, i, newColor);
                     }
                 }
                 return bitmap;
@@ -764,13 +764,35 @@ namespace Grafika
             if (Image.Source == null)
                 return;
 
-            if (zoomScale > 0.5)
+            if (zoomScale > 0.4)
             {
-                zoomScale -= 2;
+                zoomScale -= 0.4;
             }
 
             ScaleTransform scale = new ScaleTransform(zoomScale, zoomScale);
             Image.LayoutTransform = scale;
+        }
+
+        private int colorMode = 0;
+        //1 == RGB
+        //2 == CMYK
+
+        private void color_Change(object sender, RoutedEventArgs e)
+        {
+            if(colorMode == 1)
+            {
+                MessageBoxResult result = MessageBox.Show("iadomsoc");
+            }
+        }
+        
+        private void selectRGB_Checked(object sender, RoutedEventArgs e)
+        {
+            colorMode = 1;
+        }
+
+        private void selectCMYK_Checked(object sender, RoutedEventArgs e)
+        {
+            colorMode = 2;
         }
     }
 }

@@ -157,6 +157,72 @@
                     <Image Name="Image" Grid.Row="1" Margin="5,5,5,5.4" Stretch="None" Grid.ColumnSpan="2" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="PS3" MinWidth="100">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="320"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.RowSpan="2" Grid.Row="0"/>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0"/>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="1"/>
+                    <Viewport3D Name="cubeRGB" Grid.Column="1" Grid.RowSpan="2" Grid.Row="0" Margin="5" >
+                        
+                    </Viewport3D>
+                    <StackPanel Name="colorsStackPanel" VerticalAlignment="Top">
+                        <DockPanel HorizontalAlignment="Center" Margin="5">
+                            <RadioButton x:Name="selectRGB" Margin="5" Checked="selectRGB_Checked">RGB</RadioButton>
+                            <RadioButton x:Name="selectCMYK" Margin="5" Checked="selectCMYK_Checked">CMYK</RadioButton>
+                        </DockPanel>
+                        <TextBlock HorizontalAlignment="Center" Text="RGB Colors" Margin="5"/>
+                        <StackPanel HorizontalAlignment="Center" Margin="5">
+                            <DockPanel HorizontalAlignment="Stretch">
+                                <TextBlock Text="R:" Width="20" Margin="15,5,0,5"/>
+                                <TextBox x:Name="redRGB" Width="40" Margin="5"/>
+                                <Slider x:Name="redSlider" Width="450" Margin="5"></Slider>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="G:" Width="20" Margin="15,5,0,5"/>
+                                <TextBox x:Name="greenRGB" Width="40" Margin="5"/>
+                                <Slider x:Name="greenSlider" Width="450" Margin="5"></Slider>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="B:" Width="20" Margin="15,5,0,5"/>
+                                <TextBox x:Name="blueRGB" Width="40" Margin="5"/>
+                                <Slider x:Name="blueSlider"  Width="450" Margin="5"></Slider>
+                            </DockPanel>
+                        </StackPanel>
+                        <TextBlock HorizontalAlignment="Center" Text="CMYK Colors" Margin="15,15,5,5"/>
+                        <StackPanel HorizontalAlignment="Center" Margin="5">
+                            <DockPanel>
+                                <TextBlock Text="C:" Width="20" Margin="15,5,0,5"/>
+                                <TextBox x:Name="cyanCMYK" Width="40" Margin="5"/>
+                                <Slider x:Name="cyanSlider" Width="450" Margin="5"></Slider>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="M:" Width="20" Margin="15,5,0,5"/>
+                                <TextBox x:Name="magentaCMYK" Width="40" Margin="5"/>
+                                <Slider x:Name="magentaSlider" Width="450" Margin="5"></Slider>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="Y:" Width="20" Margin="15,5,0,5"/>
+                                <TextBox x:Name="yellowCMYK" Width="40" Margin="5"/>
+                                <Slider x:Name="yellowSlider"  Width="450" Margin="5"></Slider>
+                            </DockPanel>
+                            <DockPanel>
+                                <TextBlock Text="K:" Width="20" Margin="15,5,0,5"/>
+                                <TextBox x:Name="blackCMYK" Width="40" Margin="5"/>
+                                <Slider x:Name="blackSlider" Width="450" Margin="5"></Slider>
+                            </DockPanel>
+                        </StackPanel>
+                    </StackPanel>
+                    <Canvas Name="colorCanvas" Margin="5" Grid.Row="1" Grid.Column="0"/>
+                </Grid>
+            </TabItem>
         </TabControl>
 
     </Grid>
