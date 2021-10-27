@@ -129,15 +129,16 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition Width="197*"/>
+                        <ColumnDefinition Width="42*"/>
+                        <ColumnDefinition Width="155*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="100"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Background="Azure" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Row="1" Grid.ColumnSpan="2" Margin="5"></Border>
-                    <Border Background="Azure" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Row="0" Grid.Column="1" Margin="0,0,5,0"></Border>
-                    <StackPanel Margin="5,5,0,5" Grid.Row="0" HorizontalAlignment="Left" Orientation="Vertical" Grid.ColumnSpan="2">
+                    <Border Background="Azure" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="5,5,5,5.4"></Border>
+                    <Border Background="Azure" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Row="0" Margin="6,0,5,0" Grid.ColumnSpan="3"/>
+                    <StackPanel Margin="5,5,0,5" Grid.Row="0" HorizontalAlignment="Left" Orientation="Vertical" Grid.ColumnSpan="3">
                         <Button Name="uploadFile" Margin="5" Click="uploadFile_Click">Wczytaj plik</Button>
                         <Button Name="saveFile" Margin="5" Click="saveFile_Click">Zapisz plik</Button>
                         <DockPanel HorizontalAlignment="Stretch" >
@@ -152,9 +153,9 @@
                             <Button Name="zoomIn" Margin="5" MinWidth="20" Click="zoomIn_Click">+</Button>
                             <Button Name="zoomOut" Margin="5" MinWidth="20" Click="zoomOut_Click">-</Button>
                         </DockPanel>
-                        
+
                     </StackPanel>
-                    <Image Name="Image" Grid.Row="1" Margin="5,5,5,5.4" Stretch="None" Grid.ColumnSpan="2" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                    <Image Name="Image" Grid.Row="1" Margin="5,5,5,5.4" Stretch="None" Grid.ColumnSpan="3" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                 </Grid>
             </TabItem>
             <TabItem Header="PS3" MinWidth="100">
@@ -162,18 +163,162 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="320"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="100"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="26*"/>
+                        <ColumnDefinition Width="27*"/>
                     </Grid.ColumnDefinitions>
-                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.RowSpan="2" Grid.Row="0"/>
-                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0"/>
-                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="1"/>
-                    <Viewport3D Name="cubeRGB" Grid.Column="1" Grid.RowSpan="2" Grid.Row="0" Margin="5" >
-                        
+                    <Border Background="Azure" Margin="4.6,5,5,5.4" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="2" Grid.RowSpan="3" Grid.Row="0"/>
+                    <Border Background="Azure" Margin="5,5,5.4,5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
+                    <Border Background="Azure" Margin="5,5,5.4,5.4" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="571.8,322,0,0.4" Grid.RowSpan="2">
+                        <Slider x:Name="angleSlider"  VerticalAlignment="Center" Margin="15" Minimum="0" Maximum="720" TickFrequency="0.01" 
+                            ValueChanged="angleSlider_ValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Angle}" IsMoveToPointEnabled="True">
+                        </Slider>
+                        <DockPanel HorizontalAlignment="Center">
+                            <RadioButton x:Name="axis0" Margin="10" Checked="axis0_Checked">Axis 1,0,1</RadioButton>
+                            <RadioButton x:Name="axis1" Margin="10" Checked="axis1_Checked">Axis 0,1,1</RadioButton>
+                            <RadioButton x:Name="axis2" Margin="10" Checked="axis2_Checked">Axis 1,1,0</RadioButton>
+                        </DockPanel>
+                    </StackPanel>
+
+                    <Viewport3D Name="cubeRGB" Grid.Column="2" Grid.RowSpan="2" Grid.Row="0" Margin="4.6,5,5,5.4">
+                        <Viewport3D.Camera>
+                            <PerspectiveCamera x:Name="mainCamera" Position="4,3,2" LookDirection="-4,-3,-2" >
+
+                            </PerspectiveCamera>
+                        </Viewport3D.Camera>
+                        <ModelVisual3D>
+                            <ModelVisual3D.Content>
+                                <AmbientLight>
+                                </AmbientLight>
+                            </ModelVisual3D.Content>
+                        </ModelVisual3D>
+                        <ModelVisual3D x:Name="side1">
+                            <ModelVisual3D.Content>
+                                <GeometryModel3D x:Name="sideWithRed">
+                                    <GeometryModel3D.Geometry>
+                                        <MeshGeometry3D x:Name="mesh1"
+                                            Positions="1,1,0 1,0,0 1,1,1 1,0,1"
+                                            TriangleIndices="0,3,1 3,0,2"
+                                            TextureCoordinates="1,0 1,1 0,0 0,1">
+                                        </MeshGeometry3D>
+                                    </GeometryModel3D.Geometry>
+                                    <GeometryModel3D.Transform>
+                                        <RotateTransform3D>
+                                            <RotateTransform3D.Rotation>
+                                                <AxisAngleRotation3D x:Name="myAngleRotation1" Axis="1,0,1" Angle="10" />
+                                            </RotateTransform3D.Rotation>
+                                        </RotateTransform3D>
+                                    </GeometryModel3D.Transform>
+                                </GeometryModel3D>
+                            </ModelVisual3D.Content>
+                        </ModelVisual3D>
+                        <ModelVisual3D x:Name="side2">
+                            <ModelVisual3D.Content>
+                                <GeometryModel3D x:Name="sideWithGreen">
+                                    <GeometryModel3D.Geometry>
+                                        <MeshGeometry3D x:Name="mesh2"
+                                            Positions="0,0,1 1,0,1 0,1,1 1,1,1"
+                                            TriangleIndices="0,3,2 1,3,0"
+                                            TextureCoordinates="1,1 0,1 1,0 0,0 ">
+                                        </MeshGeometry3D>
+                                    </GeometryModel3D.Geometry>
+                                    <GeometryModel3D.Transform>
+                                        <RotateTransform3D>
+                                            <RotateTransform3D.Rotation>
+                                                <AxisAngleRotation3D x:Name="myAngleRotation2" Axis="1,0,1" Angle="20" />
+                                            </RotateTransform3D.Rotation>
+                                        </RotateTransform3D>
+                                    </GeometryModel3D.Transform>
+                                </GeometryModel3D>
+                            </ModelVisual3D.Content>
+                        </ModelVisual3D>
+                        <ModelVisual3D x:Name="side3">
+                            <ModelVisual3D.Content>
+                                <GeometryModel3D x:Name="sideWithBlue">
+                                    <GeometryModel3D.Geometry>
+                                        <MeshGeometry3D x:Name="mesh3"
+                                            Positions="0,1,0 1,1,0 0,1,1 1,1,1"
+                                            TriangleIndices="3,1,0 0,2,3"
+                                            TextureCoordinates="1,1 0,1 1,0 0,0">
+                                        </MeshGeometry3D>
+                                    </GeometryModel3D.Geometry>
+                                    <GeometryModel3D.Transform>
+                                        <RotateTransform3D>
+                                            <RotateTransform3D.Rotation>
+                                                <AxisAngleRotation3D x:Name="myAngleRotation3" Axis="1,0,1" Angle="30" />
+                                            </RotateTransform3D.Rotation>
+                                        </RotateTransform3D>
+                                    </GeometryModel3D.Transform>
+                                </GeometryModel3D>
+                            </ModelVisual3D.Content>
+                        </ModelVisual3D>
+                        <ModelVisual3D x:Name="side4">
+                            <ModelVisual3D.Content>
+                                <GeometryModel3D x:Name="sideWithBlackRedBlue">
+                                    <GeometryModel3D.Geometry>
+                                        <MeshGeometry3D x:Name="mesh4"
+                                            Positions="0,0,0 1,0,0 0,1,0 1,1,0"
+                                            TriangleIndices="2,3,1 2,1,0"
+                                            TextureCoordinates="1,1 0,1 1,0 0,0">
+                                        </MeshGeometry3D>
+                                    </GeometryModel3D.Geometry>
+                                    <GeometryModel3D.Transform>
+                                        <RotateTransform3D>
+                                            <RotateTransform3D.Rotation>
+                                                <AxisAngleRotation3D x:Name="myAngleRotation4" Axis="1,0,1" Angle="20" />
+                                            </RotateTransform3D.Rotation>
+                                        </RotateTransform3D>
+                                    </GeometryModel3D.Transform>
+                                </GeometryModel3D>
+                            </ModelVisual3D.Content>
+                        </ModelVisual3D>
+                        <ModelVisual3D x:Name="side5">
+                            <ModelVisual3D.Content>
+                                <GeometryModel3D x:Name="sideWithBlackGreenBlue">
+                                    <GeometryModel3D.Geometry>
+                                        <MeshGeometry3D x:Name="mesh5"
+                                            Positions="0,1,0 0,0,0 0,0,1 0,1,1"
+                                            TriangleIndices="2,0,1 3,0,2"
+                                            TextureCoordinates="1,0 1,1 0,1 0,0">
+                                        </MeshGeometry3D>
+                                    </GeometryModel3D.Geometry>
+                                    <GeometryModel3D.Transform>
+                                        <RotateTransform3D>
+                                            <RotateTransform3D.Rotation>
+                                                <AxisAngleRotation3D x:Name="myAngleRotation5" Axis="1,0,1" Angle="20" />
+                                            </RotateTransform3D.Rotation>
+                                        </RotateTransform3D>
+                                    </GeometryModel3D.Transform>
+                                </GeometryModel3D>
+                            </ModelVisual3D.Content>
+                        </ModelVisual3D>
+                        <ModelVisual3D x:Name="side6">
+                            <ModelVisual3D.Content>
+                                <GeometryModel3D x:Name="sideWithBlackRedGreen">
+                                    <GeometryModel3D.Geometry>
+                                        <MeshGeometry3D x:Name="mesh6"
+                                            Positions="0,0,0 1,0,0 1,0,1 0,0,1"
+                                            TriangleIndices="0,1,3 3,1,2"
+                                            TextureCoordinates="1,1 0,1 0,0 1,0">
+                                        </MeshGeometry3D>
+                                    </GeometryModel3D.Geometry>
+                                    <GeometryModel3D.Transform>
+                                        <RotateTransform3D>
+                                            <RotateTransform3D.Rotation>
+                                                <AxisAngleRotation3D x:Name="myAngleRotation6" Axis="1,0,1" Angle="20"/>
+                                            </RotateTransform3D.Rotation>
+                                        </RotateTransform3D>
+                                    </GeometryModel3D.Transform>
+                                </GeometryModel3D>
+                            </ModelVisual3D.Content>
+                        </ModelVisual3D>
                     </Viewport3D>
-                    <StackPanel Name="colorsStackPanel" VerticalAlignment="Top">
+
+                    <StackPanel Name="colorsStackPanel" VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="0,0,0.4,0">
                         <DockPanel HorizontalAlignment="Center" Margin="5">
                             <RadioButton x:Name="selectRGB" Margin="5" Checked="selectRGB_Checked">RGB</RadioButton>
                             <RadioButton x:Name="selectCMYK" Margin="5" Checked="selectCMYK_Checked">CMYK</RadioButton>
@@ -241,10 +386,15 @@
                             </DockPanel>
                         </StackPanel>
                     </StackPanel>
-                    <Canvas Name="colorCanvas" Margin="5" Grid.Row="1" Grid.Column="0"/>
+                    <Canvas Name="colorCanvas" Margin="5,5,5.4,5.4" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
         </TabControl>
+        <Grid.BindingGroup>
+            <BindingGroup Name="grupa">
 
+            </BindingGroup>
+        </Grid.BindingGroup>
     </Grid>
+
 </Window>

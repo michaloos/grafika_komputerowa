@@ -20,6 +20,8 @@ using Path = System.IO.Path;
 using System.Drawing;
 using System.Collections;
 using System.Text.RegularExpressions;
+using System.Windows.Media.Media3D;
+using System.Windows.Interop;
 
 namespace Grafika
 {
@@ -28,6 +30,8 @@ namespace Grafika
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region PS1
+
         private Shape shape = null;
         private int SHAPE_MODE;
         //SHAPE_MODE = 1 => line
@@ -46,6 +50,7 @@ namespace Grafika
         public MainWindow()
         {
             InitializeComponent();
+            colorRGBCube();
         }
 
         private void drawing_Checked(object sender, RoutedEventArgs e)
@@ -422,6 +427,9 @@ namespace Grafika
             }
         }
 
+        #endregion
+
+        #region PS2
         private void uploadFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -774,6 +782,10 @@ namespace Grafika
             Image.LayoutTransform = scale;
         }
 
+        #endregion
+
+        #region PS3
+
         private int colorMode = 0;
         //1 == RGB
         //2 == CMYK
@@ -936,5 +948,130 @@ namespace Grafika
         {
             fromCMYKToRGB();
         }
+
+        private void colorRGBCube()
+        {
+            Bitmap bitmapRed = new Bitmap(256, 256);
+            for (int i = 255, x = 0; i >= 0 && x <= 255; i--, x++)
+            {
+                for (int j = 255, y = 0; j >= 0 && y <= 255; j--, y++)
+                {
+                    bitmapRed.SetPixel(x, y, System.Drawing.Color.FromArgb(255, i, j));
+                }
+            }
+            BitmapImage bitmapImageRed = FromBitmapToBitmapImage(bitmapRed);
+            ImageBrush brushRed = new ImageBrush(bitmapImageRed);
+            sideWithRed.Material = new DiffuseMaterial(brushRed);
+
+            Bitmap bitmapBlue = new Bitmap(256, 256);
+            for (int i = 255, x = 0; i >= 0 && x <= 255; i--, x++)
+            {
+                for (int j = 255, y = 0; j >= 0 && y <= 255; j--, y++)
+                {
+                    bitmapBlue.SetPixel(x, y, System.Drawing.Color.FromArgb(i, j, 255));
+                }
+            }
+            BitmapImage bitmapImageBlue = FromBitmapToBitmapImage(bitmapBlue);
+            ImageBrush brushBlue = new ImageBrush(bitmapImageBlue);
+            sideWithBlue.Material = new DiffuseMaterial(brushBlue);
+
+            Bitmap bitmapGreen = new Bitmap(256, 256);
+            for (int i = 255, x = 0; i >= 0 && x <= 255; i--, x++)
+            {
+                for (int j = 255, y = 0; j >= 0 && y <= 255; j--, y++)
+                {
+                    bitmapGreen.SetPixel(x, y, System.Drawing.Color.FromArgb(i, 255, j));
+                }
+            }
+            BitmapImage bitmapImageGreen = FromBitmapToBitmapImage(bitmapGreen);
+            ImageBrush brushGreen = new ImageBrush(bitmapImageGreen);
+            sideWithGreen.Material = new DiffuseMaterial(brushGreen);
+
+            Bitmap bitmapBlackRedGreen = new Bitmap(256, 256);
+            for (int i = 255, x = 0; i >= 0 && x <= 255; i--, x++)
+            {
+                for (int j = 255, y = 0; j >= 0 && y <= 255; j--, y++)
+                {
+                    bitmapBlackRedGreen.SetPixel(x, y, System.Drawing.Color.FromArgb(i, j, 0));
+                }
+            }
+            BitmapImage bitmapImageBlackRedGreen = FromBitmapToBitmapImage(bitmapBlackRedGreen);
+            ImageBrush brushBlackRedGreen = new ImageBrush(bitmapImageBlackRedGreen);
+            sideWithBlackRedGreen.Material = new DiffuseMaterial(brushBlackRedGreen);
+
+            Bitmap bitmapBlackRedBlue = new Bitmap(256, 256);
+            for (int i = 255, x = 0; i >= 0 && x <= 255; i--, x++)
+            {
+                for (int j = 255, y = 0; j >= 0 && y <= 255; j--, y++)
+                {
+                    bitmapBlackRedBlue.SetPixel(x, y, System.Drawing.Color.FromArgb(i, 0, j));
+                }
+            }
+            BitmapImage bitmapImageBlackRedBlue = FromBitmapToBitmapImage(bitmapBlackRedBlue);
+            ImageBrush brushBlackRedBlue = new ImageBrush(bitmapImageBlackRedBlue);
+            sideWithBlackRedBlue.Material = new DiffuseMaterial(brushBlackRedBlue);
+
+            Bitmap bitmapBlackGreenBlue = new Bitmap(256, 256);
+            for (int i = 255, x = 0; i >= 0 && x <= 255; i--, x++)
+            {
+                for (int j = 255, y = 0; j >= 0 && y <= 255; j--, y++)
+                {
+                    bitmapBlackGreenBlue.SetPixel(x, y, System.Drawing.Color.FromArgb(0, i, j));
+                }
+            }
+            BitmapImage bitmapImageBlackGreenBlue = FromBitmapToBitmapImage(bitmapBlackGreenBlue);
+            ImageBrush brushBlackGreenBlue = new ImageBrush(bitmapImageBlackGreenBlue);
+            sideWithBlackGreenBlue.Material = new DiffuseMaterial(brushBlackGreenBlue);
+        }
+
+        private void angleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double value = angleSlider.Value;
+            myAngleRotation1.Angle = value;
+            myAngleRotation2.Angle = value;
+            myAngleRotation3.Angle = value;
+            myAngleRotation4.Angle = value;
+            myAngleRotation5.Angle = value;
+            myAngleRotation6.Angle = value;
+        }
+
+        private void axis0_Checked(object sender, RoutedEventArgs e)
+        {
+            myAngleRotation1.Axis = new Vector3D(1, 0, 1);
+            myAngleRotation2.Axis = new Vector3D(1, 0, 1);
+            myAngleRotation3.Axis = new Vector3D(1, 0, 1);
+            myAngleRotation4.Axis = new Vector3D(1, 0, 1);
+            myAngleRotation5.Axis = new Vector3D(1, 0, 1);
+            myAngleRotation6.Axis = new Vector3D(1, 0, 1);
+        }
+
+        private void axis1_Checked(object sender, RoutedEventArgs e)
+        {
+            myAngleRotation1.Axis = new Vector3D(0, 1, 1);
+            myAngleRotation2.Axis = new Vector3D(0, 1, 1);
+            myAngleRotation3.Axis = new Vector3D(0, 1, 1);
+            myAngleRotation4.Axis = new Vector3D(0, 1, 1);
+            myAngleRotation5.Axis = new Vector3D(0, 1, 1);
+            myAngleRotation6.Axis = new Vector3D(0, 1, 1);
+        }
+
+        private void axis2_Checked(object sender, RoutedEventArgs e)
+        {
+            myAngleRotation1.Axis = new Vector3D(1, 1, 0);
+            myAngleRotation2.Axis = new Vector3D(1, 1, 0);
+            myAngleRotation3.Axis = new Vector3D(1, 1, 0);
+            myAngleRotation4.Axis = new Vector3D(1, 1, 0);
+            myAngleRotation5.Axis = new Vector3D(1, 1, 0);
+            myAngleRotation6.Axis = new Vector3D(1, 1, 0);
+        }
+
+
+        #endregion
+
+        #region PS4
+
+        #endregion
+
+
     }
 }
