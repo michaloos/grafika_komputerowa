@@ -186,7 +186,7 @@
 
                     <Viewport3D Name="cubeRGB" Grid.Column="2" Grid.RowSpan="2" Grid.Row="0" Margin="4.6,5,5,5.4">
                         <Viewport3D.Camera>
-                            <PerspectiveCamera x:Name="mainCamera" Position="4,3,2" LookDirection="-4,-3,-2" >
+                            <PerspectiveCamera x:Name="mainCamera" Position="3,3,2" LookDirection="-3,-3,-2" >
 
                             </PerspectiveCamera>
                         </Viewport3D.Camera>
@@ -209,7 +209,7 @@
                                     <GeometryModel3D.Transform>
                                         <RotateTransform3D>
                                             <RotateTransform3D.Rotation>
-                                                <AxisAngleRotation3D x:Name="myAngleRotation1" Axis="1,0,1" Angle="10" />
+                                                <AxisAngleRotation3D x:Name="myAngleRotation1" Axis="1,0,1" Angle="0" />
                                             </RotateTransform3D.Rotation>
                                         </RotateTransform3D>
                                     </GeometryModel3D.Transform>
@@ -229,7 +229,7 @@
                                     <GeometryModel3D.Transform>
                                         <RotateTransform3D>
                                             <RotateTransform3D.Rotation>
-                                                <AxisAngleRotation3D x:Name="myAngleRotation2" Axis="1,0,1" Angle="20" />
+                                                <AxisAngleRotation3D x:Name="myAngleRotation2" Axis="1,0,1" Angle="0" />
                                             </RotateTransform3D.Rotation>
                                         </RotateTransform3D>
                                     </GeometryModel3D.Transform>
@@ -249,7 +249,7 @@
                                     <GeometryModel3D.Transform>
                                         <RotateTransform3D>
                                             <RotateTransform3D.Rotation>
-                                                <AxisAngleRotation3D x:Name="myAngleRotation3" Axis="1,0,1" Angle="30" />
+                                                <AxisAngleRotation3D x:Name="myAngleRotation3" Axis="1,0,1" Angle="0" />
                                             </RotateTransform3D.Rotation>
                                         </RotateTransform3D>
                                     </GeometryModel3D.Transform>
@@ -269,7 +269,7 @@
                                     <GeometryModel3D.Transform>
                                         <RotateTransform3D>
                                             <RotateTransform3D.Rotation>
-                                                <AxisAngleRotation3D x:Name="myAngleRotation4" Axis="1,0,1" Angle="20" />
+                                                <AxisAngleRotation3D x:Name="myAngleRotation4" Axis="1,0,1" Angle="0" />
                                             </RotateTransform3D.Rotation>
                                         </RotateTransform3D>
                                     </GeometryModel3D.Transform>
@@ -289,7 +289,7 @@
                                     <GeometryModel3D.Transform>
                                         <RotateTransform3D>
                                             <RotateTransform3D.Rotation>
-                                                <AxisAngleRotation3D x:Name="myAngleRotation5" Axis="1,0,1" Angle="20" />
+                                                <AxisAngleRotation3D x:Name="myAngleRotation5" Axis="1,0,1" Angle="0" />
                                             </RotateTransform3D.Rotation>
                                         </RotateTransform3D>
                                     </GeometryModel3D.Transform>
@@ -309,7 +309,7 @@
                                     <GeometryModel3D.Transform>
                                         <RotateTransform3D>
                                             <RotateTransform3D.Rotation>
-                                                <AxisAngleRotation3D x:Name="myAngleRotation6" Axis="1,0,1" Angle="20"/>
+                                                <AxisAngleRotation3D x:Name="myAngleRotation6" Axis="1,0,1" Angle="0"/>
                                             </RotateTransform3D.Rotation>
                                         </RotateTransform3D>
                                     </GeometryModel3D.Transform>
