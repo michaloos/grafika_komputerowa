@@ -1035,36 +1035,44 @@ namespace Grafika
             myAngleRotation6.Angle = value;
         }
 
-        private void axis0_Checked(object sender, RoutedEventArgs e)
+        private void axisSliderx_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            myAngleRotation1.Axis = new Vector3D(1, 0, 1);
-            myAngleRotation2.Axis = new Vector3D(1, 0, 1);
-            myAngleRotation3.Axis = new Vector3D(1, 0, 1);
-            myAngleRotation4.Axis = new Vector3D(1, 0, 1);
-            myAngleRotation5.Axis = new Vector3D(1, 0, 1);
-            myAngleRotation6.Axis = new Vector3D(1, 0, 1);
+            double value = axisSliderx.Value;
+            var y = myAngleRotation1.Axis.Y;
+            var z = myAngleRotation1.Axis.Z;
+            myAngleRotation1.Axis = new Vector3D(value, y, z);
+            myAngleRotation2.Axis = new Vector3D(value, y, z);
+            myAngleRotation3.Axis = new Vector3D(value, y, z);
+            myAngleRotation4.Axis = new Vector3D(value, y, z);
+            myAngleRotation5.Axis = new Vector3D(value, y, z);
+            myAngleRotation6.Axis = new Vector3D(value, y, z);
         }
 
-        private void axis1_Checked(object sender, RoutedEventArgs e)
+        private void axisSlidery_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            myAngleRotation1.Axis = new Vector3D(0, 1, 1);
-            myAngleRotation2.Axis = new Vector3D(0, 1, 1);
-            myAngleRotation3.Axis = new Vector3D(0, 1, 1);
-            myAngleRotation4.Axis = new Vector3D(0, 1, 1);
-            myAngleRotation5.Axis = new Vector3D(0, 1, 1);
-            myAngleRotation6.Axis = new Vector3D(0, 1, 1);
+            double value = axisSliderx.Value;
+            var x = myAngleRotation1.Axis.X;
+            var z = myAngleRotation1.Axis.Z;
+            myAngleRotation1.Axis = new Vector3D(x, value, z);
+            myAngleRotation2.Axis = new Vector3D(x, value, z);
+            myAngleRotation3.Axis = new Vector3D(x, value, z);
+            myAngleRotation4.Axis = new Vector3D(x, value, z);
+            myAngleRotation5.Axis = new Vector3D(x, value, z);
+            myAngleRotation6.Axis = new Vector3D(x, value, z);
         }
 
-        private void axis2_Checked(object sender, RoutedEventArgs e)
+        private void axisSliderz_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            myAngleRotation1.Axis = new Vector3D(1, 1, 0);
-            myAngleRotation2.Axis = new Vector3D(1, 1, 0);
-            myAngleRotation3.Axis = new Vector3D(1, 1, 0);
-            myAngleRotation4.Axis = new Vector3D(1, 1, 0);
-            myAngleRotation5.Axis = new Vector3D(1, 1, 0);
-            myAngleRotation6.Axis = new Vector3D(1, 1, 0);
+            double value = axisSliderx.Value;
+            var x = myAngleRotation1.Axis.X;
+            var y = myAngleRotation1.Axis.Y;
+            myAngleRotation1.Axis = new Vector3D(x, y, value);
+            myAngleRotation2.Axis = new Vector3D(x, y, value);
+            myAngleRotation3.Axis = new Vector3D(x, y, value);
+            myAngleRotation4.Axis = new Vector3D(x, y, value);
+            myAngleRotation5.Axis = new Vector3D(x, y, value);
+            myAngleRotation6.Axis = new Vector3D(x, y, value);
         }
-
 
         #endregion
 
