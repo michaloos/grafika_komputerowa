@@ -392,12 +392,100 @@
                     <Canvas Name="colorCanvas" Margin="5,5,5.4,5.4" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
+            <TabItem Header="PS4" Width="100">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="810"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        
+                    </Grid.RowDefinitions>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1"/>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0"/>
+                    <Image x:Name="ps4Image" Margin="10,10,10,10" Stretch="None" Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality">
+                        
+                    </Image>
+                    <StackPanel HorizontalAlignment="Center" Grid.Column="1" Margin="10" VerticalAlignment="Center">
+                        <Button x:Name="uploadFIlePS4" Width="220" Margin="5" Click="uploadFIlePS4_Click">Wczytaj plik</Button>
+                        <Button x:Name="filtrWygladz" Width="220" Margin="5" Click="filtrWygladz_Click">Filtr wygładzający</Button>
+                        <Button x:Name="filtrMediana" Width="220" Margin="5" Click="filtrMediana_Click">Filtr medianowy</Button>
+                        <Button x:Name="filtrWykrywKraw" Width="220" Margin="5" Click="filtrWykrywKraw_Click">Filtr wykrywania krawędzi</Button>
+                        <Button x:Name="filtrGornPrzepustWyostrz" Width="220" Margin="5" Click="filtrGornPrzepustWyostrz_Click">Filtr górnoprzepustowy wyostrzający</Button>
+                        <Button x:Name="filtrGaussa" Width="220" Margin="5" Click="filtrGaussa_Click">Filtr rozmycie gaussowskie</Button>
+
+                        <DockPanel Margin="5">
+                            <DockPanel HorizontalAlignment="Left">
+                                <Label Margin="5">Dodawanie</Label>
+                            </DockPanel>
+                            <DockPanel HorizontalAlignment="Right">
+                                <Label VerticalContentAlignment="Center">R:</Label>
+                                <TextBox Name="dodawanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Label VerticalContentAlignment="Center">G:</Label>
+                                <TextBox Name="dodawanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Label VerticalContentAlignment="Center">B:</Label>
+                                <TextBox Name="dodawanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Button Name="okDodawanie" Width="40" Height="27">OK</Button>
+                            </DockPanel>
+                        </DockPanel>
+                        <DockPanel Margin="5">
+                            <DockPanel HorizontalAlignment="Left">
+                                <Label Margin="5">Odejmowanie</Label>
+                            </DockPanel>
+                            <DockPanel HorizontalAlignment="Right">
+                                <Label VerticalContentAlignment="Center">R:</Label>
+                                <TextBox Name="odejmowanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Label VerticalContentAlignment="Center">G:</Label>
+                                <TextBox Name="odejmowanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Label VerticalContentAlignment="Center">B:</Label>
+                                <TextBox Name="odejmowanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Button Name="okOdejmowanie" Width="40" Height="27">OK</Button>
+                            </DockPanel>
+                        </DockPanel>
+                        <DockPanel Margin="5">
+                            <DockPanel HorizontalAlignment="Left">
+                                <Label Margin="5">Mnożenie</Label>    
+                            </DockPanel>
+                            <DockPanel HorizontalAlignment="Right">
+                                <Label VerticalContentAlignment="Center">R:</Label>
+                                <TextBox Name="mnozenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Label VerticalContentAlignment="Center">G:</Label>
+                                <TextBox Name="mnozenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Label VerticalContentAlignment="Center">B:</Label>
+                                <TextBox Name="mnozenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Button Name="okMnozenie" Width="40" Height="27">OK</Button>
+                            </DockPanel>
+                        </DockPanel>
+                        <DockPanel Margin="5">
+                            <DockPanel HorizontalAlignment="Left">
+                                <Label Margin="5">Dzielenie</Label>
+                            </DockPanel>
+                            <DockPanel HorizontalAlignment="Right">
+                                <Label VerticalContentAlignment="Center">R:</Label>
+                                <TextBox Name="dzielenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Label VerticalContentAlignment="Center">G:</Label>
+                                <TextBox Name="dzielenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Label VerticalContentAlignment="Center">B:</Label>
+                                <TextBox Name="dzielenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <Button Name="okDzielenie" Width="40" Height="27">OK</Button>
+                            </DockPanel>
+                        </DockPanel>
+
+                        <Label>Zmiana jasności:</Label>
+                        <Slider Name="brightnessSlider" Width="300" Minimum="0" Maximum="100" Margin="5">
+                            
+                        </Slider>
+
+                        <Label Margin="5">Przejście do skali szarości:</Label>
+                        <DockPanel HorizontalAlignment="Center">
+                            <Button Name="grayNO1" Margin="5" Width="115">Sposób 1</Button>
+                            <Button Name="grayNO2" Margin="5" Width="115">Sposób 2</Button>
+                        </DockPanel>
+                        
+                        <Button x:Name="getBackToOriginal" Width="220" Margin="5" Click="getBackToOriginal_Click">Powrót do oryginalnego obrazu</Button>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
         </TabControl>
-        <Grid.BindingGroup>
-            <BindingGroup Name="grupa">
-
-            </BindingGroup>
-        </Grid.BindingGroup>
     </Grid>
-
 </Window>

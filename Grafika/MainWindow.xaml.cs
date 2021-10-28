@@ -1074,12 +1074,68 @@ namespace Grafika
             myAngleRotation6.Axis = new Vector3D(x, y, value);
         }
 
+
+
+
+
         #endregion
 
-        #region PS4
+        private Bitmap originBitmap;
+        private void uploadFIlePS4_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg";
 
-        #endregion
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    zoomScale = 1;
+                    ScaleTransform scale = new ScaleTransform(zoomScale, zoomScale);
+                    Image.LayoutTransform = scale;
+                    string extension = Path.GetExtension(openFileDialog.FileName);
 
+                    Bitmap bitmap = new Bitmap(openFileDialog.FileName);
+                    originBitmap = bitmap;
+                    BitmapImage bitmapImage = FromBitmapToBitmapImage(bitmap);
+                    ps4Image.Source = bitmapImage;
+                    
+                }
+                catch
+                {
+                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                }
+            }
+        }
 
+        private void filtrWygladz_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void filtrMediana_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void filtrWykrywKraw_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void filtrGornPrzepustWyostrz_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void filtrGaussa_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void getBackToOriginal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
