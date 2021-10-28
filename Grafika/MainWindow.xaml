@@ -163,7 +163,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="320"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="130"/>
+                        <RowDefinition Height="140"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -174,20 +174,19 @@
                     <Border Background="Azure" Margin="5,5,5.4,5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"/>
                     <Border Background="Azure" Margin="5,5,5.4,5.4" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="2" Grid.Column="2">
-                        <Slider x:Name="angleSlider"  VerticalAlignment="Center" Margin="5" Minimum="0" Maximum="720" TickFrequency="0.01" 
+                        <Slider x:Name="angleSlider"  VerticalAlignment="Center" Margin="8" Minimum="0" Maximum="720" TickFrequency="0.01" Background="White" BorderBrush="Black" BorderThickness="1"
                             ValueChanged="angleSlider_ValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Angle}" IsMoveToPointEnabled="True">
                         </Slider>
-                        <Slider Name="axisSliderx" VerticalAlignment="Center" Margin="5" Minimum="-1" Maximum="1" TickFrequency="1"
+                        <Slider Name="axisSliderx" VerticalAlignment="Center" Margin="8" Minimum="-1" Maximum="1" TickFrequency="1" Background="White" BorderBrush="Black" BorderThickness="1"
                                 IsMoveToPointEnabled="True" ValueChanged="axisSliderx_ValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Axis.X}">
                         </Slider>
-                        <Slider Name="axisSlidery" VerticalAlignment="Center" Margin="5" Minimum="-1" Maximum="1" TickFrequency="1"
+                        <Slider Name="axisSlidery" VerticalAlignment="Center" Margin="8" Minimum="-1" Maximum="1" TickFrequency="1" Background="White" BorderBrush="Black" BorderThickness="1"
                                 IsMoveToPointEnabled="True" ValueChanged="axisSlidery_ValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Axis.Y}">
                         </Slider>
-                        <Slider Name="axisSliderz" VerticalAlignment="Center" Margin="5" Minimum="-1" Maximum="1" TickFrequency="1"
+                        <Slider Name="axisSliderz" VerticalAlignment="Center" Margin="8" Minimum="-1" Maximum="1" TickFrequency="1" Background="White" BorderBrush="Black" BorderThickness="1"
                                 IsMoveToPointEnabled="True" ValueChanged="axisSliderz_ValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Axis.Z}">
                         </Slider>
                     </StackPanel>
-
                     <Viewport3D Name="cubeRGB" Grid.Column="2" Grid.RowSpan="2" Grid.Row="0" Margin="4.6,5,5,5.4">
                         <Viewport3D.Camera>
                             <PerspectiveCamera x:Name="mainCamera" Position="3,3,2" LookDirection="-3,-3,-2" >
