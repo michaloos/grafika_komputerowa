@@ -420,11 +420,11 @@
                             </DockPanel>
                             <DockPanel HorizontalAlignment="Right">
                                 <Label VerticalContentAlignment="Center">R:</Label>
-                                <TextBox Name="dodawanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="dodawanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dodawanieR_PreviewTextInput"></TextBox>
                                 <Label VerticalContentAlignment="Center">G:</Label>
-                                <TextBox Name="dodawanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="dodawanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dodawanieG_PreviewTextInput"></TextBox>
                                 <Label VerticalContentAlignment="Center">B:</Label>
-                                <TextBox Name="dodawanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="dodawanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dodawanieB_PreviewTextInput"></TextBox>
                                 <Button Name="okDodawanie" Width="40" Height="27" Click="okDodawanie_Click">OK</Button>
                             </DockPanel>
                         </DockPanel>
@@ -434,11 +434,11 @@
                             </DockPanel>
                             <DockPanel HorizontalAlignment="Right">
                                 <Label VerticalContentAlignment="Center">R:</Label>
-                                <TextBox Name="odejmowanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="odejmowanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="odejmowanieR_PreviewTextInput"></TextBox>
                                 <Label VerticalContentAlignment="Center">G:</Label>
-                                <TextBox Name="odejmowanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="odejmowanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="odejmowanieG_PreviewTextInput"></TextBox>
                                 <Label VerticalContentAlignment="Center">B:</Label>
-                                <TextBox Name="odejmowanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="odejmowanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="odejmowanieB_PreviewTextInput"></TextBox>
                                 <Button Name="okOdejmowanie" Width="40" Height="27" Click="okOdejmowanie_Click">OK</Button>
                             </DockPanel>
                         </DockPanel>
@@ -448,11 +448,11 @@
                             </DockPanel>
                             <DockPanel HorizontalAlignment="Right">
                                 <Label VerticalContentAlignment="Center">R:</Label>
-                                <TextBox Name="mnozenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="mnozenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="mnozenieR_PreviewTextInput"></TextBox>
                                 <Label VerticalContentAlignment="Center">G:</Label>
-                                <TextBox Name="mnozenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="mnozenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="mnozenieG_PreviewTextInput"></TextBox>
                                 <Label VerticalContentAlignment="Center">B:</Label>
-                                <TextBox Name="mnozenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="mnozenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="mnozenieB_PreviewTextInput"></TextBox>
                                 <Button Name="okMnozenie" Width="40" Height="27" Click="okMnozenie_Click">OK</Button>
                             </DockPanel>
                         </DockPanel>
@@ -462,11 +462,11 @@
                             </DockPanel>
                             <DockPanel HorizontalAlignment="Right">
                                 <Label VerticalContentAlignment="Center">R:</Label>
-                                <TextBox Name="dzielenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="dzielenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dzielenieR_PreviewTextInput"></TextBox>
                                 <Label VerticalContentAlignment="Center">G:</Label>
-                                <TextBox Name="dzielenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="dzielenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dzielenieG_PreviewTextInput"></TextBox>
                                 <Label VerticalContentAlignment="Center">B:</Label>
-                                <TextBox Name="dzielenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
+                                <TextBox Name="dzielenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dzielenieB_PreviewTextInput"></TextBox>
                                 <Button Name="okDzielenie" Width="40" Height="27" Click="okDzielenie_Click">OK</Button>
                             </DockPanel>
                         </DockPanel>

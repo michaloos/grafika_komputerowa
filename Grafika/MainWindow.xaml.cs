@@ -1141,7 +1141,83 @@ namespace Grafika
 
         private void okDodawanie_Click(object sender, RoutedEventArgs e)
         {
+            if (ps4Image.Source == null)
+            {
+                return;
+            }
 
+            Bitmap tempBM = ImageSourceToBitmap(ps4Image.Source);
+
+            var ifR = Double.TryParse(dodawanieR.Text, out double addR);
+            var ifG = Double.TryParse(dodawanieG.Text, out double addG);
+            var ifB = Double.TryParse(dodawanieB.Text, out double addB);
+
+            if (ifR)
+            {
+                for(int i = 0; i < tempBM.Width; i++)
+                {
+                    for(int j = 0; j < tempBM.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        if(color.R != 255)
+                        {
+                            if (color.R + addR > 255)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(255, color.G, color.B));
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb((int)(color.R + addR), color.G, color.B));
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (ifG)
+            {
+                for (int i = 0; i < tempBM.Width; i++)
+                {
+                    for (int j = 0; j < tempBM.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        if(color.G != 255)
+                        {
+                            if (color.G + addG > 255)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, 255, color.B));
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, (int)(color.G + addG), color.B));
+                            }
+                        }                    
+                    }
+                }
+            }
+            if (ifB)
+            {
+                for (int i = 0; i < tempBM.Width; i++)
+                {
+                    for (int j = 0; j < tempBM.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        if(color.B != 255)
+                        {
+                            if (color.B + addB > 255)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, 255));
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, (int)(color.B + addB)));
+                            }
+                        }                    
+                    }
+                }
+            }
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
+            ps4Image.Source = bitmapImage;
         }
 
         private void okOdejmowanie_Click(object sender, RoutedEventArgs e)
@@ -1297,6 +1373,78 @@ namespace Grafika
             memory.Position = 0;
             Bitmap bitmap = new Bitmap(memory);
             return bitmap;
+        }
+
+        private void dodawanieR_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void dodawanieG_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void dodawanieB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void odejmowanieR_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void odejmowanieG_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void odejmowanieB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void mnozenieR_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void mnozenieG_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void mnozenieB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void dzielenieR_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void dzielenieG_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void dzielenieB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }
