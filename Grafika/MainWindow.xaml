@@ -425,7 +425,7 @@
                                 <TextBox Name="dodawanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
                                 <Label VerticalContentAlignment="Center">B:</Label>
                                 <TextBox Name="dodawanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
-                                <Button Name="okDodawanie" Width="40" Height="27">OK</Button>
+                                <Button Name="okDodawanie" Width="40" Height="27" Click="okDodawanie_Click">OK</Button>
                             </DockPanel>
                         </DockPanel>
                         <DockPanel Margin="5">
@@ -439,7 +439,7 @@
                                 <TextBox Name="odejmowanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
                                 <Label VerticalContentAlignment="Center">B:</Label>
                                 <TextBox Name="odejmowanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
-                                <Button Name="okOdejmowanie" Width="40" Height="27">OK</Button>
+                                <Button Name="okOdejmowanie" Width="40" Height="27" Click="okOdejmowanie_Click">OK</Button>
                             </DockPanel>
                         </DockPanel>
                         <DockPanel Margin="5">
@@ -453,7 +453,7 @@
                                 <TextBox Name="mnozenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
                                 <Label VerticalContentAlignment="Center">B:</Label>
                                 <TextBox Name="mnozenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
-                                <Button Name="okMnozenie" Width="40" Height="27">OK</Button>
+                                <Button Name="okMnozenie" Width="40" Height="27" Click="okMnozenie_Click">OK</Button>
                             </DockPanel>
                         </DockPanel>
                         <DockPanel Margin="5">
@@ -467,19 +467,22 @@
                                 <TextBox Name="dzielenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
                                 <Label VerticalContentAlignment="Center">B:</Label>
                                 <TextBox Name="dzielenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5"></TextBox>
-                                <Button Name="okDzielenie" Width="40" Height="27">OK</Button>
+                                <Button Name="okDzielenie" Width="40" Height="27" Click="okDzielenie_Click">OK</Button>
                             </DockPanel>
                         </DockPanel>
 
                         <Label>Zmiana jasności:</Label>
-                        <Slider Name="brightnessSlider" Width="300" Minimum="0" Maximum="100" Margin="5">
-                            
+                        <Slider Name="brightnessSlider" Width="300" Minimum="0" Maximum="30" Margin="5" Value="0" TickFrequency="1"
+                                ValueChanged="brightnessSlider_ValueChanged">
+                        </Slider>
+                        <Slider Name="lessBrightnessSlider" Width="300" Maximum="0" Minimum="-30" Margin="5" Value="0" TickFrequency="1"
+                                ValueChanged="lessBrightnessSlider_ValueChanged">
                         </Slider>
 
                         <Label Margin="5">Przejście do skali szarości:</Label>
                         <DockPanel HorizontalAlignment="Center">
-                            <Button Name="grayNO1" Margin="5" Width="115">Sposób 1</Button>
-                            <Button Name="grayNO2" Margin="5" Width="115">Sposób 2</Button>
+                            <Button Name="grayNO1" Margin="5" Width="115" Click="grayNO1_Click">Sposób 1</Button>
+                            <Button Name="grayNO2" Margin="5" Width="115" Click="grayNO2_Click">Sposób 2</Button>
                         </DockPanel>
                         
                         <Button x:Name="getBackToOriginal" Width="220" Margin="5" Click="getBackToOriginal_Click">Powrót do oryginalnego obrazu</Button>

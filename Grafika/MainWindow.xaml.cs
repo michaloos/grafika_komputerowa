@@ -1135,7 +1135,134 @@ namespace Grafika
 
         private void getBackToOriginal_Click(object sender, RoutedEventArgs e)
         {
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(originBitmap);
+            ps4Image.Source = bitmapImage;
+        }
 
+        private void okDodawanie_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void okOdejmowanie_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void okMnozenie_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void okDzielenie_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void grayNO1_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void grayNO2_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void brightnessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if(ps4Image.Source == null)
+            {
+                return;
+            }
+
+            int brightness = (int)brightnessSlider.Value;
+            Bitmap tempBM = ImageSourceToBitmap(ps4Image.Source);
+
+            System.Drawing.Color color;
+
+            for(int i = 0; i < tempBM.Width; i++)
+            {
+                for(int j = 0; j < tempBM.Height; j++)
+                {
+                    color = tempBM.GetPixel(i, j);
+                    int newRed = color.R + brightness;
+                    int newGreen = color.G + brightness;
+                    int newBlue = color.B + brightness;
+
+                    if(newRed > 255)
+                    {
+                        newRed = 255;
+                    }
+                    
+                    if (newGreen > 255)
+                    {
+                        newGreen = 255;
+                    }
+                    
+                    if (newBlue > 255)
+                    {
+                        newBlue = 255;
+                    }
+
+                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newRed,newGreen,newBlue));
+                }
+            }
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
+            ps4Image.Source = bitmapImage;
+        }
+
+        private void lessBrightnessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (ps4Image.Source == null)
+            {
+                return;
+            }
+
+            int brightness = (int)lessBrightnessSlider.Value;
+            Bitmap tempBM = ImageSourceToBitmap(ps4Image.Source);
+
+            System.Drawing.Color color;
+
+            for (int i = 0; i < tempBM.Width; i++)
+            {
+                for (int j = 0; j < tempBM.Height; j++)
+                {
+                    color = tempBM.GetPixel(i, j);
+                    int newRed = color.R + brightness;
+                    int newGreen = color.G + brightness;
+                    int newBlue = color.B + brightness;
+
+                    if (newRed < 0)
+                    {
+                        newRed = 1;
+                    }
+
+                    if (newGreen < 0)
+                    {
+                        newGreen = 1;
+                    }
+
+                    if (newBlue < 0)
+                    {
+                        newBlue = 1;
+                    }
+                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newRed, newGreen, newBlue));
+                }
+            }
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
+            ps4Image.Source = bitmapImage;
+        }
+
+        private Bitmap ImageSourceToBitmap(ImageSource image)
+        {
+            MemoryStream memory = new MemoryStream();
+            BmpBitmapEncoder mem = new BmpBitmapEncoder();
+            mem.Frames.Add(BitmapFrame.Create(BitmapFrame.Create((BitmapSource)image)));
+            mem.Save(memory);
+            memory.Position = 0;
+            Bitmap bitmap = new Bitmap(memory);
+            return bitmap;
         }
     }
 }
