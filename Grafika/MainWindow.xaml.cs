@@ -1161,7 +1161,24 @@ namespace Grafika
 
         private void grayNO1_Click(object sender, RoutedEventArgs e)
         {
+            if (ps4Image.Source == null)
+            {
+                return;
+            }
 
+            Bitmap tempBM = ImageSourceToBitmap(ps4Image.Source);
+
+            for(int i = 0; i < tempBM.Width; i++)
+            {
+                for(int j = 0; j < tempBM.Height; j++)
+                {
+                    System.Drawing.Color color = tempBM.GetPixel(i, j);
+                    byte grayColor = (byte)(0.21 * color.R + 0.71 * color.G + 0.071 * color.B);
+                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(grayColor, grayColor, grayColor));
+                }
+            }
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
+            ps4Image.Source = bitmapImage;
         }
 
         private void grayNO2_Click(object sender, RoutedEventArgs e)
