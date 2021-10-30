@@ -1183,7 +1183,24 @@ namespace Grafika
 
         private void grayNO2_Click(object sender, RoutedEventArgs e)
         {
+            if (ps4Image.Source == null)
+            {
+                return;
+            }
 
+            Bitmap tempBM = ImageSourceToBitmap(ps4Image.Source);
+
+            for(int i = 0; i < tempBM.Width; i++)
+            {
+                for(int j=0; j< tempBM.Height; j++)
+                {
+                    System.Drawing.Color color = tempBM.GetPixel(i, j);
+                    int grayColor = (color.R + color.G + color.B) / 3;
+                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(grayColor, grayColor, grayColor));
+                }
+            }
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
+            ps4Image.Source = bitmapImage;
         }
 
         private void brightnessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
