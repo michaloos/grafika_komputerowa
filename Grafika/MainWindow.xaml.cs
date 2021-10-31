@@ -1222,7 +1222,83 @@ namespace Grafika
 
         private void okOdejmowanie_Click(object sender, RoutedEventArgs e)
         {
+            if (ps4Image.Source == null)
+            {
+                return;
+            }
 
+            Bitmap tempBM = ImageSourceToBitmap(ps4Image.Source);
+
+            var ifR = Double.TryParse(odejmowanieR.Text, out double substractR);
+            var ifG = Double.TryParse(odejmowanieG.Text, out double substractG);
+            var ifB = Double.TryParse(odejmowanieB.Text, out double substractB);
+
+            if (ifR)
+            {
+                for (int i = 0; i < tempBM.Width; i++)
+                {
+                    for (int j = 0; j < tempBM.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        if (color.R != 0)
+                        {
+                            if (color.R - substractR < 0)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(0, color.G, color.B));
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb((int)(color.R - substractR), color.G, color.B));
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (ifG)
+            {
+                for (int i = 0; i < tempBM.Width; i++)
+                {
+                    for (int j = 0; j < tempBM.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        if (color.G != 0)
+                        {
+                            if (color.G - substractG < 0)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, 0, color.B));
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, (int)(color.G - substractG), color.B));
+                            }
+                        }
+                    }
+                }
+            }
+            if (ifB)
+            {
+                for (int i = 0; i < tempBM.Width; i++)
+                {
+                    for (int j = 0; j < tempBM.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        if (color.B != 0)
+                        {
+                            if (color.B - substractB < 0)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, 0));
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, (int)(color.B - substractB)));
+                            }
+                        }
+                    }
+                }
+            }
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
+            ps4Image.Source = bitmapImage;
         }
 
         private void okMnozenie_Click(object sender, RoutedEventArgs e)
