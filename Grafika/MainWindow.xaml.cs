@@ -22,6 +22,7 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Media3D;
 using System.Windows.Interop;
+using System.Threading.Tasks;
 
 namespace Grafika
 {
@@ -1119,47 +1120,63 @@ namespace Grafika
             {
                 return;
             }
-
-
-            Bitmap tempBM = ImageSourceToBitmap(ps4Image.Source);
-
-            for(int i =1;i<tempBM.Width - 1; i++)
+            indicator.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps4Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            var task = Task.Run(() => 
             {
-                for(int j=1;j<tempBM.Height - 1; j++)
+                for (int i = 1; i < tempBM.Width - 1; i++)
                 {
-                    int[] arrayRed = new int[9];
-                    int[] arrayGreen = new int[9];
-                    int[] arrayBlue = new int[9];
-                    System.Drawing.Color[] colors = new System.Drawing.Color[9];
-                    colors[0] = tempBM.GetPixel(i, j);
-                    colors[1] = tempBM.GetPixel(i - 1, j - 1);
-                    colors[2] = tempBM.GetPixel(i - 1, j);
-                    colors[3] = tempBM.GetPixel(i - 1, j + 1);
-                    colors[4] = tempBM.GetPixel(i, j - 1);
-                    colors[5] = tempBM.GetPixel(i, j + 1);
-                    colors[6] = tempBM.GetPixel(i + 1, j - 1);
-                    colors[7] = tempBM.GetPixel(i + 1, j);
-                    colors[8] = tempBM.GetPixel(i + 1, j + 1);
-                    for (int k = 0; k < 9; k++)
+                    for (int j = 1; j < tempBM.Height - 1; j++)
                     {
-                        arrayRed[k] = colors[k].R;
-                        arrayGreen[k] = colors[k].G;
-                        arrayBlue[k] = colors[k].B;
+
+                        int[] arrayRed = new int[9];
+                        int[] arrayGreen = new int[9];
+                        int[] arrayBlue = new int[9];
+                        System.Drawing.Color[] colors = new System.Drawing.Color[9];
+                        colors[0] = tempBM.GetPixel(i, j);
+                        colors[1] = tempBM.GetPixel(i - 1, j - 1);
+                        colors[2] = tempBM.GetPixel(i - 1, j);
+                        colors[3] = tempBM.GetPixel(i - 1, j + 1);
+                        colors[4] = tempBM.GetPixel(i, j - 1);
+                        colors[5] = tempBM.GetPixel(i, j + 1);
+                        colors[6] = tempBM.GetPixel(i + 1, j - 1);
+                        colors[7] = tempBM.GetPixel(i + 1, j);
+                        colors[8] = tempBM.GetPixel(i + 1, j + 1);
+                        for (int k = 0; k < 9; k++)
+                        {
+                            arrayRed[k] = colors[k].R;
+                            arrayGreen[k] = colors[k].G;
+                            arrayBlue[k] = colors[k].B;
+                        }
+                        Array.Sort(arrayRed);
+                        Array.Sort(arrayGreen);
+                        Array.Sort(arrayBlue);
+
+                        int medianaR = arrayRed[4];
+                        int medianaG = arrayGreen[4];
+                        int medianaB = arrayBlue[4];
+
+                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(medianaR, medianaG, medianaB));
                     }
-                    Array.Sort(arrayRed);
-                    Array.Sort(arrayGreen);
-                    Array.Sort(arrayBlue);
-
-                    int medianaR = arrayRed[4];
-                    int medianaG = arrayGreen[4];
-                    int medianaB = arrayBlue[4];
-
-                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(medianaR, medianaG, medianaB));
-                }
-            }
+                } 
+            });
             
-            BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
-            ps4Image.Source = bitmapImage;
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicator.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps4Image.Source = newBitmap;
+                    }              
+                }));
+                
+            });
+            
         }
 
         private void filtrWykrywKraw_Click(object sender, RoutedEventArgs e)
