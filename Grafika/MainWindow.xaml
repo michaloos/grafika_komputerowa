@@ -395,8 +395,8 @@
             <TabItem Header="PS4" Width="100">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="810"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="360"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         
@@ -486,6 +486,10 @@
                         </DockPanel>
                         
                         <Button x:Name="getBackToOriginal" Width="220" Margin="5" Click="getBackToOriginal_Click">Powrót do oryginalnego obrazu</Button>
+                        <Label  Margin="5">Zoom:</Label>
+                        <Slider Name="zoomSlider" Margin="5" TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" ValueChanged="zoomSlider_ValueChanged">
+                            
+                        </Slider>
                     </StackPanel>
                 </Grid>
             </TabItem>
