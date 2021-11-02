@@ -1154,14 +1154,14 @@ namespace Grafika
 
             if (ifR)
             {
-                for(int i = 0; i < tempBM.Width; i++)
+                for (int i = 0; i < tempBM.Width; i++)
                 {
-                    for(int j = 0; j < tempBM.Height; j++)
+                    for (int j = 0; j < tempBM.Height; j++)
                     {
                         System.Drawing.Color color = tempBM.GetPixel(i, j);
-                        if(color.R != 255)
+                        if (color.R != 255)
                         {
-                            if (color.R + addR > 255)
+                            if (color.R + addR >= 255)
                             {
                                 tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(255, color.G, color.B));
                             }
@@ -1181,9 +1181,9 @@ namespace Grafika
                     for (int j = 0; j < tempBM.Height; j++)
                     {
                         System.Drawing.Color color = tempBM.GetPixel(i, j);
-                        if(color.G != 255)
+                        if (color.G != 255)
                         {
-                            if (color.G + addG > 255)
+                            if (color.G + addG >= 255)
                             {
                                 tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, 255, color.B));
                             }
@@ -1202,9 +1202,9 @@ namespace Grafika
                     for (int j = 0; j < tempBM.Height; j++)
                     {
                         System.Drawing.Color color = tempBM.GetPixel(i, j);
-                        if(color.B != 255)
+                        if (color.B != 255)
                         {
-                            if (color.B + addB > 255)
+                            if (color.B + addB >= 255)
                             {
                                 tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, 255));
                             }
@@ -1242,7 +1242,7 @@ namespace Grafika
                         System.Drawing.Color color = tempBM.GetPixel(i, j);
                         if (color.R != 0)
                         {
-                            if (color.R - substractR < 0)
+                            if (color.R - substractR <= 0)
                             {
                                 tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(0, color.G, color.B));
                             }
@@ -1264,7 +1264,7 @@ namespace Grafika
                         System.Drawing.Color color = tempBM.GetPixel(i, j);
                         if (color.G != 0)
                         {
-                            if (color.G - substractG < 0)
+                            if (color.G - substractG <= 0)
                             {
                                 tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, 0, color.B));
                             }
@@ -1285,7 +1285,7 @@ namespace Grafika
                         System.Drawing.Color color = tempBM.GetPixel(i, j);
                         if (color.B != 0)
                         {
-                            if (color.B - substractB < 0)
+                            if (color.B - substractB <= 0)
                             {
                                 tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, 0));
                             }
@@ -1303,7 +1303,95 @@ namespace Grafika
 
         private void okMnozenie_Click(object sender, RoutedEventArgs e)
         {
+            if (ps4Image.Source == null)
+            {
+                return;
+            }
 
+            Bitmap tempBM = ImageSourceToBitmap(ps4Image.Source);
+
+            var ifR = Double.TryParse(mnozenieR.Text, out double multiR);
+            var ifG = Double.TryParse(mnozenieG.Text, out double multiG);
+            var ifB = Double.TryParse(mnozenieB.Text, out double multiB);
+
+            if (ifR)
+            {
+                for (int i = 0; i < tempBM.Width; i++)
+                {
+                    for (int j = 0; j < tempBM.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        if (color.R != 0)
+                        {
+                            if (color.R * multiR <= 0)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(0, color.G, color.B));
+                            }
+                            else if (color.R * multiR >= 255)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(255, color.G, color.B));
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb((int)(color.R * multiR), color.G, color.B));
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (ifG)
+            {
+                for (int i = 0; i < tempBM.Width; i++)
+                {
+                    for (int j = 0; j < tempBM.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        if (color.G != 0)
+                        {
+                            if (color.G * multiG <= 0)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, 0, color.B));
+                            }
+                            else if (color.G * multiG >= 255)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, 255, color.B));
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, (int)(color.G * multiG), color.B));
+                            }
+                        }
+                    }
+                }
+            }
+            if (ifB)
+            {
+                for (int i = 0; i < tempBM.Width; i++)
+                {
+                    for (int j = 0; j < tempBM.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        if (color.B != 0)
+                        {
+                            if (color.B * multiB <= 0)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, 0));
+                            }
+                            else if (color.B * multiB >= 255)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, 255));
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, (int)(color.B * multiB)));
+                            }
+                        }
+                    }
+                }
+            }
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
+            ps4Image.Source = bitmapImage;
         }
 
         private void okDzielenie_Click(object sender, RoutedEventArgs e)
