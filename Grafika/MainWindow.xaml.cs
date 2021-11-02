@@ -1111,7 +1111,63 @@ namespace Grafika
 
         private void filtrWygladz_Click(object sender, RoutedEventArgs e)
         {
+            if (ps4Image.Source == null)
+            {
+                return;
+            }
+            indicator.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps4Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            var task = Task.Run(() =>
+            {
+                for (int i = 1; i < tempBM.Width - 1; i++)
+                {
+                    for (int j = 1; j < tempBM.Height - 1; j++)
+                    {
 
+                        int redValue = 0;
+                        int greenValue = 0;
+                        int blueValue = 0;
+                        System.Drawing.Color[] colors = new System.Drawing.Color[9];
+                        colors[0] = tempBM.GetPixel(i, j);
+                        colors[1] = tempBM.GetPixel(i - 1, j - 1);
+                        colors[2] = tempBM.GetPixel(i - 1, j);
+                        colors[3] = tempBM.GetPixel(i - 1, j + 1);
+                        colors[4] = tempBM.GetPixel(i, j - 1);
+                        colors[5] = tempBM.GetPixel(i, j + 1);
+                        colors[6] = tempBM.GetPixel(i + 1, j - 1);
+                        colors[7] = tempBM.GetPixel(i + 1, j);
+                        colors[8] = tempBM.GetPixel(i + 1, j + 1);
+                        for (int k = 0; k < 9; k++)
+                        {
+                            redValue += colors[k].R;
+                            greenValue += colors[k].G;
+                            blueValue += colors[k].B;
+                        }
+
+                        int averageR = redValue / 9;
+                        int averageG = greenValue / 9;
+                        int averageB = blueValue / 9;
+
+                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(averageR, averageG, averageB));
+                    }
+                }
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicator.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps4Image.Source = newBitmap;
+                    }
+                }));
+
+            });
         }
 
         private void filtrMediana_Click(object sender, RoutedEventArgs e)
