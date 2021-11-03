@@ -1237,6 +1237,26 @@ namespace Grafika
 
         private void filtrWykrywKraw_Click(object sender, RoutedEventArgs e)
         {
+            if (ps4Image.Source == null)
+            {
+                return;
+            }
+
+            int[,] maskx = new int[,] 
+            {
+                {-1,0,1 },
+                {-2,0,2 },
+                {-1,0,1 }
+            };
+            int[,] masky = new int[,]
+            {
+                {1,2,1 },
+                {0,0,0 },
+                {-1,-2,-1 }
+            };
+
+            indicator.IsBusy = true;
+
 
         }
 
@@ -1247,7 +1267,72 @@ namespace Grafika
 
         private void filtrGaussa_Click(object sender, RoutedEventArgs e)
         {
+            if (ps4Image.Source == null)
+            {
+                return;
+            }
 
+            int[,] mask = new int[,]
+            {
+                {1,2,1 }, // i-1,j-1 | i-1,j | i-1,j+1
+                {2,4,2 }, // i,j-1   | i,j   | i,j+1
+                {1,2,1 }  // i+1,j-1 | i+1,j | i+1,j+1
+            };
+            indicator.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps4Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            var task = Task.Run(() =>
+            {
+                for (int i = 1; i < tempBM.Width - 1; i++)
+                {
+                    for (int j = 1; j < tempBM.Height - 1; j++)
+                    {
+
+                        int newRed = 0;
+                        int newGreen = 0;
+                        int newBlue = 0;
+                        System.Drawing.Color[] colors = new System.Drawing.Color[9];
+                        colors[0] = tempBM.GetPixel(i, j); // 4
+                        colors[1] = tempBM.GetPixel(i - 1, j - 1); // 1
+                        colors[2] = tempBM.GetPixel(i - 1, j); // 2
+                        colors[3] = tempBM.GetPixel(i - 1, j + 1); // 1
+                        colors[4] = tempBM.GetPixel(i, j - 1); // 2
+                        colors[5] = tempBM.GetPixel(i, j + 1); // 2
+                        colors[6] = tempBM.GetPixel(i + 1, j - 1); // 1
+                        colors[7] = tempBM.GetPixel(i + 1, j); // 2
+                        colors[8] = tempBM.GetPixel(i + 1, j + 1); // 1
+                        //for (int k = 0; k < colors.Length; k++)
+                        //{
+                            newRed = (colors[0].R * mask[1, 1] + colors[1].R * mask[0, 0] + colors[2].R * mask[0, 1]
+                                    + colors[3].R * mask[0, 2] + colors[4].R * mask[1, 0] + colors[5].R * mask[1, 2]
+                                    + colors[6].R * mask[2, 0] + colors[7].R * mask[2, 1] + colors[8].R * mask[2, 2]) / 16;
+                            newGreen = (colors[0].G * mask[1, 1] + colors[1].G * mask[0, 0] + colors[2].G * mask[0, 1]
+                                    + colors[3].G * mask[0, 2] + colors[4].G * mask[1, 0] + colors[5].G * mask[1, 2]
+                                    + colors[6].G * mask[2, 0] + colors[7].G * mask[2, 1] + colors[8].G * mask[2, 2]) / 16;
+                            newBlue = (colors[0].B * mask[1, 1] + colors[1].B * mask[0, 0] + colors[2].B * mask[0, 1]
+                                    + colors[3].B * mask[0, 2] + colors[4].B * mask[1, 0] + colors[5].B * mask[1, 2]
+                                    + colors[6].B * mask[2, 0] + colors[7].B * mask[2, 1] + colors[8].B * mask[2, 2]) / 16;
+                        //}
+
+                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newRed,newGreen,newBlue));
+                    }
+                }
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicator.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps4Image.Source = newBitmap;
+                    }
+                }));
+
+            });
         }
 
         private void getBackToOriginal_Click(object sender, RoutedEventArgs e)
