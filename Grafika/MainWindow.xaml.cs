@@ -1237,12 +1237,20 @@ namespace Grafika
 
         private void filtrWykrywKraw_Click(object sender, RoutedEventArgs e)
         {
+<<<<<<< HEAD
+            if (ps4Image.Source == null && grayScale == false)
+=======
             if (ps4Image.Source == null)
+>>>>>>> master
             {
                 return;
             }
 
+<<<<<<< HEAD
+            int[,] maskx = new int[,]
+=======
             int[,] maskx = new int[,] 
+>>>>>>> master
             {
                 {-1,0,1 },
                 {-2,0,2 },
@@ -1256,8 +1264,87 @@ namespace Grafika
             };
 
             indicator.IsBusy = true;
+<<<<<<< HEAD
+            Bitmap bitmap = ImageSourceToBitmap(ps4Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
 
+            var task = Task.Run(() =>
+            {
+                for (int i = 1; i < tempBM.Width - 1; i++)
+                {
+                    for (int j = 1; j < tempBM.Height - 1; j++)
+                    {
 
+                        int newRedX = 0, newRedY = 0;
+                        int newGreenX = 0, newGreenY = 0;
+                        int newBlueX = 0, newBlueY = 0;
+                        System.Drawing.Color[] colors = new System.Drawing.Color[9];
+                        
+                        colors[0] = tempBM.GetPixel(i - 1, j - 1); 
+                        colors[1] = tempBM.GetPixel(i - 1, j);
+                        colors[2] = tempBM.GetPixel(i - 1, j + 1); 
+                        colors[3] = tempBM.GetPixel(i, j - 1);
+                        colors[4] = tempBM.GetPixel(i, j);
+                        colors[5] = tempBM.GetPixel(i, j + 1); 
+                        colors[6] = tempBM.GetPixel(i + 1, j - 1); 
+                        colors[7] = tempBM.GetPixel(i + 1, j);
+                        colors[8] = tempBM.GetPixel(i + 1, j + 1);
+
+                        int v = 0;
+                        for(int k = 0; k < 3; k++)
+                        {
+                            for(int l = 0; l < 3; l++)
+                            {
+                                newRedX += maskx[k, l] * colors[v].R;
+                                newGreenX += maskx[k, l] * colors[v].G;
+                                newBlueX += maskx[k, l] * colors[v].B;
+
+                                newRedY += masky[k, l] * colors[v].R;
+                                newGreenY += masky[k, l] * colors[v].G;
+                                newBlueY += masky[k, l] * colors[v].B;
+
+                                v++;
+                            }
+                        }
+
+                        int newRed = 0;
+                        int newGreen = 0;
+                        int newBlue = 0;
+
+                        newRed = (int)Math.Sqrt((newRedX * newRedX) + (newRedY * newRedY));
+                        newGreen = (int)Math.Sqrt((newGreenX * newGreenX) + (newGreenY * newGreenY));
+                        newBlue = (int)Math.Sqrt((newBlueX * newBlueX) + (newBlueY * newBlueY));
+=======
+
+>>>>>>> master
+
+                        newRed = newRed > 255 ? 255 : newRed;
+                        newGreen = newGreen > 255 ? 255 : newGreen;
+                        newBlue = newBlue > 255 ? 255 : newBlue;
+
+                        newRed = newRed < 0 ? 0 : newRed;
+                        newGreen = newGreen < 0 ? 0 : newGreen;
+                        newBlue = newBlue < 0 ? 0 : newBlue;
+
+                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newRed, newGreen, newBlue));
+                    }
+                }
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicator.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps4Image.Source = newBitmap;
+                    }
+                }));
+
+            });
         }
 
         private void filtrGornPrzepustWyostrz_Click(object sender, RoutedEventArgs e)
@@ -1339,6 +1426,7 @@ namespace Grafika
         {
             BitmapImage bitmapImage = FromBitmapToBitmapImage(originBitmap);
             ps4Image.Source = bitmapImage;
+            grayScale = false;
         }
 
         private void okDodawanie_Click(object sender, RoutedEventArgs e)
@@ -1671,6 +1759,8 @@ namespace Grafika
             ps4Image.Source = bitmapImage;
         }
 
+        private bool grayScale = false;
+
         private void grayNO1_Click(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
@@ -1691,6 +1781,7 @@ namespace Grafika
             }
             BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
             ps4Image.Source = bitmapImage;
+            grayScale = true;
         }
 
         private void grayNO2_Click(object sender, RoutedEventArgs e)
@@ -1713,6 +1804,7 @@ namespace Grafika
             }
             BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
             ps4Image.Source = bitmapImage;
+            grayScale = true;
         }
 
         private void brightnessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
