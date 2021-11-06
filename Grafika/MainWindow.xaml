@@ -523,6 +523,7 @@
                             <Slider Name="zoomSliderPS5" Margin="5" TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" ValueChanged="zoomSliderPS5_ValueChanged">
 
                             </Slider>
+                            <Button Name="histogramShow" Margin="5" Click="histogramShow_Click">Histogram</Button>
                         </StackPanel>
                     </Grid>
                 </wpfx:BusyIndicator>

@@ -1916,7 +1916,7 @@ namespace Grafika
             ps4Image.Source = bitmapImage;
         }
 
-        private Bitmap ImageSourceToBitmap(ImageSource image)
+        public Bitmap ImageSourceToBitmap(ImageSource image)
         {
             MemoryStream memory = new MemoryStream();
             BmpBitmapEncoder mem = new BmpBitmapEncoder();
@@ -2146,6 +2146,12 @@ namespace Grafika
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void histogramShow_Click(object sender, RoutedEventArgs e)
+        {
+            HistogramImage histogram = new HistogramImage(this);
+            histogram.Show();
         }
     }
     

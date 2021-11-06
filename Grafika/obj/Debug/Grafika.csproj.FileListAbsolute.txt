@@ -31,3 +31,11 @@ C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\ru\Xceed.Wpf.AvalonDock.res
 C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
 C:\Users\User\source\repos\Grafika\Grafika\obj\Debug\Grafika.csproj.CopyComplete
+C:\Users\User\source\repos\Grafika\Grafika\obj\Debug\HistogramImage.g.cs
+C:\Users\User\source\repos\Grafika\Grafika\obj\Debug\HistogramImage.baml
+C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.dll
+C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.Wpf.dll
+C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.pdb
+C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.xml
+C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.Wpf.pdb
+C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.Wpf.xml

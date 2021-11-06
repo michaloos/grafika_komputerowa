@@ -1,0 +1,32 @@
+﻿<Window x:Class="Grafika.HistogramImage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Grafika"
+        xmlns:charts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        mc:Ignorable="d"
+        Title="HistogramImage" Height="700" Width="1500">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <Border Background="White" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Margin="3"/>
+        <Border Background="Azure" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Margin="4"/>
+        <charts:CartesianChart Margin="5" Series="{Binding columnSeries}" FontSize="16" Foreground="Black">
+            <charts:CartesianChart.AxisX>
+                <charts:Axis Title="Wartość" Labels="{Binding Wartosci}" FontSize="18" Foreground="Black"/>
+            </charts:CartesianChart.AxisX>
+            <charts:CartesianChart.AxisY>
+                <charts:Axis Title="Ilość" LabelFormatter="{Binding Ilosci}" FontSize="18" Foreground="Black"/>
+            </charts:CartesianChart.AxisY>
+        </charts:CartesianChart>
+        <StackPanel Grid.Column="1" Margin="5" VerticalAlignment="Center">
+            <Button Name="showRed" Click="showRed_Click" Margin="5">Czerwony</Button>
+            <Button Name="showGreen" Click="showGreen_Click" Margin="5">Zielony</Button>
+            <Button Name="showBlue" Click="showBlue_Click" Margin="5">Niebieski</Button>
+            <Button Name="showBrightness" Click="showBrightness_Click" Margin="5">Jasność</Button>
+        </StackPanel>
+    </Grid>
+</Window>
