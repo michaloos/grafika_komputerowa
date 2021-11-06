@@ -496,6 +496,34 @@
                     </Grid>
                 </wpfx:BusyIndicator>
             </TabItem>
+            <TabItem Header="PS5" Width="100">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="360"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+
+                    </Grid.RowDefinitions>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1"/>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0"/>
+                    <Image x:Name="ps5Image" Margin="10,10,10,10" Stretch="None" Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality">
+
+                    </Image>
+                    <StackPanel HorizontalAlignment="Center" Grid.Column="1" Margin="10" VerticalAlignment="Center">
+                        <Button x:Name="uploadFilePS5" Margin="5" Click="uploadFilePS5_Click">Wczytaj plik</Button>
+                        <DockPanel HorizontalAlignment="Center" Margin="0">
+                            <Button x:Name="binByUserValue" Margin="5" Click="binByUserValue_Click">Binaryzacja ręczna przez użytkownika</Button>
+                            <TextBox x:Name="binUserValue" Margin="5" MinWidth="40"></TextBox>
+                        </DockPanel>
+                        <Button Name="getBackToOriginalPS5" Margin="5" Click="getBackToOriginalPS5_Click">Powrót do oryginalnego obrazu</Button>
+                        <Label Margin="5">Zoom</Label>
+                        <Slider Name="zoomSliderPS5" Margin="5" TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" ValueChanged="zoomSliderPS5_ValueChanged">
+
+                        </Slider>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

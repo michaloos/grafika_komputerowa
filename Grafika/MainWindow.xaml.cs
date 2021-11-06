@@ -2005,6 +2005,26 @@ namespace Grafika
             ScaleTransform scale = new ScaleTransform(zoom, zoom);
             ps4Image.LayoutTransform = scale;
         }
+
+        private void binByUserValue_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void getBackToOriginalPS5_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void uploadFilePS5_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void zoomSliderPS5_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
     }
     #endregion
 }
