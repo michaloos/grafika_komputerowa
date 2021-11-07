@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +28,7 @@ namespace Grafika
         // 0 red
         // 1 green
         // 2 blue
+        // 3 brightness
         public string[] Wartosci { get; set; }
         public MainWindow mainWindow;
         byte[] red;
@@ -92,6 +95,14 @@ namespace Grafika
                     colorsArray[value] += 1;
                 }
             }
+            if (colorMode == 3)
+            {
+                for(int i = 0; i < red.Length; i++)
+                {
+                    int bright = (int)(0.21 * red[i] + 0.71 * green[i] + 0.071 * blue[i]);
+                    colorsArray[bright] += 1;
+                }
+            }
         }
 
         private void getColors()
@@ -118,7 +129,7 @@ namespace Grafika
         private void showRed_Click(object sender, RoutedEventArgs e)
         {
             colorMode = 0;
-            color = "red";
+            color = "Red";
             getColorsArray();
 
             columnSeries.Clear();
@@ -132,7 +143,7 @@ namespace Grafika
         private void showGreen_Click(object sender, RoutedEventArgs e)
         {
             colorMode = 1;
-            color = "green";
+            color = "Green";
             getColorsArray();
             columnSeries.Clear();
             columnSeries.Add(new ColumnSeries()
@@ -145,7 +156,7 @@ namespace Grafika
         private void showBlue_Click(object sender, RoutedEventArgs e)
         {
             colorMode = 2;
-            color = "blue";
+            color = "Blue";
             getColorsArray();
 
             columnSeries.Clear();
@@ -158,7 +169,64 @@ namespace Grafika
 
         private void showBrightness_Click(object sender, RoutedEventArgs e)
         {
+            colorMode = 3;
+            color = "Brightness";
+            getColorsArray();
 
+            columnSeries.Clear();
+            columnSeries.Add(new ColumnSeries()
+            {
+                Title = color,
+                Values = new ChartValues<int>(colorsArray.ToArray())
+            });
+        }
+
+        private void equalization_Click(object sender, RoutedEventArgs e)
+        {
+            int MN = bitmap.Width * bitmap.Height;
+            int[] tempArray = new int[256];
+            int firstNot0 = 0;
+            double sum = 0;
+            for(int i = 0; i < colorsArray.Length; i++) 
+            {
+                if(colorsArray[i] != 0)
+                {
+                    firstNot0 = i;
+                    break;
+                }
+            }
+            for(int i = 0; i < 256; i++)
+            {
+                sum += colorsArray[i];
+                tempArray[i] = (int)((sum - firstNot0) / (MN - firstNot0) * 255);
+            }
+            Bitmap equalizationBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            for(int i = 0; i < bitmap.Width; i++)
+            {
+                for(int j = 0; j < bitmap.Height; j++)
+                {
+                    System.Drawing.Color pixel = bitmap.GetPixel(i, j);
+                    System.Drawing.Color pixelV2 = System.Drawing.Color.FromArgb(tempArray[pixel.R], tempArray[pixel.G], tempArray[pixel.B]);
+                    equalizationBitmap.SetPixel(i, j, pixelV2);
+                }
+            }
+            BitmapImage image = FromBitmapToBitmapImage(equalizationBitmap);
+            mainWindow.ps5Image.Source = image;
+        }
+
+        private BitmapImage FromBitmapToBitmapImage(Bitmap bitmap)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                bitmap.Save(memoryStream, ImageFormat.Bmp);
+                memoryStream.Position = 0;
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+            }
+            return bitmapImage;
         }
     }
 }
