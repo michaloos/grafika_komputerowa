@@ -514,9 +514,13 @@
                         <StackPanel HorizontalAlignment="Center" Grid.Column="1" Margin="10" VerticalAlignment="Center">
                             <Button x:Name="uploadFilePS5" Margin="5" Click="uploadFilePS5_Click">Wczytaj plik</Button>
                             <Button Name="grayScalePS5" Margin="5" Click="grayScalePS5_Click">Grayscale</Button>
-                            <DockPanel HorizontalAlignment="Center" Margin="0">
+                            <DockPanel HorizontalAlignment="Stretch" Margin="0">
                                 <Button x:Name="binByUserValue" Margin="5" Click="binByUserValue_Click">Binaryzacja ręczna przez użytkownika</Button>
                                 <TextBox x:Name="binUserValue" Margin="5" MinWidth="40" PreviewTextInput="binUserValue_PreviewTextInput"></TextBox>
+                            </DockPanel>
+                            <DockPanel HorizontalAlignment="Stretch">
+                                <Button Name="percentBlack" Margin="5" Click="percentBlack_Click">Procentowa selekcja czarnego</Button>
+                                <TextBox Name="percentBlackValue" Margin="5" MinWidth="40" PreviewTextInput="percentBlackValue_PreviewTextInput"></TextBox>
                             </DockPanel>
                             <Button Name="getBackToOriginalPS5" Margin="5" Click="getBackToOriginalPS5_Click">Powrót do oryginalnego obrazu</Button>
                             <Label Margin="5">Zoom</Label>

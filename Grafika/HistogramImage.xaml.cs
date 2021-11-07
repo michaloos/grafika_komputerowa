@@ -55,8 +55,6 @@ namespace Grafika
                 }
             };
 
-            //Ilosci = value => ;
-
             var list = new List<String>();
             for (int i = 0; i < 256; i++)
             {
@@ -121,18 +119,41 @@ namespace Grafika
         {
             colorMode = 0;
             color = "red";
+            getColorsArray();
+
+            columnSeries.Clear();
+            columnSeries.Add(new ColumnSeries()
+            {
+                Title = color,
+                Values = new ChartValues<int>(colorsArray.ToArray())
+            });
         }
 
         private void showGreen_Click(object sender, RoutedEventArgs e)
         {
             colorMode = 1;
             color = "green";
+            getColorsArray();
+            columnSeries.Clear();
+            columnSeries.Add(new ColumnSeries()
+            {
+                Title = color,
+                Values = new ChartValues<int>(colorsArray.ToArray()),
+            });
         }
 
         private void showBlue_Click(object sender, RoutedEventArgs e)
         {
             colorMode = 2;
             color = "blue";
+            getColorsArray();
+
+            columnSeries.Clear();
+            columnSeries.Add(new ColumnSeries()
+            {
+                Title = color,
+                Values = new ChartValues<int>(colorsArray.ToArray())
+            });
         }
 
         private void showBrightness_Click(object sender, RoutedEventArgs e)

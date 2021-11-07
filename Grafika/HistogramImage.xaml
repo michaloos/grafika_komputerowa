@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Grafika"
         xmlns:charts="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="HistogramImage" Height="700" Width="1500">
+        Title="HistogramImage" Height="700" Width="1500" MaxWidth="2200">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

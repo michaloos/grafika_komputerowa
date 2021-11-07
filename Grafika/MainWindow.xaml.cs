@@ -2060,7 +2060,7 @@ namespace Grafika
         }
 
         private Bitmap originalBitmapPS5;
-        private bool grayScaleValuePS5 = false;
+        public bool grayScaleValuePS5 = false;
 
         private void getBackToOriginalPS5_Click(object sender, RoutedEventArgs e)
         {
@@ -2153,6 +2153,107 @@ namespace Grafika
             HistogramImage histogram = new HistogramImage(this);
             histogram.Show();
         }
+
+        private void percentBlack_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps5Image.Source == null || grayScaleValuePS5 == false || percentBlackValue.Text.Equals(""))
+            {
+                return;
+            }
+
+            indicatorPS5.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps5Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            double percentVal = Double.Parse(percentBlackValue.Text);
+            var task = Task.Run(() =>
+            {    
+                int pixelAmount = tempBM.Width * tempBM.Height;
+                
+                double percentValBy100 = percentVal / 100;
+                double howManyPixels = pixelAmount * percentValBy100;
+                getColors(tempBM);
+                getColorsArray();
+                int suma = 0;
+                int binLevel;
+                for (int k = 0; k < colorsArray.Length; k++)
+                {
+                    suma += colorsArray[k];
+                    if (suma >= howManyPixels)
+                    {
+                        binLevel = k;
+                        for (int i = 0; i < tempBM.Width; i++)
+                        {
+                            for (int j = 0; j < tempBM.Height; j++)
+                            {
+                                if (tempBM.GetPixel(i, j).R >= binLevel)
+                                {
+                                    tempBM.SetPixel(i, j, System.Drawing.Color.White);
+                                }
+                                else
+                                {
+                                    tempBM.SetPixel(i, j, System.Drawing.Color.Black);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            });
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS5.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps5Image.Source = newBitmap;
+                    }
+                }));
+
+            });
+            
+        }
+
+        private void percentBlackValue_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private byte[] grayscale;
+        private void getColors(Bitmap bitmap)
+        {
+            int ilosc = 0;
+
+            grayscale = new byte[bitmap.Height * bitmap.Width];
+
+            for (int i = 0; i < bitmap.Width; i++)
+            {
+                for (int j = 0; j < bitmap.Height; j++)
+                {
+                    System.Drawing.Color color = bitmap.GetPixel(i, j);
+                    grayscale[ilosc] = color.R;
+                    ilosc++;
+                }
+            }
+        }
+
+        int[] colorsArray = new int[256];
+
+        private void getColorsArray()
+        {
+            for (int i = 0; i < colorsArray.Length; i++)
+            {
+                colorsArray[i] = 0;
+            }
+            foreach (var value in grayscale)
+            {
+                colorsArray[value] += 1;
+            }   
+        }
+
     }
     
 }
