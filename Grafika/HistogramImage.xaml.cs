@@ -212,6 +212,20 @@ namespace Grafika
             }
             BitmapImage image = FromBitmapToBitmapImage(equalizationBitmap);
             mainWindow.ps5Image.Source = image;
+
+            bitmap = mainWindow.ImageSourceToBitmap(image);
+
+            colorMode = 3;
+            color = "Brightness";
+            getColors();
+            getColorsArray();
+
+            columnSeries.Clear();
+            columnSeries.Add(new ColumnSeries()
+            {
+                Title = color,
+                Values = new ChartValues<int>(colorsArray.ToArray())
+            });
         }
 
         private BitmapImage FromBitmapToBitmapImage(Bitmap bitmap)
@@ -227,6 +241,59 @@ namespace Grafika
                 bitmapImage.EndInit();
             }
             return bitmapImage;
+        }
+
+        private void rozszerzenie_Click(object sender, RoutedEventArgs e)
+        {
+            int minValue = 0;
+            int maxValue = 0;
+            for(int i = 0; i < 256; i++)
+            {
+                if (colorsArray[i] != 0)
+                {
+                    minValue = i;
+                    break;
+                }
+            }
+            for(int i = 255; i >= 0; i--)
+            {
+                if (colorsArray[i] != 0)
+                {
+                    maxValue = i;
+                    break;
+                }
+            }
+            int[] tempArray = new int[256];
+            for(int i = 0; i < 256; i++)
+            {
+                tempArray[i] = 255 / (maxValue - minValue) * (i - minValue);
+            }
+            Bitmap rozciąganieBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            for (int i = 0; i < bitmap.Width; i++)
+            {
+                for (int j = 0; j < bitmap.Height; j++)
+                {
+                    System.Drawing.Color pixel = bitmap.GetPixel(i, j);
+                    System.Drawing.Color pixelV2 = System.Drawing.Color.FromArgb(tempArray[pixel.R], tempArray[pixel.G], tempArray[pixel.B]);
+                    rozciąganieBitmap.SetPixel(i, j, pixelV2);
+                }
+            }
+            BitmapImage image = FromBitmapToBitmapImage(rozciąganieBitmap);
+            mainWindow.ps5Image.Source = image;
+
+            bitmap = mainWindow.ImageSourceToBitmap(image);
+
+            colorMode = 3;
+            color = "Brightness";
+            getColors();
+            getColorsArray();
+
+            columnSeries.Clear();
+            columnSeries.Add(new ColumnSeries()
+            {
+                Title = color,
+                Values = new ChartValues<int>(colorsArray.ToArray())
+            });
         }
     }
 }

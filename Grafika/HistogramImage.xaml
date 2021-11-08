@@ -28,6 +28,7 @@
             <Button Name="showBlue" Click="showBlue_Click" Margin="5">Niebieski</Button>
             <Button Name="showBrightness" Click="showBrightness_Click" Margin="5">Jasność</Button>
             <Button Name="equalization" Click="equalization_Click" Margin="5">Wyrównaj histogram</Button>
+            <Button Name="rozszerzenie" Click="rozszerzenie_Click" Margin="5">Rozciągnij histogram</Button>
         </StackPanel>
     </Grid>
 </Window>
