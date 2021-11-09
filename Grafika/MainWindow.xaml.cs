@@ -2007,6 +2007,8 @@ namespace Grafika
         }
         #endregion
 
+        #region PS5
+
         private void binByUserValue_Click(object sender, RoutedEventArgs e)
         {
             if (ps5Image.Source == null || grayScaleValuePS5 == false || binUserValue.Text.Equals(""))
@@ -2315,6 +2317,23 @@ namespace Grafika
                 }));
 
             });
+        }
+
+        #endregion
+
+        private void movePoint_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void createPoint_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void reset_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
     

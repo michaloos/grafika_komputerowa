@@ -533,6 +533,41 @@
                     </Grid>
                 </wpfx:BusyIndicator>
             </TabItem>
+            <TabItem Header="PS6" Width="100">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="125"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4"/>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4"/>
+                    <Canvas Name="canvasPS5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="15" Background="white">
+                        
+                    </Canvas>
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <RadioButton Name="createPoint" Margin="5" Click="createPoint_Click">Twórz punkty</RadioButton>
+                        <RadioButton Name="movePoint" Margin="5" Click="movePoint_Click">Przesuwaj punkty</RadioButton>
+                        <Button Name="reset" Margin="5" Click="reset_Click">Resetuj</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                        <DockPanel>
+                            <Label>X:</Label>
+                            <TextBox Name="xValue" Margin="5"></TextBox>
+                        </DockPanel>
+                        <DockPanel>
+                            <Label>Y:</Label>
+                            <TextBox Name="yValue" Margin="5"></TextBox>
+                        </DockPanel>
+                        <Button Name="addPointByXY" Margin="5">Dodaj</Button>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
