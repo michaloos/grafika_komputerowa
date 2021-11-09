@@ -522,6 +522,7 @@
                                 <Button Name="percentBlack" Margin="5" Click="percentBlack_Click">Procentowa selekcja czarnego</Button>
                                 <TextBox Name="percentBlackValue" Margin="5" MinWidth="40" PreviewTextInput="percentBlackValue_PreviewTextInput"></TextBox>
                             </DockPanel>
+                            <Button Name="binIteration" Margin="5" Click="binIteration_Click" IsEnabled="False">Selekcja iteratywna średniej</Button>
                             <Button Name="getBackToOriginalPS5" Margin="5" Click="getBackToOriginalPS5_Click">Powrót do oryginalnego obrazu</Button>
                             <Label Margin="5">Zoom</Label>
                             <Slider Name="zoomSliderPS5" Margin="5" TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" ValueChanged="zoomSliderPS5_ValueChanged">
