@@ -2326,6 +2326,8 @@ namespace Grafika
         private Shape shapePS5 = null;
         // 1 dodaj punkty
         // 2 przesuwaj punkty
+        private List<Shape> shapes = new List<Shape>();
+        private List<Shape> lines = new List<Shape>();
 
         private void reset_Click(object sender, RoutedEventArgs e)
         {
@@ -2353,20 +2355,23 @@ namespace Grafika
                 System.Windows.Point point = e.GetPosition(canvasPS5);
                 shapePS5 = new Ellipse
                 {
-                    Width = 8,
-                    Height = 8,
+                    Width = 14,
+                    Height = 14,
                     StrokeThickness = 6,
                     Stroke = System.Windows.Media.Brushes.Black
                 };
-                shapePS5.SetValue(Canvas.LeftProperty, point.X - 4);
-                shapePS5.SetValue(Canvas.TopProperty, point.Y - 4);
+                shapePS5.SetValue(Canvas.LeftProperty, point.X - 7);
+                shapePS5.SetValue(Canvas.TopProperty, point.Y - 7);
 
                 shapePS5.MouseDown += Select_ShapePS5; //event do zaznaczenia wybranej figury
                 shapePS5.MouseMove += Move_ShapePS5; //event do przesuwania myszą figury
                 shapePS5.MouseUp += Moved_ShapePS5; //event do "skończenia" przesuwania figury
 
                 canvasPS5.Children.Add(shapePS5);
-            }       
+                shapes.Add(shapePS5);
+                
+            }
+            Lines();
         }
 
         private void Moved_ShapePS5(object sender, MouseEventArgs e)
@@ -2383,23 +2388,12 @@ namespace Grafika
                 if (dragShape != null)
                 {
                     System.Windows.Point currentPosition = e.GetPosition(canvasPS5);
-                    var transform = dragShape.RenderTransform as TranslateTransform ?? new TranslateTransform();
-                    transform.X = TranslateTransform.X + (currentPosition.X - clickPosition.X);
-                    transform.Y = TranslateTransform.Y + (currentPosition.Y - clickPosition.Y);
-                    dragShape.RenderTransform = new TranslateTransform(transform.X, transform.Y);
+                    dragShape.SetValue(Canvas.LeftProperty, currentPosition.X - 7);
+                    dragShape.SetValue(Canvas.TopProperty, currentPosition.Y - 7);
                 }
+                Lines();
             }
-            if (SELECTED_MODE_BEZIER == 2 && e.LeftButton == MouseButtonState.Pressed)
-            {
-                var changeShape = sender as Shape;
-                if (changeShape != null)
-                {
-                    if (changeShape is Line)
-                    {
-                        System.Windows.Point currentPosition = e.GetPosition(canvasPS5);
-                    }
-                }
-            }
+            
         }
 
         private void Select_ShapePS5(object sender, MouseEventArgs e)
@@ -2438,6 +2432,12 @@ namespace Grafika
             double x = Double.Parse(xValue.Text);
             double y = Double.Parse(yValue.Text);
 
+            if(x == 0 || y == 0)
+            {
+                
+                return;
+            }
+
             System.Windows.Point point = new System.Windows.Point(x,y);
             shapePS5 = new Ellipse
             {
@@ -2446,14 +2446,69 @@ namespace Grafika
                 StrokeThickness = 6,
                 Stroke = System.Windows.Media.Brushes.Black
             };
-            shapePS5.SetValue(Canvas.LeftProperty, point.X - 4);
-            shapePS5.SetValue(Canvas.TopProperty, point.Y - 4);
+            shapePS5.SetValue(Canvas.LeftProperty, point.X - 7);
+            shapePS5.SetValue(Canvas.TopProperty, point.Y - 7);
 
             shapePS5.MouseDown += Select_ShapePS5; //event do zaznaczenia wybranej figury
             shapePS5.MouseMove += Move_ShapePS5; //event do przesuwania myszą figury
             shapePS5.MouseUp += Moved_ShapePS5; //event do "skończenia" przesuwania figury
 
             canvasPS5.Children.Add(shapePS5);
+            shapes.Add(shapePS5);
+        }
+
+        private void Lines()
+        {
+            canvasPS5.Children.Clear();
+            foreach(var shape in shapes)
+            {
+                canvasPS5.Children.Add(shape);
+            }
+            PathFigure figure = new PathFigure
+            {
+                StartPoint = new System.Windows.Point()
+                {
+                    X = Canvas.GetLeft(shapes.ElementAt(0)) + 7,
+                    Y = Canvas.GetTop(shapes.ElementAt(0)) + 7,
+                }
+            };
+
+            foreach(var point in shapes)
+            {
+                LineSegment segment = new LineSegment
+                {
+                    Point = new System.Windows.Point()
+                    {
+                        X = Canvas.GetLeft(point) + 7,
+                        Y = Canvas.GetTop(point) + 7,
+                    }
+                };
+                figure.Segments.Add(segment);
+            }
+
+            System.Windows.Shapes.Path path = new System.Windows.Shapes.Path()
+            {
+                Stroke = System.Windows.Media.Brushes.Red,
+                StrokeThickness = 2,
+                Data = new PathGeometry
+                {
+                    Figures = new PathFigureCollection()
+                    {
+                        figure
+                    }
+                }
+            };
+
+            canvasPS5.Children.Add(path);
+
+        }
+
+        private void BeziereCurve()
+        {
+            for(double i = 0; i <= 1; i += 0.001)
+            {
+
+            }
         }
     }
     
