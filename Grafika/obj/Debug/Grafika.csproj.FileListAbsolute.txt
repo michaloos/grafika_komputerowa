@@ -39,3 +39,4 @@ C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.pdb
 C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.xml
 C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.Wpf.pdb
 C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.Wpf.xml
+C:\Users\User\source\repos\Grafika\Grafika\obj\Debug\Grafika.csproj.SuggestedBindingRedirects.cache

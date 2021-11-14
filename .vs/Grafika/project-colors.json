@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "a11c7a0a-18f7-49fa-bf85-2ca333d3b5a8": {
+      "ProjectGuid": "a11c7a0a-18f7-49fa-bf85-2ca333d3b5a8",
+      "DisplayName": "Grafika",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
