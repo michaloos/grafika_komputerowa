@@ -569,6 +569,15 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
+            <TabItem Header="PS7" Width="100">
+                
+            </TabItem>
+            <TabItem Header="PS8" Width="100">
+                
+            </TabItem>
+            <TabItem Header="PS9" Width="100">
+                
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
