@@ -2591,5 +2591,65 @@ namespace Grafika
                 return x * silnia(x - 1);
         }
         #endregion
+
+        private void ps7Canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void ps7Canvas_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void createPolygon_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void translatePolygon_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void rotatePolygon_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void scalePolygon_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void addNewPointPolygon_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void rotatePolygonByValue_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void translatePolygonByXY_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void scalePolygonByValue_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void deserializeCanvas_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void serializeCanvas_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

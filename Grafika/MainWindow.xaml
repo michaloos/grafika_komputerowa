@@ -570,7 +570,66 @@
                 </Grid>
             </TabItem>
             <TabItem Header="PS7" Width="100">
-                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="250"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.RowSpan="6"/>
+                    <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="0" Grid.RowSpan="6"/>
+                    <Canvas x:Name="ps7Canvas" Grid.Row="0" Grid.RowSpan="6" Grid.Column="0" Margin="5"
+                            MouseDown="ps7Canvas_MouseDown" MouseMove="ps7Canvas_MouseMove">
+                        
+                    </Canvas>
+                    <StackPanel Grid.Column="1" Grid.Row="0" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <RadioButton Name="createPolygon" Margin="5" Width="200" Checked="createPolygon_Checked">Tworzenie</RadioButton>
+                        <RadioButton Name="translatePolygon" Margin="5" Width="200" Checked="translatePolygon_Checked">Przesuwanie</RadioButton>
+                        <RadioButton Name="rotatePolygon" Margin="5" Width="200" Checked="rotatePolygon_Checked">Obrot</RadioButton>
+                        <RadioButton Name="scalePolygon" Margin="5" Width="200" Checked="scalePolygon_Checked">Skalowanie</RadioButton>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <DockPanel Width="200">
+                            <Label>X:</Label>
+                            <TextBox Name="xNewPointPolygon" Margin="5"></TextBox>
+                        </DockPanel>
+                        <DockPanel Width="200">
+                            <Label>Y:</Label>
+                            <TextBox Name="yNewPointPolygon" Margin="5"></TextBox>
+                        </DockPanel>
+                        <Button Name="addNewPointPolygon" Margin="5" Width="200" Click="addNewPointPolygon_Click">Dodaj kolejny punkt</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="2" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBox Name="rotationAnglePolygon" Margin="5" Width="200"></TextBox>
+                        <Button Name="rotatePolygonByValue" Margin="5" Width="200" Click="rotatePolygonByValue_Click">Obrót o podany kąt</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="3" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <DockPanel Width="200">
+                            <Label>X:</Label>
+                            <TextBox Name="xTranslatePolygon" Margin="5"></TextBox>
+                        </DockPanel>
+                        <DockPanel Width="200">
+                            <Label>Y:</Label>
+                            <TextBox Name="yTranslatePolygon" Margin="5"></TextBox>
+                        </DockPanel>
+                        <Button Name="translatePolygonByXY" Margin="5" Click="translatePolygonByXY_Click">Przesuwania o podane współrzędne</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="4" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBox Name="scalePolygonValue" Margin="5" Width="200"></TextBox>
+                        <Button Name="scalePolygonByValue" Margin="5" Width="200" Click="scalePolygonByValue_Click">Skaluj o podaną skalę</Button>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="5" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Button Name="serializeCanvas" Margin="5" Width="200" Click="serializeCanvas_Click">Serializacja</Button>
+                        <Button Name="deserializeCanvas" Margin="5" Width="200" Click="deserializeCanvas_Click">Deserializacja</Button>
+                    </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Header="PS8" Width="100">
                 
