@@ -2592,54 +2592,242 @@ namespace Grafika
         }
         #endregion
 
+        private int PS7_MODE;
+        // 1 = tworzenie
+        // 2 = przesuwanie
+        // 3 = obracanie
+        // 4 = skalowanie
+        private Polygon _polygon = null;
+        private System.Windows.Point startPoint = new System.Windows.Point();
+        private PointCollection points = new PointCollection();
+
         private void ps7Canvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if(PS7_MODE != 1)
+            {
+                return;
+            }
+            
+            startPoint = e.GetPosition(ps7Canvas);
+            if (PS7_MODE == 1)
+            {   
+                points.Add(startPoint);            
+                if(points.Count >= 3)
+                {
+                    if(_polygon != null)
+                    {
+                        ps7Canvas.Children.Remove(_polygon);
+                    }
+                    makePolygon();
+                    ps7Canvas.Children.Add(_polygon);
+                } 
+            }
+        }
 
+        private void makePolygon()
+        {
+            Polygon polygon = new Polygon();
+            polygon.Stroke = System.Windows.Media.Brushes.Black;
+            polygon.StrokeThickness = 5;
+            polygon.Points = points;
+            polygon.MouseDown += Select_Polygon;
+            polygon.MouseMove += Move_Polygon;
+            polygon.MouseWheel += Polygon_Wheel;
+            polygon.MouseUp += Moved_Polygon;
+            _polygon = polygon;
+        }
+
+        private void Polygon_Wheel(object sender, MouseWheelEventArgs e)
+        {
+            PointCollection scaledPoints = new PointCollection();
+            if (e.Delta > 0)
+            {
+                foreach(var point in points)
+                {
+                    System.Windows.Point tempPoint = point;
+                    tempPoint.X *= 1.1;
+                    tempPoint.Y *= 1.1;
+                    scaledPoints.Add(tempPoint);
+                }
+                points = scaledPoints;
+                if (points.Count >= 3)
+                {
+                    if (_polygon != null)
+                    {
+                        ps7Canvas.Children.Remove(_polygon);
+                    }
+                    makePolygon();
+                    ps7Canvas.Children.Add(_polygon);
+                }
+            }
+            else
+            {
+                foreach (var point in points)
+                {
+
+                }
+            }
+        }
+
+        private void Moved_Polygon(object sender, MouseEventArgs e)
+        {
+            _polygon = sender as Polygon;
+            _polygon.ReleaseMouseCapture();
+        }
+
+        private void Select_Polygon(object sender, MouseEventArgs e)
+        {
+            if (ACTION_MODE != 1)
+            {
+                _polygon = sender as Polygon;
+                if (e.LeftButton == MouseButtonState.Pressed && PS7_MODE == 2)
+                {
+                    TranslateTransform = _polygon.RenderTransform as TranslateTransform ?? new TranslateTransform();
+                    clickPosition = e.GetPosition(ps7Canvas);
+                    _polygon.CaptureMouse();
+                }
+            }
+        }
+
+        private void Move_Polygon(object sender, MouseEventArgs e)
+        {
+            if (PS7_MODE == 2 && e.LeftButton == MouseButtonState.Pressed)
+            {
+                var dragShape = sender as Polygon;
+                if (dragShape != null)
+                {
+                    System.Windows.Point currentPosition = e.GetPosition(ps7Canvas);
+                    var transform = dragShape.RenderTransform as TranslateTransform ?? new TranslateTransform();
+                    transform.X = TranslateTransform.X + (currentPosition.X - clickPosition.X);
+                    transform.Y = TranslateTransform.Y + (currentPosition.Y - clickPosition.Y);
+                    dragShape.RenderTransform = new TranslateTransform(transform.X, transform.Y);
+                }
+            }
+            if (ACTION_MODE == 3 && e.LeftButton == MouseButtonState.Pressed)
+            {
+                
+            }
+            if (ACTION_MODE == 4 && e.LeftButton == MouseButtonState.Pressed)
+            {
+
+            }
         }
 
         private void ps7Canvas_MouseMove(object sender, MouseEventArgs e)
         {
-
+            if(PS7_MODE != 2)
+            {
+                return;
+            }
         }
 
         private void createPolygon_Checked(object sender, RoutedEventArgs e)
         {
-
+            PS7_MODE = 1;
         }
 
         private void translatePolygon_Checked(object sender, RoutedEventArgs e)
         {
-
+            PS7_MODE = 2;
         }
 
         private void rotatePolygon_Checked(object sender, RoutedEventArgs e)
         {
-
+            PS7_MODE = 3;
         }
 
         private void scalePolygon_Checked(object sender, RoutedEventArgs e)
         {
-
+            PS7_MODE = 4;
         }
 
         private void addNewPointPolygon_Click(object sender, RoutedEventArgs e)
         {
+            if (PS7_MODE != 1)
+            {
+                return;
+            }
+            else
+            {
+                var xCorrect = Double.TryParse(xNewPointPolygon.Text, out double xValue);
+                var yCorrect = Double.TryParse(yNewPointPolygon.Text, out double yValue);
 
+                if(xCorrect == true && yCorrect == true)
+                {
+                    System.Windows.Point point = new System.Windows.Point(xValue, yValue);
+                    points.Add(point);
+                    if (points.Count >= 3)
+                    {
+                        if (_polygon != null)
+                        {
+                            ps7Canvas.Children.Remove(_polygon);
+                        }
+                        makePolygon();
+                        ps7Canvas.Children.Add(_polygon);
+                    }
+                }
+            }
         }
 
         private void rotatePolygonByValue_Click(object sender, RoutedEventArgs e)
         {
-
+            if (PS7_MODE != 3)
+            {
+                return;
+            }
+            else
+            {
+                
+            }
         }
 
         private void translatePolygonByXY_Click(object sender, RoutedEventArgs e)
         {
+            if (PS7_MODE != 2)
+            {
+                return;
+            }
+            else
+            {
+                var xCorrect = Double.TryParse(xTranslatePolygon.Text, out double xValue);
+                var yCorrect = Double.TryParse(yTranslatePolygon.Text, out double yValue);
 
+                if (xCorrect == true && yCorrect == true)
+                {
+                    PointCollection scaledPoints = new PointCollection();
+                    foreach(var point in points)
+                    {
+                        System.Windows.Point tempPoint = point;
+                        tempPoint.X += xValue;
+                        tempPoint.Y += yValue;
+                        scaledPoints.Add(tempPoint);
+                    }
+
+                    points = scaledPoints;
+
+                    if (points.Count >= 3)
+                    {
+                        if (_polygon != null)
+                        {
+                            ps7Canvas.Children.Remove(_polygon);
+                        }
+                        makePolygon();
+                        ps7Canvas.Children.Add(_polygon);
+                    }
+                }
+            }
         }
 
         private void scalePolygonByValue_Click(object sender, RoutedEventArgs e)
         {
+            if (PS7_MODE != 4)
+            {
+                return;
+            }
+            else
+            {
 
+            }
         }
 
         private void deserializeCanvas_Click(object sender, RoutedEventArgs e)

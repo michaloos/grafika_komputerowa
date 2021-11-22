@@ -585,8 +585,8 @@
                     </Grid.RowDefinitions>
                     <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.RowSpan="6"/>
                     <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="0" Grid.RowSpan="6"/>
-                    <Canvas x:Name="ps7Canvas" Grid.Row="0" Grid.RowSpan="6" Grid.Column="0" Margin="5"
-                            MouseDown="ps7Canvas_MouseDown" MouseMove="ps7Canvas_MouseMove">
+                    <Canvas x:Name="ps7Canvas" Grid.Row="0" Grid.RowSpan="6" Grid.Column="0" Margin="15"
+                            MouseDown="ps7Canvas_MouseDown" MouseMove="ps7Canvas_MouseMove" Background="White">
                         
                     </Canvas>
                     <StackPanel Grid.Column="1" Grid.Row="0" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
