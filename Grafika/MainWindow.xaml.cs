@@ -2594,6 +2594,8 @@ namespace Grafika
         }
         #endregion
 
+        #region PS7
+
         private int PS7_MODE;
         // 1 = tworzenie
         // 2 = przesuwanie
@@ -2950,5 +2952,7 @@ namespace Grafika
             allPointCollections.Clear();
             points.Clear();
         }
+
+        #endregion
     }
 }
