@@ -40,3 +40,5 @@ C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.xml
 C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.Wpf.pdb
 C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\LiveCharts.Wpf.xml
 C:\Users\User\source\repos\Grafika\Grafika\obj\Debug\Grafika.csproj.SuggestedBindingRedirects.cache
+C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\Microsoft.VisualStudio.DesignTools.Extensibility.dll
+C:\Users\User\source\repos\Grafika\Grafika\bin\Debug\Microsoft.VisualStudio.DesignTools.Interaction.dll
