@@ -590,10 +590,11 @@
                         
                     </Canvas>
                     <StackPanel Grid.Column="1" Grid.Row="0" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <RadioButton Name="createPolygon" Margin="5" Width="200" Checked="createPolygon_Checked">Tworzenie</RadioButton>
-                        <RadioButton Name="translatePolygon" Margin="5" Width="200" Checked="translatePolygon_Checked">Przesuwanie</RadioButton>
-                        <RadioButton Name="rotatePolygon" Margin="5" Width="200" Checked="rotatePolygon_Checked">Obrot</RadioButton>
-                        <RadioButton Name="scalePolygon" Margin="5" Width="200" Checked="scalePolygon_Checked">Skalowanie</RadioButton>
+                        <RadioButton Name="createPolygon" Width="200" Checked="createPolygon_Checked">Tworzenie</RadioButton>
+                        <RadioButton Name="translatePolygon" Width="200" Checked="translatePolygon_Checked">Przesuwanie</RadioButton>
+                        <RadioButton Name="rotatePolygon" Width="200" Checked="rotatePolygon_Checked">Obrot</RadioButton>
+                        <RadioButton Name="scalePolygon" Width="200" Checked="scalePolygon_Checked">Skalowanie</RadioButton>
+                        <RadioButton Name="donePolygon" Width="200" Checked="donePolygon_Checked">Narysowany wielokąt</RadioButton>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Grid.Row="1" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <DockPanel Width="200">

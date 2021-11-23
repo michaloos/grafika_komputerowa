@@ -2597,6 +2597,7 @@ namespace Grafika
         // 2 = przesuwanie
         // 3 = obracanie
         // 4 = skalowanie
+        // 5 = zatwierdzenie naryswania
         private Polygon _polygon = null;
         private System.Windows.Point startPoint = new System.Windows.Point();
         private PointCollection points = new PointCollection();
@@ -2607,7 +2608,7 @@ namespace Grafika
             {
                 return;
             }
-            
+            _polygon = null;
             startPoint = e.GetPosition(ps7Canvas);
             if (PS7_MODE == 1)
             {   
@@ -2639,34 +2640,51 @@ namespace Grafika
 
         private void Polygon_Wheel(object sender, MouseWheelEventArgs e)
         {
-            PointCollection scaledPoints = new PointCollection();
-            if (e.Delta > 0)
+            if(PS7_MODE == 4)
             {
-                foreach(var point in points)
+                PointCollection scaledPoints = new PointCollection();
+                if (e.Delta > 0)
                 {
-                    System.Windows.Point tempPoint = point;
-                    tempPoint.X *= 1.1;
-                    tempPoint.Y *= 1.1;
-                    scaledPoints.Add(tempPoint);
-                }
-                points = scaledPoints;
-                if (points.Count >= 3)
-                {
-                    if (_polygon != null)
+                    foreach (var point in points)
                     {
-                        ps7Canvas.Children.Remove(_polygon);
+                        System.Windows.Point tempPoint = point;
+                        tempPoint.X *= 1.025;
+                        tempPoint.Y *= 1.025;
+                        scaledPoints.Add(tempPoint);
                     }
-                    makePolygon();
-                    ps7Canvas.Children.Add(_polygon);
+                    points = scaledPoints;
+                    if (points.Count >= 3)
+                    {
+                        if (_polygon != null)
+                        {
+                            ps7Canvas.Children.Remove(_polygon);
+                        }
+                        makePolygon();
+                        ps7Canvas.Children.Add(_polygon);
+                    }
                 }
-            }
-            else
-            {
-                foreach (var point in points)
+                else
                 {
-
+                    foreach (var point in points)
+                    {
+                        System.Windows.Point tempPoint = point;
+                        tempPoint.X *= 0.975;
+                        tempPoint.Y *= 0.975;
+                        scaledPoints.Add(tempPoint);
+                    }
+                    points = scaledPoints;
+                    if (points.Count >= 3)
+                    {
+                        if (_polygon != null)
+                        {
+                            ps7Canvas.Children.Remove(_polygon);
+                        }
+                        makePolygon();
+                        ps7Canvas.Children.Add(_polygon);
+                    }
                 }
             }
+            
         }
 
         private void Moved_Polygon(object sender, MouseEventArgs e)
@@ -2739,6 +2757,11 @@ namespace Grafika
         private void scalePolygon_Checked(object sender, RoutedEventArgs e)
         {
             PS7_MODE = 4;
+        }
+
+        private void donePolygon_Checked(object sender, RoutedEventArgs e)
+        {
+            PS7_MODE = 5;           
         }
 
         private void addNewPointPolygon_Click(object sender, RoutedEventArgs e)
@@ -2839,5 +2862,7 @@ namespace Grafika
         {
 
         }
+
+        
     }
 }
