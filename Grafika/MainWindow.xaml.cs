@@ -2608,44 +2608,48 @@ namespace Grafika
             {
                 return;
             }
-            _polygon = null;
+
             startPoint = e.GetPosition(ps7Canvas);
+
             if (PS7_MODE == 1)
             {   
-                points.Add(startPoint);            
-                if(points.Count >= 3)
-                {
-                    if(_polygon != null)
-                    {
-                        ps7Canvas.Children.Remove(_polygon);
-                    }
-                    makePolygon();
-                    ps7Canvas.Children.Add(_polygon);
-                } 
+                points.Add(startPoint);
+                makePolygon(_polygon);
+                ps7Canvas.Children.Remove(_polygon);
+                ps7Canvas.Children.Add(_polygon);
             }
         }
 
-        private void makePolygon()
-        {
-            Polygon polygon = new Polygon();
-            polygon.Stroke = System.Windows.Media.Brushes.Black;
-            polygon.StrokeThickness = 5;
-            polygon.Points = points;
-            polygon.MouseDown += Select_Polygon;
-            polygon.MouseMove += Move_Polygon;
-            polygon.MouseWheel += Polygon_Wheel;
-            polygon.MouseUp += Moved_Polygon;
+        private void makePolygon(Polygon polygon)
+        {   
+            if (polygon == null)
+            {
+                polygon = new Polygon();
+                polygon.Stroke = System.Windows.Media.Brushes.Red;
+                polygon.StrokeThickness = 5;
+                polygon.Points = points;
+                polygon.MouseDown += Select_Polygon;
+                polygon.MouseMove += Move_Polygon;
+                polygon.MouseWheel += Polygon_Wheel;
+                polygon.MouseUp += Moved_Polygon;
+            }
+            else
+            {
+                polygon.Points = points;
+            }
             _polygon = polygon;
         }
 
         private void Polygon_Wheel(object sender, MouseWheelEventArgs e)
         {
-            if(PS7_MODE == 4)
+            _polygon = sender as Polygon;
+            _polygon.Stroke = System.Windows.Media.Brushes.Red;
+            if (PS7_MODE == 4)
             {
                 PointCollection scaledPoints = new PointCollection();
                 if (e.Delta > 0)
                 {
-                    foreach (var point in points)
+                    foreach (var point in _polygon.Points)
                     {
                         System.Windows.Point tempPoint = point;
                         tempPoint.X *= 1.025;
@@ -2653,19 +2657,13 @@ namespace Grafika
                         scaledPoints.Add(tempPoint);
                     }
                     points = scaledPoints;
-                    if (points.Count >= 3)
-                    {
-                        if (_polygon != null)
-                        {
-                            ps7Canvas.Children.Remove(_polygon);
-                        }
-                        makePolygon();
-                        ps7Canvas.Children.Add(_polygon);
-                    }
+                    makePolygon(_polygon);
+                    ps7Canvas.Children.Remove(_polygon);
+                    ps7Canvas.Children.Add(_polygon);
                 }
                 else
                 {
-                    foreach (var point in points)
+                    foreach (var point in _polygon.Points)
                     {
                         System.Windows.Point tempPoint = point;
                         tempPoint.X *= 0.975;
@@ -2673,18 +2671,12 @@ namespace Grafika
                         scaledPoints.Add(tempPoint);
                     }
                     points = scaledPoints;
-                    if (points.Count >= 3)
-                    {
-                        if (_polygon != null)
-                        {
-                            ps7Canvas.Children.Remove(_polygon);
-                        }
-                        makePolygon();
-                        ps7Canvas.Children.Add(_polygon);
-                    }
+                    makePolygon(_polygon);
+                    ps7Canvas.Children.Remove(_polygon);
+                    ps7Canvas.Children.Add(_polygon);
                 }
             }
-            
+            _polygon.Stroke = System.Windows.Media.Brushes.Black;
         }
 
         private void Moved_Polygon(object sender, MouseEventArgs e)
@@ -2695,14 +2687,22 @@ namespace Grafika
 
         private void Select_Polygon(object sender, MouseEventArgs e)
         {
-            if (ACTION_MODE != 1)
+            if (PS7_MODE != 1)
             {
+                if(_polygon != null)
+                    _polygon.Stroke = System.Windows.Media.Brushes.Black;
+
                 _polygon = sender as Polygon;
+                _polygon.Stroke = System.Windows.Media.Brushes.Red;
                 if (e.LeftButton == MouseButtonState.Pressed && PS7_MODE == 2)
                 {
                     TranslateTransform = _polygon.RenderTransform as TranslateTransform ?? new TranslateTransform();
                     clickPosition = e.GetPosition(ps7Canvas);
                     _polygon.CaptureMouse();
+                }
+                if(PS7_MODE == 5)
+                {
+                    _polygon.Stroke = System.Windows.Media.Brushes.Black;
                 }
             }
         }
@@ -2761,7 +2761,10 @@ namespace Grafika
 
         private void donePolygon_Checked(object sender, RoutedEventArgs e)
         {
-            PS7_MODE = 5;           
+            PS7_MODE = 5;
+            _polygon.Stroke = System.Windows.Media.Brushes.Black;
+            _polygon = null;
+            points = new PointCollection();
         }
 
         private void addNewPointPolygon_Click(object sender, RoutedEventArgs e)
@@ -2779,15 +2782,9 @@ namespace Grafika
                 {
                     System.Windows.Point point = new System.Windows.Point(xValue, yValue);
                     points.Add(point);
-                    if (points.Count >= 3)
-                    {
-                        if (_polygon != null)
-                        {
-                            ps7Canvas.Children.Remove(_polygon);
-                        }
-                        makePolygon();
-                        ps7Canvas.Children.Add(_polygon);
-                    }
+                    makePolygon(_polygon);
+                    ps7Canvas.Children.Remove(_polygon);
+                    ps7Canvas.Children.Add(_polygon);
                 }
             }
         }
@@ -2812,13 +2809,14 @@ namespace Grafika
             }
             else
             {
+                //_polygon = sender as Polygon;
                 var xCorrect = Double.TryParse(xTranslatePolygon.Text, out double xValue);
                 var yCorrect = Double.TryParse(yTranslatePolygon.Text, out double yValue);
 
                 if (xCorrect == true && yCorrect == true)
                 {
                     PointCollection scaledPoints = new PointCollection();
-                    foreach(var point in points)
+                    foreach(var point in _polygon.Points)
                     {
                         System.Windows.Point tempPoint = point;
                         tempPoint.X += xValue;
@@ -2828,15 +2826,9 @@ namespace Grafika
 
                     points = scaledPoints;
 
-                    if (points.Count >= 3)
-                    {
-                        if (_polygon != null)
-                        {
-                            ps7Canvas.Children.Remove(_polygon);
-                        }
-                        makePolygon();
-                        ps7Canvas.Children.Add(_polygon);
-                    }
+                    makePolygon(_polygon);
+                    ps7Canvas.Children.Remove(_polygon);
+                    ps7Canvas.Children.Add(_polygon);
                 }
             }
         }
