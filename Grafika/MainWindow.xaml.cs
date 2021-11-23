@@ -22,6 +22,8 @@ using System.Collections;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Media3D;
 using System.Windows.Interop;
+using System.Xml.Serialization;
+using System.Windows.Markup;
 
 namespace Grafika
 {
@@ -2762,7 +2764,12 @@ namespace Grafika
         private void donePolygon_Checked(object sender, RoutedEventArgs e)
         {
             PS7_MODE = 5;
-            _polygon.Stroke = System.Windows.Media.Brushes.Black;
+            if(_polygon != null)
+            {
+                allPointCollections.Add(_polygon.Points);
+                _polygon.Stroke = System.Windows.Media.Brushes.Black;
+            }
+               
             _polygon = null;
             points = new PointCollection();
         }
@@ -2778,7 +2785,7 @@ namespace Grafika
                 var xCorrect = Double.TryParse(xNewPointPolygon.Text, out double xValue);
                 var yCorrect = Double.TryParse(yNewPointPolygon.Text, out double yValue);
 
-                if(xCorrect == true && yCorrect == true)
+                if(xCorrect == true && yCorrect == true && _polygon != null)
                 {
                     System.Windows.Point point = new System.Windows.Point(xValue, yValue);
                     points.Add(point);
@@ -2797,7 +2804,27 @@ namespace Grafika
             }
             else
             {
-                
+                var xCorrect = Double.TryParse(rotateXPoint.Text, out double xValue);
+                var yCorrect = Double.TryParse(rotateYPoint.Text, out double yValue);
+                var angleCorrect = Double.TryParse(rotationAnglePolygon.Text, out double angle);
+
+                if (xCorrect == true && yCorrect == true && angleCorrect == true && _polygon != null)
+                {
+                    PointCollection scaledPoints = new PointCollection();
+                    foreach (var point in _polygon.Points)
+                    {
+                        System.Windows.Point tempPoint = point;
+                        tempPoint.X += xValue + (point.X - xValue) * Math.Cos(angle) - (point.Y - yValue) * Math.Sin(angle);
+                        tempPoint.Y += yValue + (point.X - xValue) * Math.Sin(angle) + (point.Y - yValue) * Math.Cos(angle);
+                        scaledPoints.Add(tempPoint);
+                    }
+
+                    points = scaledPoints;
+
+                    makePolygon(_polygon);
+                    ps7Canvas.Children.Remove(_polygon);
+                    ps7Canvas.Children.Add(_polygon);
+                }
             }
         }
 
@@ -2813,7 +2840,7 @@ namespace Grafika
                 var xCorrect = Double.TryParse(xTranslatePolygon.Text, out double xValue);
                 var yCorrect = Double.TryParse(yTranslatePolygon.Text, out double yValue);
 
-                if (xCorrect == true && yCorrect == true)
+                if (xCorrect == true && yCorrect == true && _polygon != null)
                 {
                     PointCollection scaledPoints = new PointCollection();
                     foreach(var point in _polygon.Points)
@@ -2841,20 +2868,87 @@ namespace Grafika
             }
             else
             {
+                var xCorrect = Double.TryParse(scaleXPoint.Text, out double xValue);
+                var yCorrect = Double.TryParse(scaleYPoint.Text, out double yValue);
+                var scaleCorrect = Double.TryParse(scalePolygonValue.Text, out double scale);
 
+                if (xCorrect == true && yCorrect == true && scaleCorrect == true && _polygon != null)
+                {
+                    PointCollection scaledPoints = new PointCollection();
+                    foreach (var point in _polygon.Points)
+                    {
+                        System.Windows.Point tempPoint = point;
+                        tempPoint.X += xValue + (point.X - xValue) + scale;
+                        tempPoint.Y += yValue + (point.Y - yValue) + scale;
+                        scaledPoints.Add(tempPoint);
+                    }
+
+                    points = scaledPoints;
+
+                    makePolygon(_polygon);
+                    ps7Canvas.Children.Remove(_polygon);
+                    ps7Canvas.Children.Add(_polygon);
+                }
             }
         }
 
+        private List<PointCollection> allPointCollections = new List<PointCollection>();
+
         private void deserializeCanvas_Click(object sender, RoutedEventArgs e)
         {
-
+            XmlSerializer serializer = new XmlSerializer(typeof(List<PointCollection>));
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    List<PointCollection> openedList;
+                    using (FileStream stream = new FileStream(openFileDialog.FileName, FileMode.Open, FileAccess.Read))
+                    {
+                        openedList = (List<PointCollection>)serializer.Deserialize(stream);
+                        stream.Close();
+                    }
+                    
+                    foreach(var pointCollection in openedList)
+                    {
+                        Polygon polygon = new Polygon();
+                        polygon.Points = pointCollection;
+                        polygon.Stroke = System.Windows.Media.Brushes.Black;
+                        polygon.StrokeThickness = 5;
+                        polygon.MouseDown += Select_Polygon;
+                        polygon.MouseMove += Move_Polygon;
+                        polygon.MouseWheel += Polygon_Wheel;
+                        polygon.MouseUp += Moved_Polygon;
+                        ps7Canvas.Children.Add(polygon);
+                    }
+                    allPointCollections = openedList;
+                }
+                catch
+                {
+                    MessageBoxResult result = MessageBox.Show("Podczas próby zapisu pliku coś poszło nie tak.");
+                }
+            }
         }
 
         private void serializeCanvas_Click(object sender, RoutedEventArgs e)
         {
-
+            XmlSerializer serializer = new XmlSerializer(typeof(List<PointCollection>));
+            SaveFileDialog saveFile = new SaveFileDialog();
+            if (saveFile.ShowDialog() == true)
+            {
+                using (FileStream stream = new FileStream(saveFile.FileName,FileMode.Create))
+                {
+                    serializer.Serialize(stream, allPointCollections);
+                    stream.Close();
+                }
+            }
         }
 
-        
+        private void resetCanvasPS7_Click(object sender, RoutedEventArgs e)
+        {
+            ps7Canvas.Children.Clear();
+            allPointCollections.Clear();
+            points.Clear();
+        }
     }
 }

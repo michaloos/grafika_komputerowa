@@ -576,12 +576,12 @@
                         <ColumnDefinition Width="250"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="135"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="150"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="150"/>
+                        <RowDefinition Height="100"/>
                     </Grid.RowDefinitions>
                     <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.RowSpan="6"/>
                     <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="0" Grid.RowSpan="6"/>
@@ -594,9 +594,10 @@
                         <RadioButton Name="translatePolygon" Width="200" Checked="translatePolygon_Checked">Przesuwanie</RadioButton>
                         <RadioButton Name="rotatePolygon" Width="200" Checked="rotatePolygon_Checked">Obrot</RadioButton>
                         <RadioButton Name="scalePolygon" Width="200" Checked="scalePolygon_Checked">Skalowanie</RadioButton>
-                        <RadioButton Name="donePolygon" Width="200" Checked="donePolygon_Checked">Narysowany wielokąt</RadioButton>
+                        <RadioButton Name="donePolygon" Width="200" Checked="donePolygon_Checked">Odznacz wielokąt</RadioButton>
+                        <Button Name="resetCanvasPS7" Click="resetCanvasPS7_Click" Margin="5">Resetuj</Button>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <StackPanel Grid.Column="1" Grid.Row="1" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <DockPanel Width="200">
                             <Label>X:</Label>
                             <TextBox Name="xNewPointPolygon" Margin="5"></TextBox>
@@ -607,11 +608,22 @@
                         </DockPanel>
                         <Button Name="addNewPointPolygon" Margin="5" Width="200" Click="addNewPointPolygon_Click">Dodaj kolejny punkt</Button>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Grid.Row="2" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBox Name="rotationAnglePolygon" Margin="5" Width="200"></TextBox>
+                    <StackPanel Grid.Column="1" Grid.Row="2" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <DockPanel Width="200">
+                            <Label>X:</Label>
+                            <TextBox Name="rotateXPoint" Margin="5"></TextBox>
+                        </DockPanel>
+                        <DockPanel Width="200">
+                            <Label>Y:</Label>
+                            <TextBox Name="rotateYPoint" Margin="5"></TextBox>
+                        </DockPanel>
+                        <DockPanel Width="200">
+                            <Label>Kąt:</Label>
+                            <TextBox Name="rotationAnglePolygon" Margin="5"></TextBox>
+                        </DockPanel>
                         <Button Name="rotatePolygonByValue" Margin="5" Width="200" Click="rotatePolygonByValue_Click">Obrót o podany kąt</Button>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Grid.Row="3" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <StackPanel Grid.Column="1" Grid.Row="3" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <DockPanel Width="200">
                             <Label>X:</Label>
                             <TextBox Name="xTranslatePolygon" Margin="5"></TextBox>
@@ -622,11 +634,22 @@
                         </DockPanel>
                         <Button Name="translatePolygonByXY" Margin="5" Click="translatePolygonByXY_Click">Przesuwania o podane współrzędne</Button>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Grid.Row="4" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBox Name="scalePolygonValue" Margin="5" Width="200"></TextBox>
+                    <StackPanel Grid.Column="1" Grid.Row="4" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <DockPanel Width="200">
+                            <Label>X:</Label>
+                            <TextBox Name="scaleXPoint" Margin="5"></TextBox>
+                        </DockPanel>
+                        <DockPanel Width="200">
+                            <Label>Y:</Label>
+                            <TextBox Name="scaleYPoint" Margin="5"></TextBox>
+                        </DockPanel>
+                        <DockPanel Width="200">
+                            <Label>Skala:</Label>
+                            <TextBox Name="scalePolygonValue" Margin="5"></TextBox>
+                        </DockPanel>
                         <Button Name="scalePolygonByValue" Margin="5" Width="200" Click="scalePolygonByValue_Click">Skaluj o podaną skalę</Button>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Grid.Row="5" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <StackPanel Grid.Column="1" Grid.Row="5" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <Button Name="serializeCanvas" Margin="5" Width="200" Click="serializeCanvas_Click">Serializacja</Button>
                         <Button Name="deserializeCanvas" Margin="5" Width="200" Click="deserializeCanvas_Click">Deserializacja</Button>
                     </StackPanel>
