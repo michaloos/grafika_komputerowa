@@ -2984,9 +2984,55 @@ namespace Grafika
             }
         }
 
+
+        private bool isGreenPixel(System.Drawing.Color color1, int tolerancja) => 
+            color1.G > color1.R + tolerancja && color1.G > color1.B + tolerancja;
+
         private void greenPercent_Click(object sender, RoutedEventArgs e)
         {
+            if (originalImagePS9.Source == null)
+            {
+                return;
+            }
 
+            indicatorPS9.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(originalImagePS9.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            Bitmap setBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+
+            int allPixels = bitmap.Width * bitmap.Height;
+            int greenPixels = 0;
+
+            var task = Task.Run(() =>
+            {
+                for (int i = 0; i < setBitmap.Width; i++)
+                {
+                    for (int j = 0; j < setBitmap.Height; j++)
+                    {
+                        if(isGreenPixel(tempBM.GetPixel(i, j), 2))
+                        {
+                            tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(255, tempBM.GetPixel(i, j).G, tempBM.GetPixel(i, j).B));
+                            greenPixels++;
+                        }      
+                    }
+                }
+            });
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS9.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        double percent = (double)(greenPixels * 100 / allPixels);
+                        changedImagePS9.Source = newBitmap;
+                        resultPercentPS9.Content = percent + "%";
+                    }
+                }));
+
+            });
         }
 
         private void originalZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
