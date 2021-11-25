@@ -2955,19 +2955,85 @@ namespace Grafika
 
         #endregion
 
+        private Bitmap originalBitmapPS8;
+        public bool grayScaleValuePS8 = false;
+
         private void zoomSliderPS8_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-
+            double zoom = e.NewValue;
+            ScaleTransform scale = new ScaleTransform(zoom, zoom);
+            ps8Image.LayoutTransform = scale;
         }
 
         private void uploadFilePS8_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg";
 
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    zoomScale = 1;
+                    ScaleTransform scale = new ScaleTransform(zoomScale, zoomScale);
+                    Image.LayoutTransform = scale;
+                    string extension = Path.GetExtension(openFileDialog.FileName);
+
+                    Bitmap bitmap = new Bitmap(openFileDialog.FileName);
+                    originalBitmapPS8 = bitmap;
+                    BitmapImage bitmapImage = FromBitmapToBitmapImage(bitmap);
+                    ps8Image.Source = bitmapImage;
+
+                }
+                catch
+                {
+                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                }
+            }
         }
+
+        private byte[,] kernelDylatacja = new byte[3, 3]
+        {
+            { 0, 1, 0},
+            { 1, 1, 1},
+            { 0, 1, 0}
+        };
 
         private void dylatacja_Click(object sender, RoutedEventArgs e)
         {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            Bitmap setBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            var task = Task.Run(() =>
+            {
+                for (int i = 0; i < setBitmap.Width - 1; i++)
+                {
+                    for (int j = 0; j < setBitmap.Height - 1; j++)
+                    {
+                        
+                    }
+                }
+            });
 
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(setBitmap);
+                    if (newBitmap != null)
+                    {
+                        ps8Image.Source = newBitmap;
+                    }
+                }));
+
+            });
         }
 
         private void erozja_Click(object sender, RoutedEventArgs e)
@@ -2992,7 +3058,49 @@ namespace Grafika
 
         private void getBackToOriginalPS8_Click(object sender, RoutedEventArgs e)
         {
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(originalBitmapPS8);
+            ps8Image.Source = bitmapImage;
+            grayScaleValuePS8 = false;
+        }
 
+        private void grayScalePS8_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            Bitmap setBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            var task = Task.Run(() =>
+            {
+                for (int i = 0; i < setBitmap.Width; i++)
+                {
+                    for (int j = 0; j < setBitmap.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        byte grayColor = (byte)(0.21 * color.R + 0.71 * color.G + 0.071 * color.B);
+                        setBitmap.SetPixel(i, j, System.Drawing.Color.FromArgb(grayColor, grayColor, grayColor));
+                    }
+                }
+            });
+
+            grayScaleValuePS8 = true;
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(setBitmap);
+                    if (newBitmap != null)
+                    {
+                        ps8Image.Source = newBitmap;
+                    }
+                }));
+
+            });
         }
     }
 }
