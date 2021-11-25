@@ -2954,5 +2954,148 @@ namespace Grafika
         }
 
         #endregion
+
+        private Bitmap originalBitmapPS9;
+        private int COLOR_MODE = 0;
+        //1 = red
+        //2 = green
+        //3 = blue
+
+        private void uploadFilePS9_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    zoomScale = 1;
+                    ScaleTransform scale = new ScaleTransform(zoomScale, zoomScale);
+                    Image.LayoutTransform = scale;
+                    string extension = Path.GetExtension(openFileDialog.FileName);
+
+                    Bitmap bitmap = new Bitmap(openFileDialog.FileName);
+                    originalBitmapPS9 = bitmap;
+                    BitmapImage bitmapImage = FromBitmapToBitmapImage(bitmap);
+                    originalImagePS9.Source = bitmapImage;
+
+                }
+                catch
+                {
+                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                }
+            }
+        }
+
+
+        private bool isGreenPixel(System.Drawing.Color color1, int tolerancja) => 
+            color1.G > color1.R + tolerancja && color1.G > color1.B + tolerancja;
+
+        private bool isRedPixel(System.Drawing.Color color1, int tolerancja) =>
+            color1.R > color1.G + tolerancja && color1.R > color1.B + tolerancja;
+
+        private bool isBluePixel(System.Drawing.Color color1, int tolerancja) =>
+            color1.B > color1.R + tolerancja && color1.B > color1.G + tolerancja;
+
+        private void greenPercent_Click(object sender, RoutedEventArgs e)
+        {
+            if (originalImagePS9.Source == null)
+            {
+                return;
+            }
+
+            indicatorPS9.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(originalImagePS9.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            Bitmap setBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+
+            int allPixels = bitmap.Width * bitmap.Height;
+            int countPixels = 0;
+
+            var task = Task.Run(() =>
+            {
+                for (int i = 0; i < setBitmap.Width; i++)
+                {
+                    for (int j = 0; j < setBitmap.Height; j++)
+                    {
+                        switch (COLOR_MODE)
+                        {
+                            case 1:
+                                if (isRedPixel(tempBM.GetPixel(i, j), 2))
+                                {
+                                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(tempBM.GetPixel(i, j).R, tempBM.GetPixel(i, j).G, 255));
+                                    countPixels++;
+                                }
+                                break;
+
+                            case 2:
+                                if (isGreenPixel(tempBM.GetPixel(i, j), 2))
+                                {
+                                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(255, tempBM.GetPixel(i, j).G, tempBM.GetPixel(i, j).B));
+                                    countPixels++;
+                                }
+                                break;
+
+                            case 3:
+                                if (isBluePixel(tempBM.GetPixel(i, j), 2))
+                                {
+                                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(tempBM.GetPixel(i, j).R, 255, tempBM.GetPixel(i, j).B));
+                                    countPixels++;
+                                }
+                                break;
+                        }     
+                    }
+                }
+            });
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS9.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        double percent = (double)(countPixels * 100 / allPixels);
+                        changedImagePS9.Source = newBitmap;
+                        resultPercentPS9.Content = percent + "%";
+                    }
+                }));
+
+            });
+        }
+
+        private void originalZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double zoom = e.NewValue;
+            ScaleTransform scale = new ScaleTransform(zoom, zoom);
+            originalImagePS9.LayoutTransform = scale;
+        }
+
+        private void changedZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double zoom = e.NewValue;
+            ScaleTransform scale = new ScaleTransform(zoom, zoom);
+            changedImagePS9.LayoutTransform = scale;
+        }
+
+        private void ps9Red_Checked(object sender, RoutedEventArgs e)
+        {
+            COLOR_MODE = 1;
+            greenPercent.IsEnabled = true;
+        }
+
+        private void ps9Green_Checked(object sender, RoutedEventArgs e)
+        {
+            COLOR_MODE = 2;
+            greenPercent.IsEnabled = true;
+        }
+
+        private void ps9Blue_Checked(object sender, RoutedEventArgs e)
+        {
+            COLOR_MODE = 3;
+            greenPercent.IsEnabled = true;
+        }
     }
 }
