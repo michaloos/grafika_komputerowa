@@ -2955,9 +2955,33 @@ namespace Grafika
 
         #endregion
 
+        private Bitmap originalBitmapPS9;
+
         private void uploadFilePS9_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg";
 
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    zoomScale = 1;
+                    ScaleTransform scale = new ScaleTransform(zoomScale, zoomScale);
+                    Image.LayoutTransform = scale;
+                    string extension = Path.GetExtension(openFileDialog.FileName);
+
+                    Bitmap bitmap = new Bitmap(openFileDialog.FileName);
+                    originalBitmapPS9 = bitmap;
+                    BitmapImage bitmapImage = FromBitmapToBitmapImage(bitmap);
+                    originalImagePS9.Source = bitmapImage;
+
+                }
+                catch
+                {
+                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                }
+            }
         }
 
         private void greenPercent_Click(object sender, RoutedEventArgs e)
@@ -2967,12 +2991,16 @@ namespace Grafika
 
         private void originalZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-
+            double zoom = e.NewValue;
+            ScaleTransform scale = new ScaleTransform(zoom, zoom);
+            originalImagePS9.LayoutTransform = scale;
         }
 
         private void changedZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-
+            double zoom = e.NewValue;
+            ScaleTransform scale = new ScaleTransform(zoom, zoom);
+            changedImagePS9.LayoutTransform = scale;
         }
     }
 }
