@@ -2956,6 +2956,10 @@ namespace Grafika
         #endregion
 
         private Bitmap originalBitmapPS9;
+        private int COLOR_MODE = 0;
+        //1 = red
+        //2 = green
+        //3 = blue
 
         private void uploadFilePS9_Click(object sender, RoutedEventArgs e)
         {
@@ -2988,6 +2992,12 @@ namespace Grafika
         private bool isGreenPixel(System.Drawing.Color color1, int tolerancja) => 
             color1.G > color1.R + tolerancja && color1.G > color1.B + tolerancja;
 
+        private bool isRedPixel(System.Drawing.Color color1, int tolerancja) =>
+            color1.R > color1.G + tolerancja && color1.R > color1.B + tolerancja;
+
+        private bool isBluePixel(System.Drawing.Color color1, int tolerancja) =>
+            color1.B > color1.R + tolerancja && color1.B > color1.G + tolerancja;
+
         private void greenPercent_Click(object sender, RoutedEventArgs e)
         {
             if (originalImagePS9.Source == null)
@@ -3002,7 +3012,7 @@ namespace Grafika
             Bitmap setBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
             int allPixels = bitmap.Width * bitmap.Height;
-            int greenPixels = 0;
+            int countPixels = 0;
 
             var task = Task.Run(() =>
             {
@@ -3010,11 +3020,32 @@ namespace Grafika
                 {
                     for (int j = 0; j < setBitmap.Height; j++)
                     {
-                        if(isGreenPixel(tempBM.GetPixel(i, j), 2))
+                        switch (COLOR_MODE)
                         {
-                            tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(255, tempBM.GetPixel(i, j).G, tempBM.GetPixel(i, j).B));
-                            greenPixels++;
-                        }      
+                            case 1:
+                                if (isRedPixel(tempBM.GetPixel(i, j), 2))
+                                {
+                                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(tempBM.GetPixel(i, j).R, tempBM.GetPixel(i, j).G, 255));
+                                    countPixels++;
+                                }
+                                break;
+
+                            case 2:
+                                if (isGreenPixel(tempBM.GetPixel(i, j), 2))
+                                {
+                                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(255, tempBM.GetPixel(i, j).G, tempBM.GetPixel(i, j).B));
+                                    countPixels++;
+                                }
+                                break;
+
+                            case 3:
+                                if (isBluePixel(tempBM.GetPixel(i, j), 2))
+                                {
+                                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(tempBM.GetPixel(i, j).R, 255, tempBM.GetPixel(i, j).B));
+                                    countPixels++;
+                                }
+                                break;
+                        }     
                     }
                 }
             });
@@ -3026,7 +3057,7 @@ namespace Grafika
                     newBitmap = FromBitmapToBitmapImage(tempBM);
                     if (newBitmap != null)
                     {
-                        double percent = (double)(greenPixels * 100 / allPixels);
+                        double percent = (double)(countPixels * 100 / allPixels);
                         changedImagePS9.Source = newBitmap;
                         resultPercentPS9.Content = percent + "%";
                     }
@@ -3047,6 +3078,24 @@ namespace Grafika
             double zoom = e.NewValue;
             ScaleTransform scale = new ScaleTransform(zoom, zoom);
             changedImagePS9.LayoutTransform = scale;
+        }
+
+        private void ps9Red_Checked(object sender, RoutedEventArgs e)
+        {
+            COLOR_MODE = 1;
+            greenPercent.IsEnabled = true;
+        }
+
+        private void ps9Green_Checked(object sender, RoutedEventArgs e)
+        {
+            COLOR_MODE = 2;
+            greenPercent.IsEnabled = true;
+        }
+
+        private void ps9Blue_Checked(object sender, RoutedEventArgs e)
+        {
+            COLOR_MODE = 3;
+            greenPercent.IsEnabled = true;
         }
     }
 }

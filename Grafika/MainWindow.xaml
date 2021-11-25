@@ -681,7 +681,10 @@
                             TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5"></Slider>
                         <StackPanel Margin="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <Button Name="uploadFilePS9" Click="uploadFilePS9_Click" Margin="5" Width="150">Wczytaj plik</Button>
-                            <Button Name="greenPercent" Click="greenPercent_Click" Margin="5">Oblicz procent</Button>
+                            <Button Name="greenPercent" Click="greenPercent_Click" Margin="5" IsEnabled="False">Oblicz procent</Button>
+                            <RadioButton Name="ps9Red" Checked="ps9Red_Checked" Margin="5">Kolor czerwony</RadioButton>
+                            <RadioButton Name="ps9Green" Checked="ps9Green_Checked" Margin="5">Kolor zielony</RadioButton>
+                            <RadioButton Name="ps9Blue" Checked="ps9Blue_Checked" Margin="5">Kolor niebieski</RadioButton>
                             <DockPanel>
                                 <Label>Skład procentowy:</Label>
                                 <Label Name="resultPercentPS9" HorizontalContentAlignment="Stretch"></Label>
