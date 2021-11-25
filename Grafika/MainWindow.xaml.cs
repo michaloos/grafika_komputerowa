@@ -2954,5 +2954,25 @@ namespace Grafika
         }
 
         #endregion
+
+        private void uploadFilePS9_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void greenPercent_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void originalZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
+
+        private void changedZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
     }
 }
