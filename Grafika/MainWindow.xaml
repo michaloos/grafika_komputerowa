@@ -656,7 +656,36 @@
                 </Grid>
             </TabItem>
             <TabItem Header="PS8" Width="100">
-                
+                <wpfx:BusyIndicator x:Name="indicatorPS8" IsBusy="False">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="360"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+
+                        </Grid.RowDefinitions>
+                        <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1"/>
+                        <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0"/>
+                        <Image x:Name="ps8Image" Margin="10,10,10,10" Stretch="None" Grid.Column="0" RenderOptions.BitmapScalingMode="HighQuality">
+
+                        </Image>
+                        <StackPanel HorizontalAlignment="Center" Grid.Column="1" Margin="10" VerticalAlignment="Center">
+                            <Button Name="uploadFilePS8" Click="uploadFilePS8_Click" Margin="5">Wczytaj plik</Button>
+                            <Button Name="dylatacja" Click="dylatacja_Click" Margin="5">Dylatacja</Button>
+                            <Button Name="erozja" Click="erozja_Click" Margin="5">Erozja</Button>
+                            <Button Name="otwarcie" Click="otwarcie_Click" Margin="5">Otwarcie</Button>
+                            <Button Name="domkniecie" Click="domkniecie_Click" Margin="5">Domknięcie</Button>
+                            <Button Name="hitOrMiss" Click="hitOrMiss_Click" Margin="5">Hit-or-miss</Button>
+                            <Button Name="getBackToOriginalPS8" Click="getBackToOriginalPS8_Click" Margin="5">Powrót do oryginalnego obrazu</Button>
+                            <Label>Zoom</Label>
+                            <Slider Name="zoomSliderPS8" Margin="5" TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5"
+                                    ValueChanged="zoomSliderPS8_ValueChanged" Width="300" >
+
+                            </Slider>
+                        </StackPanel>
+                    </Grid>
+                </wpfx:BusyIndicator>
             </TabItem>
             <TabItem Header="PS9" Width="100">
                 

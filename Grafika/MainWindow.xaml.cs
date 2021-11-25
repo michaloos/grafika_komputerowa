@@ -2954,5 +2954,45 @@ namespace Grafika
         }
 
         #endregion
+
+        private void zoomSliderPS8_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
+
+        private void uploadFilePS8_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void dylatacja_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void erozja_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void otwarcie_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void domkniecie_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void hitOrMiss_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void getBackToOriginalPS8_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
