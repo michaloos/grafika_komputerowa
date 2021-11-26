@@ -2955,6 +2955,399 @@ namespace Grafika
 
         #endregion
 
+        #region PS8
+        private Bitmap originalBitmapPS8;
+        public bool grayScaleValuePS8 = false;
+
+        private void uploadFilePS8_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    zoomScale = 1;
+                    ScaleTransform scale = new ScaleTransform(zoomScale, zoomScale);
+                    Image.LayoutTransform = scale;
+                    string extension = Path.GetExtension(openFileDialog.FileName);
+
+                    Bitmap bitmap = new Bitmap(openFileDialog.FileName);
+                    originalBitmapPS8 = bitmap;
+                    BitmapImage bitmapImage = FromBitmapToBitmapImage(bitmap);
+                    ps8Image.Source = bitmapImage;
+
+                }
+                catch
+                {
+                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                }
+            }
+        }
+
+        private byte[,] kernelDylatacja = new byte[3, 3]
+        {
+            { 0, 1, 0},
+            { 1, 1, 1},
+            { 0, 1, 0}
+        };
+
+        private Bitmap dilationOperation(Bitmap bitmap, byte[,] kernel)
+        {
+            Bitmap tempBM = bitmap;
+            for (int i = 1; i < tempBM.Width - 1; i++)
+            {
+                for (int j = 1; j < tempBM.Height - 1; j++)
+                {
+                    System.Drawing.Color color = tempBM.GetPixel(i, j);
+                    int newR = color.R;
+                    int newG = color.G;
+                    int newB = color.B;
+                    for (int k = -1; k <= 1; k++)
+                    {
+                        for (int l = -1; l <= 1; l++)
+                        {
+                            if (kernel[k + 1, l + 1] == 1)
+                            {
+                                System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
+                                newR = Math.Max(color.R, newColor.R);
+                                newG = Math.Max(color.G, newColor.G);
+                                newB = Math.Max(color.B, newColor.B);
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                        }
+                    }
+                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newR, newG, newB));
+                }
+            }
+            return tempBM;
+        }
+
+        private Bitmap erosionOperation(Bitmap bitmap, byte[,] kernel)
+        {
+            Bitmap tempBM = bitmap;
+            for (int i = 1; i < tempBM.Width - 1; i++)
+            {
+                for (int j = 1; j < tempBM.Height - 1; j++)
+                {
+                    System.Drawing.Color color = tempBM.GetPixel(i, j);
+                    int newR = color.R;
+                    int newG = color.G;
+                    int newB = color.B;
+                    for (int k = -1; k <= 1; k++)
+                    {
+                        for (int l = -1; l <= 1; l++)
+                        {
+                            if (kernel[k + 1, l + 1] == 1)
+                            {
+                                System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
+                                newR = Math.Min(color.R, newColor.R);
+                                newG = Math.Min(color.G, newColor.G);
+                                newB = Math.Min(color.B, newColor.B);
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                        }
+                    }
+                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newR, newG, newB));
+                }
+            }
+            return tempBM;
+        }
+
+        private void dylatacja_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            
+            var task = Task.Run(() =>
+            {
+                tempBM = dilationOperation(bitmap, kernelDylatacja);
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8ImageFiltred.Source = newBitmap;
+                    }
+                }));
+
+            });
+        }
+
+        private void erozja_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+
+            var task = Task.Run(() =>
+            {
+                tempBM = erosionOperation(bitmap, kernelDylatacja);
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8ImageFiltred.Source = newBitmap;
+                    }
+                }));
+
+            });
+        }
+
+        private void otwarcie_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+
+            var task = Task.Run(() =>
+            {
+                tempBM = erosionOperation(bitmap, kernelDylatacja);
+                tempBM = dilationOperation(tempBM, kernelDylatacja);
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8ImageFiltred.Source = newBitmap;
+                    }
+                }));
+
+            });
+        }
+
+        private void domkniecie_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+
+            var task = Task.Run(() =>
+            {
+                tempBM = dilationOperation(bitmap, kernelDylatacja);
+                tempBM = erosionOperation(tempBM, kernelDylatacja);
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8ImageFiltred.Source = newBitmap;
+                    }
+                }));
+
+            });
+        }
+
+        private byte[,] b1 = new byte[3, 3]
+        {
+            { 0, 1, 0},
+            { 1, 1, 1},
+            { 0, 1, 0}
+        };
+
+        private byte[,] b2 = new byte[3, 3]
+        {
+            { 1, 0, 1},
+            { 0, 0, 0},
+            { 1, 0, 1}
+        };
+
+        private Bitmap complementOperation(Bitmap bitmap)
+        {
+            System.Drawing.Color colorBlack = System.Drawing.Color.Black;
+            System.Drawing.Color colorWhite = System.Drawing.Color.White;
+            for(int i = 0; i < bitmap.Width; i++)
+            {
+                for(int j = 0; j < bitmap.Height; j++)
+                {
+                    System.Drawing.Color color = bitmap.GetPixel(i, j);
+                    bitmap.SetPixel(i, j, System.Drawing.Color.FromArgb(implementedValue(color.R), implementedValue(color.G), implementedValue(color.B)));
+                }
+            }
+            return bitmap;
+        }
+
+        private int implementedValue(int value)
+        {
+            return 255 - value;
+        }
+
+        private Bitmap andOperation(Bitmap bitmap1, Bitmap bitmap2)
+        {
+            Bitmap result = bitmap1;
+
+            for (int i = 0; i < bitmap1.Width; i++)
+            {
+                for (int j = 0; j < bitmap1.Height; j++)
+                {
+                    System.Drawing.Color color1 = bitmap1.GetPixel(i, j);
+                    System.Drawing.Color color2 = bitmap2.GetPixel(i, j);
+                    if(color1 != color2)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        result.SetPixel(i, j, System.Drawing.Color.FromArgb(implementedValue(color1.R), implementedValue(color1.G), implementedValue(color1.B)));
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private void hitOrMiss_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            Bitmap result1 = bitmap;
+            Bitmap result2 = bitmap;
+            Bitmap Ac = bitmap;
+
+            var task = Task.Run(() =>
+            {
+                result1 = erosionOperation(tempBM, b1);
+                Ac = complementOperation(tempBM);
+                result2 = erosionOperation(Ac, b2);
+                tempBM = andOperation(result1, result2);
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8ImageFiltred.Source = newBitmap;
+                    }
+                }));
+
+            });
+        }
+
+        private void getBackToOriginalPS8_Click(object sender, RoutedEventArgs e)
+        {
+            BitmapImage bitmapImage = FromBitmapToBitmapImage(originalBitmapPS8);
+            ps8Image.Source = bitmapImage;
+            grayScaleValuePS8 = false;
+        }
+
+        private void grayScalePS8_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            Bitmap setBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            var task = Task.Run(() =>
+            {
+                for (int i = 0; i < setBitmap.Width; i++)
+                {
+                    for (int j = 0; j < setBitmap.Height; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        byte grayColor = (byte)(0.21 * color.R + 0.71 * color.G + 0.071 * color.B);
+                        setBitmap.SetPixel(i, j, System.Drawing.Color.FromArgb(grayColor, grayColor, grayColor));
+                    }
+                }
+            });
+
+            grayScaleValuePS8 = true;
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(setBitmap);
+                    if (newBitmap != null)
+                    {
+                        ps8Image.Source = newBitmap;
+                    }
+                }));
+
+            });
+        }
+
+        private void originalZoomPS80_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double zoom = e.NewValue;
+            ScaleTransform scale = new ScaleTransform(zoom, zoom);
+            ps8Image.LayoutTransform = scale;
+        }
+
+        private void filteredZoomPS8_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double zoom = e.NewValue;
+            ScaleTransform scale = new ScaleTransform(zoom, zoom);
+            ps8ImageFiltred.LayoutTransform = scale;
+        }
+        #endregion
+        
+        #region PS9
+        
         private Bitmap originalBitmapPS9;
         private int COLOR_MODE = 0;
         //1 = red
@@ -3097,5 +3490,6 @@ namespace Grafika
             COLOR_MODE = 3;
             greenPercent.IsEnabled = true;
         }
+        #endregion
     }
 }
