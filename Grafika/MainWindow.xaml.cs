@@ -3009,12 +3009,130 @@ namespace Grafika
             Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
             BitmapImage newBitmap = null;
             Bitmap tempBM = bitmap;
-            Bitmap setBitmap = new Bitmap(bitmap.Width, bitmap.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            
             var task = Task.Run(() =>
             {
-                for (int i = 0; i < setBitmap.Width - 1; i++)
+                for (int i = 1; i < tempBM.Width - 1; i++)
                 {
-                    for (int j = 0; j < setBitmap.Height - 1; j++)
+                    for (int j = 1; j < tempBM.Height - 1; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i,j);
+                        int newR = color.R;
+                        int newG = color.G;
+                        int newB = color.B;
+                        for(int k = -1; k <= 1; k++)
+                        {
+                            for(int l = -1; l <= 1; l++)
+                            {
+                                if(kernelDylatacja[k + 1 ,l + 1] == 1)
+                                {
+                                    System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
+                                    newR = Math.Max(color.R, newColor.R);
+                                    newG = Math.Max(color.G, newColor.G);
+                                    newB = Math.Max(color.B, newColor.B);
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                                
+                            }
+                        }
+                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newR, newG, newB));
+                    }
+                }
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8ImageFiltred.Source = newBitmap;
+                    }
+                }));
+
+            });
+        }
+
+        private void erozja_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+
+            var task = Task.Run(() =>
+            {
+                for (int i = 1; i < tempBM.Width - 1; i++)
+                {
+                    for (int j = 1; j < tempBM.Height - 1; j++)
+                    {
+                        System.Drawing.Color color = tempBM.GetPixel(i, j);
+                        int newR = color.R;
+                        int newG = color.G;
+                        int newB = color.B;
+                        for (int k = -1; k <= 1; k++)
+                        {
+                            for (int l = -1; l <= 1; l++)
+                            {
+                                if (kernelDylatacja[k + 1, l + 1] == 1)
+                                {
+                                    System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
+                                    newR = Math.Min(color.R, newColor.R);
+                                    newG = Math.Min(color.G, newColor.G);
+                                    newB = Math.Min(color.B, newColor.B);
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+
+                            }
+                        }
+                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newR, newG, newB));
+                    }
+                }
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8ImageFiltred.Source = newBitmap;
+                    }
+                }));
+
+            });
+        }
+
+        private void otwarcie_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+
+            var task = Task.Run(() =>
+            {
+                for (int i = 0; i < tempBM.Width - 1; i++)
+                {
+                    for (int j = 0; j < tempBM.Height - 1; j++)
                     {
                         
                     }
@@ -3026,34 +3144,88 @@ namespace Grafika
                 Application.Current.Dispatcher.Invoke(new System.Action(() =>
                 {
                     indicatorPS8.IsBusy = false;
-                    newBitmap = FromBitmapToBitmapImage(setBitmap);
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
                     if (newBitmap != null)
                     {
-                        ps8Image.Source = newBitmap;
+                        ps8ImageFiltred.Source = newBitmap;
                     }
                 }));
 
             });
         }
 
-        private void erozja_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void otwarcie_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void domkniecie_Click(object sender, RoutedEventArgs e)
         {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
 
+            var task = Task.Run(() =>
+            {
+                for (int i = 0; i < tempBM.Width - 1; i++)
+                {
+                    for (int j = 0; j < tempBM.Height - 1; j++)
+                    {
+                        
+                    }
+                }
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8ImageFiltred.Source = newBitmap;
+                    }
+                }));
+
+            });
         }
 
         private void hitOrMiss_Click(object sender, RoutedEventArgs e)
         {
+            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
 
+            var task = Task.Run(() =>
+            {
+                for (int i = 0; i < tempBM.Width - 1; i++)
+                {
+                    for (int j = 0; j < tempBM.Height - 1; j++)
+                    {
+                        
+                    }
+                }
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8ImageFiltred.Source = newBitmap;
+                    }
+                }));
+
+            });
         }
 
         private void getBackToOriginalPS8_Click(object sender, RoutedEventArgs e)
@@ -3101,6 +3273,20 @@ namespace Grafika
                 }));
 
             });
+        }
+
+        private void originalZoomPS80_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double zoom = e.NewValue;
+            ScaleTransform scale = new ScaleTransform(zoom, zoom);
+            ps8Image.LayoutTransform = scale;
+        }
+
+        private void filteredZoomPS8_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double zoom = e.NewValue;
+            ScaleTransform scale = new ScaleTransform(zoom, zoom);
+            ps8ImageFiltred.LayoutTransform = scale;
         }
     }
 }
