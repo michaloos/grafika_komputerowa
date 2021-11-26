@@ -698,7 +698,39 @@
                 </wpfx:BusyIndicator>
             </TabItem>
             <TabItem Header="PS9" Width="100">
-                
+                <wpfx:BusyIndicator x:Name="indicatorPS9" IsBusy="False">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="225"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="80"/>
+                        </Grid.RowDefinitions>
+                        <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.RowSpan="2"/>
+                        <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.RowSpan="2"/>
+                        <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="2" Grid.RowSpan="2"/>
+                        <Image Name="originalImagePS9" Grid.Column="0" Margin="10,10,10,10" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+                        <Image Name="changedImagePS9" Grid.Column="1" Margin="10,10,10,10" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality"></Image>
+                        <Slider Name="originalZoom" ValueChanged="originalZoom_ValueChanged" Grid.Column="0" Grid.Row="1" Width="400" VerticalAlignment="Center"
+                            TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5"></Slider>
+                        <Slider Name="changedZoom" ValueChanged="changedZoom_ValueChanged" Grid.Column="1" Grid.Row="1" Width="400" VerticalAlignment="Center"
+                            TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5"></Slider>
+                        <StackPanel Margin="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Button Name="uploadFilePS9" Click="uploadFilePS9_Click" Margin="5" Width="150">Wczytaj plik</Button>
+                            <Button Name="greenPercent" Click="greenPercent_Click" Margin="5" IsEnabled="False">Oblicz procent</Button>
+                            <RadioButton Name="ps9Red" Checked="ps9Red_Checked" Margin="5">Kolor czerwony</RadioButton>
+                            <RadioButton Name="ps9Green" Checked="ps9Green_Checked" Margin="5">Kolor zielony</RadioButton>
+                            <RadioButton Name="ps9Blue" Checked="ps9Blue_Checked" Margin="5">Kolor niebieski</RadioButton>
+                            <DockPanel>
+                                <Label>Skład procentowy:</Label>
+                                <Label Name="resultPercentPS9" HorizontalContentAlignment="Stretch"></Label>
+                            </DockPanel>
+                        </StackPanel>
+                    </Grid>
+                </wpfx:BusyIndicator>
             </TabItem>
         </TabControl>
     </Grid>
