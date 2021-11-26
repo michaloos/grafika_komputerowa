@@ -2999,6 +2999,76 @@ namespace Grafika
             { 0, 1, 0}
         };
 
+        private Bitmap dilationOperation(Bitmap bitmap)
+        {
+            Bitmap tempBM = bitmap;
+            for (int i = 1; i < tempBM.Width - 1; i++)
+            {
+                for (int j = 1; j < tempBM.Height - 1; j++)
+                {
+                    System.Drawing.Color color = tempBM.GetPixel(i, j);
+                    int newR = color.R;
+                    int newG = color.G;
+                    int newB = color.B;
+                    for (int k = -1; k <= 1; k++)
+                    {
+                        for (int l = -1; l <= 1; l++)
+                        {
+                            if (kernelDylatacja[k + 1, l + 1] == 1)
+                            {
+                                System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
+                                newR = Math.Max(color.R, newColor.R);
+                                newG = Math.Max(color.G, newColor.G);
+                                newB = Math.Max(color.B, newColor.B);
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                        }
+                    }
+                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newR, newG, newB));
+                }
+            }
+            return tempBM;
+        }
+
+        private Bitmap erosionOperation(Bitmap bitmap)
+        {
+            Bitmap tempBM = bitmap;
+            for (int i = 1; i < tempBM.Width - 1; i++)
+            {
+                for (int j = 1; j < tempBM.Height - 1; j++)
+                {
+                    System.Drawing.Color color = tempBM.GetPixel(i, j);
+                    int newR = color.R;
+                    int newG = color.G;
+                    int newB = color.B;
+                    for (int k = -1; k <= 1; k++)
+                    {
+                        for (int l = -1; l <= 1; l++)
+                        {
+                            if (kernelDylatacja[k + 1, l + 1] == 1)
+                            {
+                                System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
+                                newR = Math.Min(color.R, newColor.R);
+                                newG = Math.Min(color.G, newColor.G);
+                                newB = Math.Min(color.B, newColor.B);
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                        }
+                    }
+                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newR, newG, newB));
+                }
+            }
+            return tempBM;
+        }
+
         private void dylatacja_Click(object sender, RoutedEventArgs e)
         {
             if (ps8Image.Source == null || grayScaleValuePS8 == false)
@@ -3012,35 +3082,7 @@ namespace Grafika
             
             var task = Task.Run(() =>
             {
-                for (int i = 1; i < tempBM.Width - 1; i++)
-                {
-                    for (int j = 1; j < tempBM.Height - 1; j++)
-                    {
-                        System.Drawing.Color color = tempBM.GetPixel(i,j);
-                        int newR = color.R;
-                        int newG = color.G;
-                        int newB = color.B;
-                        for(int k = -1; k <= 1; k++)
-                        {
-                            for(int l = -1; l <= 1; l++)
-                            {
-                                if(kernelDylatacja[k + 1 ,l + 1] == 1)
-                                {
-                                    System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
-                                    newR = Math.Max(color.R, newColor.R);
-                                    newG = Math.Max(color.G, newColor.G);
-                                    newB = Math.Max(color.B, newColor.B);
-                                }
-                                else
-                                {
-                                    continue;
-                                }
-                                
-                            }
-                        }
-                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newR, newG, newB));
-                    }
-                }
+                tempBM = dilationOperation(bitmap);
             });
 
             task.ContinueWith((t) =>
@@ -3071,35 +3113,7 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                for (int i = 1; i < tempBM.Width - 1; i++)
-                {
-                    for (int j = 1; j < tempBM.Height - 1; j++)
-                    {
-                        System.Drawing.Color color = tempBM.GetPixel(i, j);
-                        int newR = color.R;
-                        int newG = color.G;
-                        int newB = color.B;
-                        for (int k = -1; k <= 1; k++)
-                        {
-                            for (int l = -1; l <= 1; l++)
-                            {
-                                if (kernelDylatacja[k + 1, l + 1] == 1)
-                                {
-                                    System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
-                                    newR = Math.Min(color.R, newColor.R);
-                                    newG = Math.Min(color.G, newColor.G);
-                                    newB = Math.Min(color.B, newColor.B);
-                                }
-                                else
-                                {
-                                    continue;
-                                }
-
-                            }
-                        }
-                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newR, newG, newB));
-                    }
-                }
+                tempBM = erosionOperation(bitmap);
             });
 
             task.ContinueWith((t) =>
@@ -3130,13 +3144,8 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                for (int i = 0; i < tempBM.Width - 1; i++)
-                {
-                    for (int j = 0; j < tempBM.Height - 1; j++)
-                    {
-                        
-                    }
-                }
+                tempBM = erosionOperation(bitmap);
+                tempBM = dilationOperation(tempBM);
             });
 
             task.ContinueWith((t) =>
@@ -3167,13 +3176,8 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                for (int i = 0; i < tempBM.Width - 1; i++)
-                {
-                    for (int j = 0; j < tempBM.Height - 1; j++)
-                    {
-                        
-                    }
-                }
+                tempBM = dilationOperation(bitmap);
+                tempBM = erosionOperation(tempBM);
             });
 
             task.ContinueWith((t) =>
