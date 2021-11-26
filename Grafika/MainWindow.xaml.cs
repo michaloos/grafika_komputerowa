@@ -2958,13 +2958,6 @@ namespace Grafika
         private Bitmap originalBitmapPS8;
         public bool grayScaleValuePS8 = false;
 
-        private void zoomSliderPS8_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            double zoom = e.NewValue;
-            ScaleTransform scale = new ScaleTransform(zoom, zoom);
-            ps8Image.LayoutTransform = scale;
-        }
-
         private void uploadFilePS8_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -2999,7 +2992,7 @@ namespace Grafika
             { 0, 1, 0}
         };
 
-        private Bitmap dilationOperation(Bitmap bitmap)
+        private Bitmap dilationOperation(Bitmap bitmap, byte[,] kernel)
         {
             Bitmap tempBM = bitmap;
             for (int i = 1; i < tempBM.Width - 1; i++)
@@ -3014,7 +3007,7 @@ namespace Grafika
                     {
                         for (int l = -1; l <= 1; l++)
                         {
-                            if (kernelDylatacja[k + 1, l + 1] == 1)
+                            if (kernel[k + 1, l + 1] == 1)
                             {
                                 System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
                                 newR = Math.Max(color.R, newColor.R);
@@ -3034,7 +3027,7 @@ namespace Grafika
             return tempBM;
         }
 
-        private Bitmap erosionOperation(Bitmap bitmap)
+        private Bitmap erosionOperation(Bitmap bitmap, byte[,] kernel)
         {
             Bitmap tempBM = bitmap;
             for (int i = 1; i < tempBM.Width - 1; i++)
@@ -3049,7 +3042,7 @@ namespace Grafika
                     {
                         for (int l = -1; l <= 1; l++)
                         {
-                            if (kernelDylatacja[k + 1, l + 1] == 1)
+                            if (kernel[k + 1, l + 1] == 1)
                             {
                                 System.Drawing.Color newColor = tempBM.GetPixel(i + k, j + l);
                                 newR = Math.Min(color.R, newColor.R);
@@ -3082,7 +3075,7 @@ namespace Grafika
             
             var task = Task.Run(() =>
             {
-                tempBM = dilationOperation(bitmap);
+                tempBM = dilationOperation(bitmap, kernelDylatacja);
             });
 
             task.ContinueWith((t) =>
@@ -3113,7 +3106,7 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                tempBM = erosionOperation(bitmap);
+                tempBM = erosionOperation(bitmap, kernelDylatacja);
             });
 
             task.ContinueWith((t) =>
@@ -3144,8 +3137,8 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                tempBM = erosionOperation(bitmap);
-                tempBM = dilationOperation(tempBM);
+                tempBM = erosionOperation(bitmap, kernelDylatacja);
+                tempBM = dilationOperation(tempBM, kernelDylatacja);
             });
 
             task.ContinueWith((t) =>
@@ -3176,8 +3169,8 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                tempBM = dilationOperation(bitmap);
-                tempBM = erosionOperation(tempBM);
+                tempBM = dilationOperation(bitmap, kernelDylatacja);
+                tempBM = erosionOperation(tempBM, kernelDylatacja);
             });
 
             task.ContinueWith((t) =>
@@ -3195,6 +3188,64 @@ namespace Grafika
             });
         }
 
+        private byte[,] b1 = new byte[3, 3]
+        {
+            { 0, 1, 0},
+            { 1, 1, 1},
+            { 0, 1, 0}
+        };
+
+        private byte[,] b2 = new byte[3, 3]
+        {
+            { 1, 0, 1},
+            { 0, 0, 0},
+            { 1, 0, 1}
+        };
+
+        private Bitmap complementOperation(Bitmap bitmap)
+        {
+            System.Drawing.Color colorBlack = System.Drawing.Color.Black;
+            System.Drawing.Color colorWhite = System.Drawing.Color.White;
+            for(int i = 0; i < bitmap.Width; i++)
+            {
+                for(int j = 0; j < bitmap.Height; j++)
+                {
+                    System.Drawing.Color color = bitmap.GetPixel(i, j);
+                    bitmap.SetPixel(i, j, System.Drawing.Color.FromArgb(implementedValue(color.R), implementedValue(color.G), implementedValue(color.B)));
+                }
+            }
+            return bitmap;
+        }
+
+        private int implementedValue(int value)
+        {
+            return 255 - value;
+        }
+
+        private Bitmap andOperation(Bitmap bitmap1, Bitmap bitmap2)
+        {
+            Bitmap result = bitmap1;
+
+            for (int i = 0; i < bitmap1.Width; i++)
+            {
+                for (int j = 0; j < bitmap1.Height; j++)
+                {
+                    System.Drawing.Color color1 = bitmap1.GetPixel(i, j);
+                    System.Drawing.Color color2 = bitmap2.GetPixel(i, j);
+                    if(color1 != color2)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        result.SetPixel(i, j, System.Drawing.Color.FromArgb(implementedValue(color1.R), implementedValue(color1.G), implementedValue(color1.B)));
+                    }
+                }
+            }
+
+            return result;
+        }
+
         private void hitOrMiss_Click(object sender, RoutedEventArgs e)
         {
             if (ps8Image.Source == null || grayScaleValuePS8 == false)
@@ -3205,16 +3256,16 @@ namespace Grafika
             Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
             BitmapImage newBitmap = null;
             Bitmap tempBM = bitmap;
+            Bitmap result1 = bitmap;
+            Bitmap result2 = bitmap;
+            Bitmap Ac = bitmap;
 
             var task = Task.Run(() =>
             {
-                for (int i = 0; i < tempBM.Width - 1; i++)
-                {
-                    for (int j = 0; j < tempBM.Height - 1; j++)
-                    {
-                        
-                    }
-                }
+                result1 = erosionOperation(tempBM, b1);
+                Ac = complementOperation(tempBM);
+                result2 = erosionOperation(Ac, b2);
+                tempBM = andOperation(result1, result2);
             });
 
             task.ContinueWith((t) =>
