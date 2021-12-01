@@ -692,6 +692,11 @@
                             <Button Name="domkniecie" Click="domkniecie_Click" Margin="5">Domknięcie</Button>
                             <Button Name="hitOrMiss" Click="hitOrMiss_Click" Margin="5">Hit-or-miss</Button>
                             <Button Name="grayScalePS8" Click="grayScalePS8_Click" Margin="5">Filtr Odcieni szarości</Button>
+                            
+                            <DockPanel>
+                                <Button Name="Binaryzacja" Click="Binaryzacja_Click" Margin="5" MinWidth="115">Binaryzacja</Button>
+                                <TextBox Name="binaryzacjaPS8" Margin="5" MaxWidth="50" PreviewTextInput="binaryzacjaPS8_PreviewTextInput"></TextBox>
+                            </DockPanel>
                             <Button Name="getBackToOriginalPS8" Click="getBackToOriginalPS8_Click" Margin="5">Powrót do oryginalnego obrazu</Button>
                         </StackPanel>
                     </Grid>

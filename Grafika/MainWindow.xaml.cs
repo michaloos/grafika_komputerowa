@@ -3065,7 +3065,7 @@ namespace Grafika
 
         private void dylatacja_Click(object sender, RoutedEventArgs e)
         {
-            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            if (ps8Image.Source == null)
             {
                 return;
             }
@@ -3096,7 +3096,7 @@ namespace Grafika
 
         private void erozja_Click(object sender, RoutedEventArgs e)
         {
-            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            if (ps8Image.Source == null)
             {
                 return;
             }
@@ -3127,7 +3127,7 @@ namespace Grafika
 
         private void otwarcie_Click(object sender, RoutedEventArgs e)
         {
-            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            if (ps8Image.Source == null)
             {
                 return;
             }
@@ -3159,7 +3159,7 @@ namespace Grafika
 
         private void domkniecie_Click(object sender, RoutedEventArgs e)
         {
-            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            if (ps8Image.Source == null)
             {
                 return;
             }
@@ -3249,7 +3249,7 @@ namespace Grafika
 
         private void hitOrMiss_Click(object sender, RoutedEventArgs e)
         {
-            if (ps8Image.Source == null || grayScaleValuePS8 == false)
+            if (ps8Image.Source == null)
             {
                 return;
             }
@@ -3344,10 +3344,68 @@ namespace Grafika
             ScaleTransform scale = new ScaleTransform(zoom, zoom);
             ps8ImageFiltred.LayoutTransform = scale;
         }
+
+        private void Binaryzacja_Click(object sender, RoutedEventArgs e)
+        {
+            if (ps8Image.Source == null || binaryzacjaPS8.Text == "")
+            {
+                return;
+            }
+            indicatorPS8.IsBusy = true;
+            Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
+            BitmapImage newBitmap = null;
+            Bitmap tempBM = bitmap;
+            int binValue = int.Parse(binaryzacjaPS8.Text);
+            var task = Task.Run(() =>
+            {
+                if (binValue < 0 || binValue > 255)
+                {
+                    MessageBoxResult result = MessageBox.Show("Wartość powinna mieścić się od 0 do 255!");
+                }
+                else
+                {
+                    for (int i = 0; i < tempBM.Width; i++)
+                    {
+                        for (int j = 0; j < tempBM.Height; j++)
+                        {
+                            if (tempBM.GetPixel(i, j).R >= binValue)
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.White);
+                            }
+                            else
+                            {
+                                tempBM.SetPixel(i, j, System.Drawing.Color.Black);
+                            }
+                        }
+                    }
+                }
+            });
+
+            task.ContinueWith((t) =>
+            {
+                Application.Current.Dispatcher.Invoke(new System.Action(() =>
+                {
+                    indicatorPS8.IsBusy = false;
+                    newBitmap = FromBitmapToBitmapImage(tempBM);
+                    if (newBitmap != null)
+                    {
+                        ps8Image.Source = newBitmap;
+                    }
+                }));
+
+            });
+        }
+
+        private void binaryzacjaPS8_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+-");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
         #endregion
-        
+
         #region PS9
-        
+
         private Bitmap originalBitmapPS9;
         private int COLOR_MODE = 0;
         //1 = red
@@ -3490,6 +3548,9 @@ namespace Grafika
             COLOR_MODE = 3;
             greenPercent.IsEnabled = true;
         }
+
         #endregion
+
+        
     }
 }
