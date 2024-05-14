@@ -3,27 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
-using Encoder = System.Drawing.Imaging.Encoder;
 using Path = System.IO.Path;
 using System.Drawing;
-using System.Collections;
 using System.Text.RegularExpressions;
 using System.Windows.Media.Media3D;
-using System.Windows.Interop;
 using System.Xml.Serialization;
-using System.Windows.Markup;
 
 namespace Grafika
 {
@@ -52,61 +44,43 @@ namespace Grafika
         public MainWindow()
         {
             InitializeComponent();
-            colorRGBCube();
+            ColorRgbCube();
         }
 
-        private void drawing_Checked(object sender, RoutedEventArgs e)
-        {
-            ACTION_MODE = 1;
-        }
+        private void DrawingChecked(object sender, RoutedEventArgs e) => ACTION_MODE = 1;
 
-        private void moving_Checked(object sender, RoutedEventArgs e)
-        {
-            ACTION_MODE = 2;
-        }
+        private void MovingChecked(object sender, RoutedEventArgs e) => ACTION_MODE = 2;
 
-        private void changeShape_Checked(object sender, RoutedEventArgs e)
-        {
-            ACTION_MODE = 3;
-        }
+        private void ChangeShapeChecked(object sender, RoutedEventArgs e) => ACTION_MODE = 3;
 
-        private void line_Checked(object sender, RoutedEventArgs e)
-        {
-            SHAPE_MODE = 1;
-        }
+        private void LineChecked(object sender, RoutedEventArgs e) => SHAPE_MODE = 1;
 
-        private void rectangle_Checked(object sender, RoutedEventArgs e)
-        {
-            SHAPE_MODE = 2;
-        }
+        private void RectangleChecked(object sender, RoutedEventArgs e) => SHAPE_MODE = 2;
 
-        private void ellipse_Checked(object sender, RoutedEventArgs e)
-        {
-            SHAPE_MODE = 3;
-        }
+        private void EllipseChecked(object sender, RoutedEventArgs e) => SHAPE_MODE = 3;
 
-        private void CanvasField_MouseDown(object sender, MouseButtonEventArgs e)
+        private void CanvasFieldMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(ACTION_MODE != 1)
+            if (ACTION_MODE != 1)
             {
                 return;
             }
-            
+
             startPoints = e.GetPosition(CanvasField);
             shape = null;
         }
 
-        private void CanvasField_MouseMove(object sender, MouseEventArgs e)
+        private void CanvasFieldMouseMove(object sender, MouseEventArgs e)
         {
-            if(SHAPE_MODE == 0 || ACTION_MODE == 0)
+            if (SHAPE_MODE == 0 || ACTION_MODE == 0)
             {
                 return;
             }
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (ACTION_MODE == 1)
                 {
-                    if(shape != null)
+                    if (shape != null)
                     {
                         CanvasField.Children.Remove(shape);
                     }
@@ -156,27 +130,26 @@ namespace Grafika
                             break;
                     }
 
-                    shape.MouseDown += Select_Shape; //event do zaznaczenia wybranej figury
-                    shape.MouseMove += Move_Shape; //event do przesuwania myszą figury
-                    shape.MouseUp += Moved_Shape; //event do "skończenia" przesuwania figury
+                    shape.MouseDown += SelectShape; //event do zaznaczenia wybranej figury
+                    shape.MouseMove += MoveShape; //event do przesuwania myszą figury
+                    shape.MouseUp += MovedShape; //event do "skończenia" przesuwania figury
 
                     CanvasField.Children.Add(shape);
                 }
             }
         }
 
-        private void Moved_Shape(object sender, MouseEventArgs e)
+        private void MovedShape(object sender, MouseEventArgs e)
         {
             shape = sender as Shape;
             shape.ReleaseMouseCapture();
         }
 
-        private void Move_Shape(object sender, MouseEventArgs e)
+        private void MoveShape(object sender, MouseEventArgs e)
         {
-            if(ACTION_MODE == 2 && e.LeftButton == MouseButtonState.Pressed)
+            if (ACTION_MODE == 2 && e.LeftButton == MouseButtonState.Pressed)
             {
-                var dragShape = sender as Shape;
-                if (dragShape != null)
+                if (sender is Shape dragShape)
                 {
                     System.Windows.Point currentPosition = e.GetPosition(CanvasField);
                     var transform = dragShape.RenderTransform as TranslateTransform ?? new TranslateTransform();
@@ -185,25 +158,24 @@ namespace Grafika
                     dragShape.RenderTransform = new TranslateTransform(transform.X, transform.Y);
                 }
             }
-            if(ACTION_MODE == 3 && e.LeftButton == MouseButtonState.Pressed)
+            if (ACTION_MODE == 3 && e.LeftButton == MouseButtonState.Pressed)
             {
-                var changeShape = sender as Shape;
-                if(changeShape != null)
+                if (sender is Shape changeShape)
                 {
-                    if(changeShape is Line)
+                    if (changeShape is Line)
                     {
-                        System.Windows.Point currentPosition = e.GetPosition(CanvasField);
+                        _ = e.GetPosition(CanvasField);
                     }
                 }
             }
         }
 
-        private void Select_Shape(object sender, MouseEventArgs e)
+        private void SelectShape(object sender, MouseEventArgs e)
         {
-            if(ACTION_MODE != 1)
+            if (ACTION_MODE != 1)
             {
                 shape = sender as Shape;
-                if(e.LeftButton == MouseButtonState.Pressed && ACTION_MODE == 2)
+                if (e.LeftButton == MouseButtonState.Pressed && ACTION_MODE == 2)
                 {
                     TranslateTransform = shape.RenderTransform as TranslateTransform ?? new TranslateTransform();
                     clickPosition = e.GetPosition(CanvasField);
@@ -212,14 +184,14 @@ namespace Grafika
             }
         }
 
-        private void drawLine_Click(object sender, RoutedEventArgs e)
+        private void DrawLineClick(object sender, RoutedEventArgs e)
         {
-            var x1Point = Double.TryParse(x1line.Text,out double x1);
-            var y1Point = Double.TryParse(y1line.Text,out double y1);
-            var x2Point = Double.TryParse(x2line.Text,out double x2);
-            var y2Point = Double.TryParse(y2line.Text,out double y2);
+            var x1Point = Double.TryParse(x1line.Text, out double x1);
+            var y1Point = Double.TryParse(y1line.Text, out double y1);
+            var x2Point = Double.TryParse(x2line.Text, out double x2);
+            var y2Point = Double.TryParse(y2line.Text, out double y2);
 
-            if(x1Point && y1Point && x2Point && y2Point)
+            if (x1Point && y1Point && x2Point && y2Point)
             {
                 shape = new Line
                 {
@@ -230,9 +202,9 @@ namespace Grafika
                     StrokeThickness = 5,
                     Stroke = System.Windows.Media.Brushes.Red
                 };
-                shape.MouseDown += Select_Shape; //event do zaznaczenia wybranej figury
-                shape.MouseMove += Move_Shape; //event do przesuwania myszą figury
-                shape.MouseUp += Moved_Shape; //event do "skończenia" przesuwania figury
+                shape.MouseDown += SelectShape; //event do zaznaczenia wybranej figury
+                shape.MouseMove += MoveShape; //event do przesuwania myszą figury
+                shape.MouseUp += MovedShape; //event do "skończenia" przesuwania figury
                 CanvasField.Children.Add(shape);
             }
             else
@@ -241,7 +213,7 @@ namespace Grafika
             }
         }
 
-        private void drawRectangle_Click(object sender, RoutedEventArgs e)
+        private void DrawRectangleClick(object sender, RoutedEventArgs e)
         {
             var x1Point = Double.TryParse(x1rectangle.Text, out double x1);
             var y1Point = Double.TryParse(y1rectangle.Text, out double y1);
@@ -260,10 +232,10 @@ namespace Grafika
                 shape.SetValue(Canvas.LeftProperty, x1);
                 shape.SetValue(Canvas.TopProperty, y1);
 
-                shape.MouseDown += Select_Shape; //event do zaznaczenia wybranej figury
-                shape.MouseMove += Move_Shape; //event do przesuwania myszą figury
-                shape.MouseUp += Moved_Shape; //event do "skończenia" przesuwania figury
-                
+                shape.MouseDown += SelectShape; //event do zaznaczenia wybranej figury
+                shape.MouseMove += MoveShape; //event do przesuwania myszą figury
+                shape.MouseUp += MovedShape; //event do "skończenia" przesuwania figury
+
                 CanvasField.Children.Add(shape);
             }
             else
@@ -273,18 +245,18 @@ namespace Grafika
 
         }
 
-        private void drawEllipse_Click(object sender, RoutedEventArgs e)
+        private void DrawEllipseClick(object sender, RoutedEventArgs e)
         {
             var x1Point = Double.TryParse(x1ellipse.Text, out double x1);
             var y1Point = Double.TryParse(y1ellipse.Text, out double y1);
             var radius = Double.TryParse(radiusellipse.Text, out double r);
 
-            if(x1Point && y1Point && radius)
+            if (x1Point && y1Point && radius)
             {
                 shape = new Ellipse
                 {
-                    Width = Math.Abs(r*2),
-                    Height = Math.Abs(r*2),
+                    Width = Math.Abs(r * 2),
+                    Height = Math.Abs(r * 2),
                     StrokeThickness = 5,
                     Stroke = System.Windows.Media.Brushes.Yellow
                 };
@@ -292,10 +264,10 @@ namespace Grafika
                 shape.SetValue(Canvas.LeftProperty, x1);
                 shape.SetValue(Canvas.TopProperty, y1);
 
-                shape.MouseDown += Select_Shape; //event do zaznaczenia wybranej figury
-                shape.MouseMove += Move_Shape; //event do przesuwania myszą figury
-                shape.MouseUp += Moved_Shape; //event do "skończenia" przesuwania figury
-                
+                shape.MouseDown += SelectShape; //event do zaznaczenia wybranej figury
+                shape.MouseMove += MoveShape; //event do przesuwania myszą figury
+                shape.MouseUp += MovedShape; //event do "skończenia" przesuwania figury
+
                 CanvasField.Children.Add(shape);
             }
             else
@@ -304,9 +276,9 @@ namespace Grafika
             }
         }
 
-        private void lineBigger_Click(object sender, RoutedEventArgs e)
+        private void LineBiggerClick(object sender, RoutedEventArgs e)
         {
-            if(ACTION_MODE != 3 || shape == null || !(shape is Line))
+            if (ACTION_MODE != 3 || shape == null || !(shape is Line))
             {
                 return;
             }
@@ -317,14 +289,14 @@ namespace Grafika
                 Line line = shape as Line;
                 if (line.X2 < line.X1)
                 {
-                    value = value * -1;
+                    value *= -1;
                 }
-                
+
                 double currentLenght = Math.Sqrt(Math.Pow(Math.Abs(line.X1 - line.X2), 2) + Math.Pow(Math.Abs(line.Y1 - line.Y2), 2));
                 double cos = line.ActualWidth / currentLenght;
 
                 double newLenght = currentLenght + value;
-                
+
                 // width/currentLenght = (width + a)/newLenght
                 //          (width + a)
                 //  cos = -------------  => cos * newLenght = width + a => a = (cos * newLenght) - width
@@ -340,16 +312,16 @@ namespace Grafika
                 double m = (line.Y2 - line.Y1) / (line.X2 - line.X1);
                 double c = line.Y1 - m * line.X1;
 
-                line.X2 = line.X2 + a/2;
+                line.X2 += a / 2;
                 line.Y2 = m * line.X2 + c;
             }
             else
             {
-                MessageBoxResult result = MessageBox.Show("Wprowadzone dane są niepoprawne!");
+                _ = MessageBox.Show("Wprowadzone dane są niepoprawne!");
             }
         }
 
-        private void changeRectangle_Click(object sender, RoutedEventArgs e)
+        private void ChangeRectangleClick(object sender, RoutedEventArgs e)
         {
             if (ACTION_MODE != 3 || shape == null || shape is Line || shape is Ellipse)
             {
@@ -359,13 +331,13 @@ namespace Grafika
             var width = Double.TryParse(changeWidth.Text, out double newWidth);
             var height = Double.TryParse(changeHeight.Text, out double newHeight);
 
-            if(width && height)
+            if (width && height)
             {
                 System.Windows.Shapes.Rectangle rectangle = shape as System.Windows.Shapes.Rectangle;
                 //nowe wartości nie mogą spowodować że szerokość/wysokość będzie mniejsza od zera
-                if(rectangle.Width + newWidth <= 0 || rectangle.Height + newHeight <= 0)
+                if (rectangle.Width + newWidth <= 0 || rectangle.Height + newHeight <= 0)
                 {
-                    MessageBoxResult result = MessageBox.Show("Wprowadzone dane są niepoprawne!");
+                    _ = MessageBox.Show("Wprowadzone dane są niepoprawne!");
                 }
                 else
                 {
@@ -374,29 +346,29 @@ namespace Grafika
                     //kształt figury nie może wyjść poza obszar do rysowania
                     if (x >= CanvasField.ActualWidth || y >= CanvasField.ActualHeight)
                     {
-                        MessageBoxResult result = MessageBox.Show("Wprowadzone dane są niepoprawne!");
+                        _ = MessageBox.Show("Wprowadzone dane są niepoprawne!");
                     }
                     else
                     {
-                        rectangle.Width = rectangle.Width + newWidth;
-                        rectangle.Height = rectangle.Height + newHeight;
+                        rectangle.Width += newWidth;
+                        rectangle.Height += newHeight;
                     }
                 }
             }
             else
             {
-                MessageBoxResult result = MessageBox.Show("Wprowadzone dane są niepoprawne!");
+                _ = MessageBox.Show("Wprowadzone dane są niepoprawne!");
             }
         }
 
-        private void changeEllipse_Click(object sender, RoutedEventArgs e)
+        private void ChangeEllipseClick(object sender, RoutedEventArgs e)
         {
             if (ACTION_MODE != 3 || shape == null || shape is Line || shape is System.Windows.Shapes.Rectangle)
             {
                 return;
             }
 
-            var radius = Double.TryParse(changeRadius.Text,out double newRadius);
+            var radius = Double.TryParse(changeRadius.Text, out double newRadius);
 
             if (radius)
             {
@@ -405,7 +377,7 @@ namespace Grafika
                 //nowy promień nie może być mniejszy od 0
                 if (oldRadius + newRadius <= 0)
                 {
-                    MessageBoxResult result = MessageBox.Show("Wprowadzone dane są niepoprawne!");
+                    _ = MessageBox.Show("Wprowadzone dane są niepoprawne!");
                 }
                 else
                 {
@@ -414,7 +386,7 @@ namespace Grafika
                     //kształt figury nie może wyjść poza obszar do rysowania
                     if (x >= CanvasField.ActualWidth || y >= CanvasField.ActualHeight)
                     {
-                        MessageBoxResult result = MessageBox.Show("Wprowadzone dane są niepoprawne!");
+                        _ = MessageBox.Show("Wprowadzone dane są niepoprawne!");
                     }
                     else
                     {
@@ -425,17 +397,19 @@ namespace Grafika
             }
             else
             {
-                MessageBoxResult result = MessageBox.Show("Wprowadzone dane są niepoprawne!");
+                _ = MessageBox.Show("Wprowadzone dane są niepoprawne!");
             }
         }
 
         #endregion
 
         #region PS2
-        private void uploadFile_Click(object sender, RoutedEventArgs e)
+        private void UploadFileClick(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg|PPM Image|*.ppm";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "JPEG Image|*.jpg;*.jpeg|PPM Image|*.ppm"
+            };
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -456,18 +430,18 @@ namespace Grafika
                         Bitmap bitmap = PPMToBitmap(openFileDialog.FileName);
                         BitmapImage bitmapImage = FromBitmapToBitmapImage(bitmap);
                         Image.Source = bitmapImage;
-                    }              
+                    }
                 }
                 catch
                 {
-                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                    _ = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
                 }
             }
         }
 
-        private void saveFile_Click(object sender, RoutedEventArgs e)
+        private void SaveFileClick(object sender, RoutedEventArgs e)
         {
-            if(Image.Source == null)
+            if (Image.Source == null)
             {
                 return;
             }
@@ -478,7 +452,7 @@ namespace Grafika
             };
 
             var save = new JpegBitmapEncoder();
-            if(saveFile.ShowDialog() != false)
+            if (saveFile.ShowDialog() != false)
             {
                 try
                 {
@@ -508,7 +482,7 @@ namespace Grafika
                     }
 
                     save.Frames.Add(BitmapFrame.Create((BitmapSource)Image.Source));
-                    using(var stream = saveFile.OpenFile())
+                    using (var stream = saveFile.OpenFile())
                     {
                         save.Save(stream);
                     }
@@ -516,16 +490,16 @@ namespace Grafika
                 }
                 catch
                 {
-                    MessageBoxResult result = MessageBox.Show("Podczas próby zapisu pliku coś poszło nie tak.");
+                    _ = MessageBox.Show("Podczas próby zapisu pliku coś poszło nie tak.");
                 }
             }
-            
+
         }
 
         private BitmapImage FromBitmapToBitmapImage(Bitmap bitmap)
         {
             BitmapImage bitmapImage = new BitmapImage();
-            using(MemoryStream memoryStream = new MemoryStream())
+            using (MemoryStream memoryStream = new MemoryStream())
             {
                 bitmap.Save(memoryStream, ImageFormat.Bmp);
                 memoryStream.Position = 0;
@@ -554,7 +528,7 @@ namespace Grafika
                 previousLength = fs.Length;
                 using (var streamRead = new StreamReader(fs))
                 {
-                    
+
                     while (!streamRead.EndOfStream)
                     {
                         if (fileType.Equals("P6") && width != 0 && height != 0 && maxColor != 0)
@@ -562,7 +536,7 @@ namespace Grafika
                             break;
                         }
                         var line = streamRead.ReadLine();
-                        if(!String.IsNullOrEmpty(line) && line.StartsWith("#"))
+                        if (!String.IsNullOrEmpty(line) && line.StartsWith("#"))
                         {
                             int index = line.IndexOf("#");
                             if (index >= 0)
@@ -571,8 +545,8 @@ namespace Grafika
                                 linesToAvoidP6++;
                             }
                         }
-                        
-                        if (!String.IsNullOrEmpty(line) && !line.StartsWith("#") && !fileType.Equals("") )
+
+                        if (!String.IsNullOrEmpty(line) && !line.StartsWith("#") && !fileType.Equals(""))
                         {
                             if (width != 0 && height != 0 && maxColor != 0 && !fileType.Equals(""))
                             {
@@ -582,17 +556,17 @@ namespace Grafika
                             {
                                 linesToAvoidP6++;
                                 List<int> correctValues = new List<int>(); //ostateczne wartości
-                                List<string> splitedList = line.Split(new char[]{' ','\t' },StringSplitOptions.RemoveEmptyEntries).ToList();
+                                List<string> splitedList = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                                 foreach (var element in splitedList)
                                 {
                                     if (Int32.TryParse(element, out int value))
                                         correctValues.Add(value);
                                 }
-                                if(correctValues.Count == 1)
+                                if (correctValues.Count == 1)
                                 {
                                     width = correctValues[0];
                                 }
-                                if(correctValues.Count == 2)
+                                if (correctValues.Count == 2)
                                 {
                                     width = correctValues[0];
                                     height = correctValues[1];
@@ -604,7 +578,7 @@ namespace Grafika
                                     maxColor = correctValues[2];
                                 }
                             }
-                            else if(height == 0 && width != 0 && !fileType.Equals(""))
+                            else if (height == 0 && width != 0 && !fileType.Equals(""))
                             {
                                 linesToAvoidP6++;
                                 List<int> correctValues = new List<int>(); //ostateczne wartości
@@ -624,7 +598,7 @@ namespace Grafika
                                     maxColor = correctValues[1];
                                 }
                             }
-                            else if(height != 0 && width != 0 && maxColor == 0 && !fileType.Equals(""))
+                            else if (height != 0 && width != 0 && maxColor == 0 && !fileType.Equals(""))
                             {
                                 linesToAvoidP6++;
                                 List<int> correctValues = new List<int>(); //ostateczne wartości
@@ -671,7 +645,7 @@ namespace Grafika
                     if (splitedLine.Count % 3 != 0)
                     {
                         List<string> nextLine = lines[i + 1].Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        for(int k = 0; k < nextLine.Count; k++)
+                        for (int k = 0; k < nextLine.Count; k++)
                         {
                             splitedLine.Add(nextLine[k]);
                         }
@@ -679,7 +653,7 @@ namespace Grafika
                         nextLine.Clear();
                         continue;
                     }
-                    if(splitedLine.Count % 3 == 0)
+                    if (splitedLine.Count % 3 == 0)
                     {
                         for (int j = 0; j < splitedLine.Count; j += 3)
                         {
@@ -712,13 +686,13 @@ namespace Grafika
                     }
                     else
                     {
-                        MessageBoxResult result = MessageBox.Show("Plik jest większy niż zostało to zapisane w pliku.");
+                        _ = MessageBox.Show("Plik jest większy niż zostało to zapisane w pliku.");
                     }
                 }
                 return bitmap;
-                
+
             }
-            else if(fileType.Equals("P6"))
+            else if (fileType.Equals("P6"))
             {
                 Bitmap bitmap = new Bitmap(width, height);
                 var binRead = new BinaryReader(new FileStream(file, FileMode.Open));
@@ -730,16 +704,16 @@ namespace Grafika
                     if (binRead.ReadByte() == '\n')
                     {
                         counter++;
-                    }  
+                    }
                     if (counter == linesToAvoidP6)
                     {
                         break;
                     }
-                        
+
                 }
                 for (int i = 0; i < height; i++)
                 {
-                    for(int j = 0; j < width; j++)
+                    for (int j = 0; j < width; j++)
                     {
                         int Red = (int)(binRead.ReadByte() * (double)(255 / maxColor));
                         int Green = (int)(binRead.ReadByte() * (double)(255 / maxColor));
@@ -756,12 +730,12 @@ namespace Grafika
 
         public double zoomScale = 1;
 
-        private void zoomIn_Click(object sender, RoutedEventArgs e)
+        private void ZoomInClick(object sender, RoutedEventArgs e)
         {
             if (Image.Source == null)
                 return;
-            
-            if(zoomScale < 20)
+
+            if (zoomScale < 20)
             {
                 zoomScale += 2;
             }
@@ -770,7 +744,7 @@ namespace Grafika
             Image.LayoutTransform = scale;
         }
 
-        private void zoomOut_Click(object sender, RoutedEventArgs e)
+        private void ZoomOutClick(object sender, RoutedEventArgs e)
         {
             if (Image.Source == null)
                 return;
@@ -791,60 +765,54 @@ namespace Grafika
         private int colorMode = 0;
         //1 == RGB
         //2 == CMYK
-        
-        private void selectRGB_Checked(object sender, RoutedEventArgs e)
-        {
-            colorMode = 1;
-        }
 
-        private void selectCMYK_Checked(object sender, RoutedEventArgs e)
-        {
-            colorMode = 2;
-        }
+        private void SelectRgbChecked(object sender, RoutedEventArgs e) => colorMode = 1;
 
-        private void redRGB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void SelectCmykChecked(object sender, RoutedEventArgs e) => colorMode = 2;
+
+        private void RedRgbPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void greenRGB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void GreenRgbPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void blueRGB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void BlueRGgbPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void cyanCMYK_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void CyanCmykPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void magentaCMYK_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void MagentaCmykPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void yellowCMYK_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void YellowCmykPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void blackCMYK_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void BlackCmykPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void color_change_RGB()
+        private void ColorChangeRgb()
         {
             var R = redSlider.Value;
             var G = greenSlider.Value;
@@ -855,7 +823,7 @@ namespace Grafika
             }
         }
 
-        private void color_change_CMYK()
+        private void ColorChangeCmyk()
         {
             double cyan = cyanSlider.Value / 100;
             double magenta = magentaSlider.Value / 100;
@@ -875,13 +843,13 @@ namespace Grafika
             }
         }
 
-        private void fromRGBToCMYK()
+        private void FromRgbToCmyk()
         {
             double red = redSlider.Value / 255;
             double green = greenSlider.Value / 255;
             double blue = blueSlider.Value / 255;
 
-            if(colorMode == 1 && (red > 0 || green > 0 || blue > 0))
+            if (colorMode == 1 && (red > 0 || green > 0 || blue > 0))
             {
                 double tempBlack = Math.Min(1 - red, Math.Min(1 - green, 1 - blue));
                 double tempCyan = (1 - red - tempBlack) / (1 - tempBlack);
@@ -893,19 +861,19 @@ namespace Grafika
                 magentaSlider.Value = tempMagenta * 100;
                 yellowSlider.Value = tempYellow * 100;
             }
-            color_change_RGB();
+            ColorChangeRgb();
         }
-        
-        private void fromCMYKToRGB()
+
+        private void FromCmykToRgb()
         {
             double cyan = cyanSlider.Value / 100;
             double magenta = magentaSlider.Value / 100;
             double yellow = yellowSlider.Value / 100;
             double black = blackSlider.Value / 100;
 
-            if(colorMode == 2 && (cyan > 0 || magenta > 0 || yellow > 0 || black > 0))
+            if (colorMode == 2 && (cyan > 0 || magenta > 0 || yellow > 0 || black > 0))
             {
-                var tempRed = 1 - Math.Min(1,cyan*(1-black)+black);
+                var tempRed = 1 - Math.Min(1, cyan * (1 - black) + black);
                 var tempGreen = 1 - Math.Min(1, magenta * (1 - black) + black);
                 var tempBlue = 1 - Math.Min(1, yellow * (1 - black) + black);
 
@@ -913,45 +881,24 @@ namespace Grafika
                 greenSlider.Value = 255 * tempGreen;
                 blueSlider.Value = 255 * tempBlue;
             }
-            color_change_CMYK();
-        } 
-
-        private void redRGB_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            fromRGBToCMYK();
+            ColorChangeCmyk();
         }
 
-        private void greenRGB_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            fromRGBToCMYK();
-        }
+        private void RedRgbTextChanged(object sender, TextChangedEventArgs e) => FromRgbToCmyk();
 
-        private void blueRGB_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            fromRGBToCMYK();
-        }
+        private void GreenRgbTextChanged(object sender, TextChangedEventArgs e) => FromRgbToCmyk();
 
-        private void cyanCMYK_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            fromCMYKToRGB();
-        }
+        private void BlueRgbTextChanged(object sender, TextChangedEventArgs e) => FromRgbToCmyk();
 
-        private void magentaCMYK_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            fromCMYKToRGB();
-        }
+        private void CyanCmykTextChanged(object sender, TextChangedEventArgs e) => FromCmykToRgb();
 
-        private void yellowCMYK_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            fromCMYKToRGB();
-        }
+        private void MagentaCmykTextChanged(object sender, TextChangedEventArgs e) => FromCmykToRgb();
 
-        private void blackCMYK_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            fromCMYKToRGB();
-        }
+        private void YellowCmykTextChanged(object sender, TextChangedEventArgs e) => FromCmykToRgb();
 
-        private void colorRGBCube()
+        private void BlackCmykTextChanged(object sender, TextChangedEventArgs e) => FromCmykToRgb();
+
+        private void ColorRgbCube()
         {
             Bitmap bitmapRed = new Bitmap(256, 256);
             for (int i = 255, x = 0; i >= 0 && x <= 255; i--, x++)
@@ -1026,7 +973,7 @@ namespace Grafika
             sideWithBlackGreenBlue.Material = new DiffuseMaterial(brushBlackGreenBlue);
         }
 
-        private void angleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void AngleSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double value = angleSlider.Value;
             myAngleRotation1.Angle = value;
@@ -1037,7 +984,7 @@ namespace Grafika
             myAngleRotation6.Angle = value;
         }
 
-        private void axisSliderx_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void AxisSliderxValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double value = axisSliderx.Value;
             var y = myAngleRotation1.Axis.Y;
@@ -1050,7 +997,7 @@ namespace Grafika
             myAngleRotation6.Axis = new Vector3D(value, y, z);
         }
 
-        private void axisSlidery_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void AxisSlideryValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double value = axisSliderx.Value;
             var x = myAngleRotation1.Axis.X;
@@ -1063,7 +1010,7 @@ namespace Grafika
             myAngleRotation6.Axis = new Vector3D(x, value, z);
         }
 
-        private void axisSliderz_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void AxisSliderzValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double value = axisSliderx.Value;
             var x = myAngleRotation1.Axis.X;
@@ -1076,19 +1023,17 @@ namespace Grafika
             myAngleRotation6.Axis = new Vector3D(x, y, value);
         }
 
-
-
-
-
         #endregion
 
         #region PS4
 
         private Bitmap originBitmap;
-        private void uploadFIlePS4_Click(object sender, RoutedEventArgs e)
+        private void UploadFilePS4Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "JPEG Image|*.jpg;*.jpeg"
+            };
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -1103,16 +1048,16 @@ namespace Grafika
                     originBitmap = bitmap;
                     BitmapImage bitmapImage = FromBitmapToBitmapImage(bitmap);
                     ps4Image.Source = bitmapImage;
-                    
+
                 }
                 catch
                 {
-                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                    _ = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
                 }
             }
         }
 
-        private void filtrWygladz_Click(object sender, RoutedEventArgs e)
+        private void FiltrWygladzClick(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1173,7 +1118,7 @@ namespace Grafika
             });
         }
 
-        private void filtrMediana_Click(object sender, RoutedEventArgs e)
+        private void FiltrMedianaClick(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1183,7 +1128,7 @@ namespace Grafika
             Bitmap bitmap = ImageSourceToBitmap(ps4Image.Source);
             BitmapImage newBitmap = null;
             Bitmap tempBM = bitmap;
-            var task = Task.Run(() => 
+            var task = Task.Run(() =>
             {
                 for (int i = 1; i < tempBM.Width - 1; i++)
                 {
@@ -1219,9 +1164,9 @@ namespace Grafika
 
                         tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(medianaR, medianaG, medianaB));
                     }
-                } 
+                }
             });
-            
+
             task.ContinueWith((t) =>
             {
                 Application.Current.Dispatcher.Invoke(new System.Action(() =>
@@ -1231,14 +1176,14 @@ namespace Grafika
                     if (newBitmap != null)
                     {
                         ps4Image.Source = newBitmap;
-                    }              
+                    }
                 }));
-                
+
             });
-            
+
         }
 
-        private void filtrWykrywKraw_Click(object sender, RoutedEventArgs e)
+        private void FiltrWykrywKrawClick(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1249,7 +1194,7 @@ namespace Grafika
                 return;
             }
 
-            int[,] maskx = new int[,] 
+            int[,] maskx = new int[,]
             {
                 {-1,0,1 },
                 {-2,0,2 },
@@ -1279,21 +1224,21 @@ namespace Grafika
                         int newGreenX = 0, newGreenY = 0;
                         int newBlueX = 0, newBlueY = 0;
                         System.Drawing.Color[] colors = new System.Drawing.Color[9];
-                        
-                        colors[0] = tempBM.GetPixel(i - 1, j - 1); 
+
+                        colors[0] = tempBM.GetPixel(i - 1, j - 1);
                         colors[1] = tempBM.GetPixel(i - 1, j);
-                        colors[2] = tempBM.GetPixel(i - 1, j + 1); 
+                        colors[2] = tempBM.GetPixel(i - 1, j + 1);
                         colors[3] = tempBM.GetPixel(i, j - 1);
                         colors[4] = tempBM.GetPixel(i, j);
-                        colors[5] = tempBM.GetPixel(i, j + 1); 
-                        colors[6] = tempBM.GetPixel(i + 1, j - 1); 
+                        colors[5] = tempBM.GetPixel(i, j + 1);
+                        colors[6] = tempBM.GetPixel(i + 1, j - 1);
                         colors[7] = tempBM.GetPixel(i + 1, j);
                         colors[8] = tempBM.GetPixel(i + 1, j + 1);
 
                         int v = 0;
-                        for(int k = 0; k < 3; k++)
+                        for (int k = 0; k < 3; k++)
                         {
-                            for(int l = 0; l < 3; l++)
+                            for (int l = 0; l < 3; l++)
                             {
                                 newRedX += maskx[k, l] * colors[v].R;
                                 newGreenX += maskx[k, l] * colors[v].G;
@@ -1343,12 +1288,12 @@ namespace Grafika
             });
         }
 
-        private void filtrGornPrzepustWyostrz_Click(object sender, RoutedEventArgs e)
+        private void FiltrGornPrzepustWyostrzClick(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void filtrGaussa_Click(object sender, RoutedEventArgs e)
+        private void FiltrGaussaClick(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1396,7 +1341,7 @@ namespace Grafika
                                     + colors[3].B * mask[0, 2] + colors[4].B * mask[1, 0] + colors[5].B * mask[1, 2]
                                     + colors[6].B * mask[2, 0] + colors[7].B * mask[2, 1] + colors[8].B * mask[2, 2]) / 16;
 
-                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newRed,newGreen,newBlue));
+                        tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newRed, newGreen, newBlue));
                     }
                 }
             });
@@ -1416,14 +1361,14 @@ namespace Grafika
             });
         }
 
-        private void getBackToOriginal_Click(object sender, RoutedEventArgs e)
+        private void GetBackToOriginalClick(object sender, RoutedEventArgs e)
         {
             BitmapImage bitmapImage = FromBitmapToBitmapImage(originBitmap);
             ps4Image.Source = bitmapImage;
             grayScale = false;
         }
 
-        private void okDodawanie_Click(object sender, RoutedEventArgs e)
+        private void OkDodawanieClick(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1475,7 +1420,7 @@ namespace Grafika
                             {
                                 tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, (int)(color.G + addG), color.B));
                             }
-                        }                    
+                        }
                     }
                 }
             }
@@ -1496,7 +1441,7 @@ namespace Grafika
                             {
                                 tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(color.R, color.G, (int)(color.B + addB)));
                             }
-                        }                    
+                        }
                     }
                 }
             }
@@ -1504,7 +1449,7 @@ namespace Grafika
             ps4Image.Source = bitmapImage;
         }
 
-        private void okOdejmowanie_Click(object sender, RoutedEventArgs e)
+        private void OkOdejmowanieClick(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1585,7 +1530,7 @@ namespace Grafika
             ps4Image.Source = bitmapImage;
         }
 
-        private void okMnozenie_Click(object sender, RoutedEventArgs e)
+        private void OkMnozenieClick(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1669,7 +1614,7 @@ namespace Grafika
             ps4Image.Source = bitmapImage;
         }
 
-        private void okDzielenie_Click(object sender, RoutedEventArgs e)
+        private void OkDzielenieClick(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1755,7 +1700,7 @@ namespace Grafika
 
         private bool grayScale = false;
 
-        private void grayNO1_Click(object sender, RoutedEventArgs e)
+        private void GrayNO1Click(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1765,7 +1710,7 @@ namespace Grafika
             Bitmap bitmap = ImageSourceToBitmap(ps4Image.Source);
             BitmapImage newBitmap = null;
             Bitmap tempBM = bitmap;
-            var task = Task.Run(() => 
+            var task = Task.Run(() =>
             {
                 for (int i = 0; i < tempBM.Width; i++)
                 {
@@ -1794,7 +1739,7 @@ namespace Grafika
             });
         }
 
-        private void grayNO2_Click(object sender, RoutedEventArgs e)
+        private void GrayNO2Click(object sender, RoutedEventArgs e)
         {
             if (ps4Image.Source == null)
             {
@@ -1833,9 +1778,9 @@ namespace Grafika
             });
         }
 
-        private void brightnessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void BrightnessSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if(ps4Image.Source == null)
+            if (ps4Image.Source == null)
             {
                 return;
             }
@@ -1845,38 +1790,38 @@ namespace Grafika
 
             System.Drawing.Color color;
 
-            for(int i = 0; i < tempBM.Width; i++)
+            for (int i = 0; i < tempBM.Width; i++)
             {
-                for(int j = 0; j < tempBM.Height; j++)
+                for (int j = 0; j < tempBM.Height; j++)
                 {
                     color = tempBM.GetPixel(i, j);
                     int newRed = color.R + brightness;
                     int newGreen = color.G + brightness;
                     int newBlue = color.B + brightness;
 
-                    if(newRed > 255)
+                    if (newRed > 255)
                     {
                         newRed = 255;
                     }
-                    
+
                     if (newGreen > 255)
                     {
                         newGreen = 255;
                     }
-                    
+
                     if (newBlue > 255)
                     {
                         newBlue = 255;
                     }
 
-                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newRed,newGreen,newBlue));
+                    tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(newRed, newGreen, newBlue));
                 }
             }
             BitmapImage bitmapImage = FromBitmapToBitmapImage(tempBM);
             ps4Image.Source = bitmapImage;
         }
 
-        private void lessBrightnessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void LessBrightnessSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (ps4Image.Source == null)
             {
@@ -1929,79 +1874,79 @@ namespace Grafika
             return bitmap;
         }
 
-        private void dodawanieR_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void DodawanieRPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void dodawanieG_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void DodawanieGPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void dodawanieB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void DodawanieBPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void odejmowanieR_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void OdejmowanieRPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void odejmowanieG_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void OdejmowanieGPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void odejmowanieB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void OdejmowanieBPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void mnozenieR_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void MnozenieRPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void mnozenieG_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void MnozenieGPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void mnozenieB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void MnozenieBPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void dzielenieR_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void DzielenieRPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void dzielenieG_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void DzielenieGPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void dzielenieB_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void DzielenieBPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void zoomSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ZoomSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoom = e.NewValue;
             ScaleTransform scale = new ScaleTransform(zoom, zoom);
@@ -2011,7 +1956,7 @@ namespace Grafika
 
         #region PS5
 
-        private void binByUserValue_Click(object sender, RoutedEventArgs e)
+        private void BinByUserValueClick(object sender, RoutedEventArgs e)
         {
             if (ps5Image.Source == null || grayScaleValuePS5 == false || binUserValue.Text.Equals(""))
             {
@@ -2046,7 +1991,7 @@ namespace Grafika
                     }
                 }
             });
-            
+
 
             task.ContinueWith((t) =>
             {
@@ -2066,17 +2011,19 @@ namespace Grafika
         private Bitmap originalBitmapPS5;
         public bool grayScaleValuePS5 = false;
 
-        private void getBackToOriginalPS5_Click(object sender, RoutedEventArgs e)
+        private void GetBackToOriginalPS5Click(object sender, RoutedEventArgs e)
         {
             BitmapImage bitmapImage = FromBitmapToBitmapImage(originalBitmapPS5);
             ps5Image.Source = bitmapImage;
             grayScaleValuePS5 = false;
         }
 
-        private void uploadFilePS5_Click(object sender, RoutedEventArgs e)
+        private void UploadFilePS5Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "JPEG Image|*.jpg;*.jpeg"
+            };
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -2095,19 +2042,19 @@ namespace Grafika
                 }
                 catch
                 {
-                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                    _ = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
                 }
             }
         }
 
-        private void zoomSliderPS5_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ZoomSliderPS5ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoom = e.NewValue;
             ScaleTransform scale = new ScaleTransform(zoom, zoom);
             ps5Image.LayoutTransform = scale;
         }
 
-        private void grayScalePS5_Click(object sender, RoutedEventArgs e)
+        private void GrayScalePS5Click(object sender, RoutedEventArgs e)
         {
             if (ps5Image.Source == null)
             {
@@ -2147,19 +2094,19 @@ namespace Grafika
             });
         }
 
-        private void binUserValue_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void BinUserValuePreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
-        private void histogramShow_Click(object sender, RoutedEventArgs e)
+        private void HistogramShowClick(object sender, RoutedEventArgs e)
         {
             HistogramImage histogram = new HistogramImage(this);
             histogram.Show();
         }
 
-        private void percentBlack_Click(object sender, RoutedEventArgs e)
+        private void PercentBlackClick(object sender, RoutedEventArgs e)
         {
             if (ps5Image.Source == null || grayScaleValuePS5 == false || percentBlackValue.Text.Equals(""))
             {
@@ -2171,7 +2118,7 @@ namespace Grafika
             BitmapImage newBitmap = null;
             Bitmap tempBM = bitmap;
             double percentVal = Double.Parse(percentBlackValue.Text);
-            
+
             var task = Task.Run(() =>
             {
                 if (percentVal < 0 || percentVal > 100)
@@ -2184,8 +2131,8 @@ namespace Grafika
 
                     double percentValBy100 = percentVal / 100;
                     double howManyPixels = pixelAmount * percentValBy100;
-                    getColors(tempBM);
-                    getColorsArray();
+                    GetColors(tempBM);
+                    GetColorsArray();
                     int suma = 0;
                     int binLevel;
                     for (int k = 0; k < colorsArray.Length; k++)
@@ -2226,17 +2173,17 @@ namespace Grafika
                 }));
 
             });
-            
+
         }
 
-        private void percentBlackValue_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void PercentBlackValuePreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
         }
 
         private byte[] grayscale;
-        private void getColors(Bitmap bitmap)
+        private void GetColors(Bitmap bitmap)
         {
             int ilosc = 0;
 
@@ -2253,9 +2200,9 @@ namespace Grafika
             }
         }
 
-        int[] colorsArray = new int[256];
+        readonly int[] colorsArray = new int[256];
 
-        private void getColorsArray()
+        private void GetColorsArray()
         {
             for (int i = 0; i < colorsArray.Length; i++)
             {
@@ -2264,10 +2211,10 @@ namespace Grafika
             foreach (var value in grayscale)
             {
                 colorsArray[value] += 1;
-            }   
+            }
         }
 
-        private void binIteration_Click(object sender, RoutedEventArgs e)
+        private void BinIterationClick(object sender, RoutedEventArgs e)
         {
             if (ps5Image.Source == null || grayScaleValuePS5 == false)
             {
@@ -2286,11 +2233,11 @@ namespace Grafika
                 int minValue = 0;
                 int maxValue = 0;
 
-                getColors(tempBM);
-                getColorsArray();
-                for(int i = 0; i < colorsArray.Length; i++)
+                GetColors(tempBM);
+                GetColorsArray();
+                for (int i = 0; i < colorsArray.Length; i++)
                 {
-                    if(colorsArray[i] != 0)
+                    if (colorsArray[i] != 0)
                     {
                         minValue = i;
                         break;
@@ -2332,7 +2279,7 @@ namespace Grafika
         private List<Shape> shapes = new List<Shape>();
         private List<System.Windows.Point> bezierPoints = new List<System.Windows.Point>();
 
-        private void reset_Click(object sender, RoutedEventArgs e)
+        private void ResetClick(object sender, RoutedEventArgs e)
         {
             canvasPS5.Children.Clear();
             shapes = new List<Shape>();
@@ -2342,23 +2289,17 @@ namespace Grafika
             yValue.Text = "";
         }
 
-        private void createPoint_Checked(object sender, RoutedEventArgs e)
-        {
-            SELECTED_MODE_BEZIER = 1;
-        }
+        private void CreatePointChecked(object sender, RoutedEventArgs e) => SELECTED_MODE_BEZIER = 1;
 
-        private void movePoint_Checked(object sender, RoutedEventArgs e)
-        {
-            SELECTED_MODE_BEZIER = 2;
-        }
+        private void MovePointChecked(object sender, RoutedEventArgs e) => SELECTED_MODE_BEZIER = 2;
 
-        private void canvasPS5_MouseDown(object sender, MouseButtonEventArgs e)
+        private void CanvasPS5MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(SELECTED_MODE_BEZIER != 1)
+            if (SELECTED_MODE_BEZIER != 1)
             {
                 return;
             }
-            if(SELECTED_MODE_BEZIER == 1)
+            if (SELECTED_MODE_BEZIER == 1)
             {
                 System.Windows.Point point = e.GetPosition(canvasPS5);
                 shapePS5 = new Ellipse
@@ -2371,42 +2312,41 @@ namespace Grafika
                 shapePS5.SetValue(Canvas.LeftProperty, point.X - 7);
                 shapePS5.SetValue(Canvas.TopProperty, point.Y - 7);
 
-                shapePS5.MouseDown += Select_ShapePS5; //event do zaznaczenia wybranej figury
-                shapePS5.MouseMove += Move_ShapePS5; //event do przesuwania myszą figury
-                shapePS5.MouseUp += Moved_ShapePS5; //event do "skończenia" przesuwania figury
+                shapePS5.MouseDown += SelectShapePS5; //event do zaznaczenia wybranej figury
+                shapePS5.MouseMove += MoveShapePS5; //event do przesuwania myszą figury
+                shapePS5.MouseUp += MovedShapePS5; //event do "skończenia" przesuwania figury
 
                 canvasPS5.Children.Add(shapePS5);
                 shapes.Add(shapePS5);
-                
+
             }
             Lines();
-            drawBezier();
+            DrawBezier();
         }
 
-        private void Moved_ShapePS5(object sender, MouseEventArgs e)
+        private void MovedShapePS5(object sender, MouseEventArgs e)
         {
             shapePS5 = sender as Shape;
             shapePS5.ReleaseMouseCapture();
         }
 
-        private void Move_ShapePS5(object sender, MouseEventArgs e)
+        private void MoveShapePS5(object sender, MouseEventArgs e)
         {
             if (SELECTED_MODE_BEZIER == 2 && e.LeftButton == MouseButtonState.Pressed)
             {
-                var dragShape = sender as Shape;
-                if (dragShape != null)
+                if (sender is Shape dragShape)
                 {
                     System.Windows.Point currentPosition = e.GetPosition(canvasPS5);
                     dragShape.SetValue(Canvas.LeftProperty, currentPosition.X - 7);
                     dragShape.SetValue(Canvas.TopProperty, currentPosition.Y - 7);
                 }
                 Lines();
-                drawBezier();
+                DrawBezier();
             }
-            
+
         }
 
-        private void Select_ShapePS5(object sender, MouseEventArgs e)
+        private void SelectShapePS5(object sender, MouseEventArgs e)
         {
             if (SELECTED_MODE_BEZIER == 2)
             {
@@ -2420,34 +2360,34 @@ namespace Grafika
             }
         }
 
-        private void canvasPS5_MouseMove(object sender, MouseEventArgs e)
+        private void CanvasPS5MouseMove(object sender, MouseEventArgs e)
         {
-            if(SELECTED_MODE_BEZIER != 2)
+            if (SELECTED_MODE_BEZIER != 2)
             {
                 return;
             }
             else
             {
-                if(e.LeftButton == MouseButtonState.Pressed)
+                if (e.LeftButton == MouseButtonState.Pressed)
                 {
-                    shapePS5.MouseDown += Select_ShapePS5; //event do zaznaczenia wybranej figury
-                    shapePS5.MouseMove += Move_ShapePS5; //event do przesuwania myszą figury
-                    shapePS5.MouseUp += Moved_ShapePS5; //event do "skończenia" przesuwania figury
+                    shapePS5.MouseDown += SelectShapePS5; //event do zaznaczenia wybranej figury
+                    shapePS5.MouseMove += MoveShapePS5; //event do przesuwania myszą figury
+                    shapePS5.MouseUp += MovedShapePS5; //event do "skończenia" przesuwania figury
                 }
             }
         }
 
-        private void addPointByXY_Click(object sender, RoutedEventArgs e)
+        private void AddPointByXYClick(object sender, RoutedEventArgs e)
         {
             double x = Double.Parse(xValue.Text);
             double y = Double.Parse(yValue.Text);
 
-            if(x == 0 || y == 0)
-            {  
+            if (x == 0 || y == 0)
+            {
                 return;
             }
 
-            System.Windows.Point point = new System.Windows.Point(x,y);
+            System.Windows.Point point = new System.Windows.Point(x, y);
             shapePS5 = new Ellipse
             {
                 Width = 14,
@@ -2458,15 +2398,15 @@ namespace Grafika
             shapePS5.SetValue(Canvas.LeftProperty, point.X - 7);
             shapePS5.SetValue(Canvas.TopProperty, point.Y - 7);
 
-            shapePS5.MouseDown += Select_ShapePS5; //event do zaznaczenia wybranej figury
-            shapePS5.MouseMove += Move_ShapePS5; //event do przesuwania myszą figury
-            shapePS5.MouseUp += Moved_ShapePS5; //event do "skończenia" przesuwania figury
+            shapePS5.MouseDown += SelectShapePS5; //event do zaznaczenia wybranej figury
+            shapePS5.MouseMove += MoveShapePS5; //event do przesuwania myszą figury
+            shapePS5.MouseUp += MovedShapePS5; //event do "skończenia" przesuwania figury
 
             canvasPS5.Children.Add(shapePS5);
             shapes.Add(shapePS5);
 
             Lines();
-            drawBezier();
+            DrawBezier();
         }
 
         private System.Windows.Shapes.Path pathLine = null;
@@ -2474,7 +2414,7 @@ namespace Grafika
         private void Lines()
         {
             canvasPS5.Children.Clear();
-            foreach(var shape in shapes)
+            foreach (var shape in shapes)
             {
                 canvasPS5.Children.Add(shape);
             }
@@ -2487,7 +2427,7 @@ namespace Grafika
                 }
             };
 
-            foreach(var point in shapes)
+            foreach (var point in shapes)
             {
                 LineSegment segment = new LineSegment
                 {
@@ -2518,7 +2458,7 @@ namespace Grafika
         private void BeziereCurve()
         {
             bezierPoints = new List<System.Windows.Point>();
-            if(shapes.Count <= 2)
+            if (shapes.Count <= 2)
             {
                 return;
             }
@@ -2528,12 +2468,12 @@ namespace Grafika
                 double X = 0;
                 double Y = 0;
                 for (int i = 0; i < n; i++)
-                { 
+                {
                     double currentX = Canvas.GetLeft(shapes[i]) + 7;
                     double currentY = Canvas.GetTop(shapes[i]) + 7;
 
-                    X += currentX * (silnia(n - 1) / (silnia(i) * silnia(n - 1 - i))) * Math.Pow((1 - t), (n - 1 - i)) * Math.Pow(t, i);
-                    Y += currentY * (silnia(n - 1) / (silnia(i) * silnia(n - 1 - i))) * Math.Pow((1 - t), (n - 1 - i)) * Math.Pow(t, i);  
+                    X += currentX * (Silnia(n - 1) / (Silnia(i) * Silnia(n - 1 - i))) * Math.Pow((1 - t), (n - 1 - i)) * Math.Pow(t, i);
+                    Y += currentY * (Silnia(n - 1) / (Silnia(i) * Silnia(n - 1 - i))) * Math.Pow((1 - t), (n - 1 - i)) * Math.Pow(t, i);
                 }
                 X = Math.Round(X, 2);
                 Y = Math.Round(Y, 2);
@@ -2541,7 +2481,7 @@ namespace Grafika
             }
         }
 
-        private void drawBezier()
+        private void DrawBezier()
         {
             if (shapes.Count <= 2)
             {
@@ -2585,12 +2525,12 @@ namespace Grafika
             canvasPS5.Children.Add(path);
         }
 
-        private int silnia(int x)
+        private int Silnia(int x)
         {
             if (x <= 1)
                 return 1;
             else
-                return x * silnia(x - 1);
+                return x * Silnia(x - 1);
         }
         #endregion
 
@@ -2606,9 +2546,9 @@ namespace Grafika
         private System.Windows.Point startPoint = new System.Windows.Point();
         private PointCollection points = new PointCollection();
 
-        private void ps7Canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        private void PS7CanvasMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(PS7_MODE != 1)
+            if (PS7_MODE != 1)
             {
                 return;
             }
@@ -2616,26 +2556,28 @@ namespace Grafika
             startPoint = e.GetPosition(ps7Canvas);
 
             if (PS7_MODE == 1)
-            {   
+            {
                 points.Add(startPoint);
-                makePolygon(_polygon);
+                MakePolygon(_polygon);
                 ps7Canvas.Children.Remove(_polygon);
                 ps7Canvas.Children.Add(_polygon);
             }
         }
 
-        private void makePolygon(Polygon polygon)
-        {   
+        private void MakePolygon(Polygon polygon)
+        {
             if (polygon == null)
             {
-                polygon = new Polygon();
-                polygon.Stroke = System.Windows.Media.Brushes.Red;
-                polygon.StrokeThickness = 5;
-                polygon.Points = points;
-                polygon.MouseDown += Select_Polygon;
-                polygon.MouseMove += Move_Polygon;
-                polygon.MouseWheel += Polygon_Wheel;
-                polygon.MouseUp += Moved_Polygon;
+                polygon = new Polygon
+                {
+                    Stroke = System.Windows.Media.Brushes.Red,
+                    StrokeThickness = 5,
+                    Points = points
+                };
+                polygon.MouseDown += SelectPolygon;
+                polygon.MouseMove += MovePolygon;
+                polygon.MouseWheel += PolygonWheel;
+                polygon.MouseUp += MovedPolygon;
             }
             else
             {
@@ -2644,7 +2586,7 @@ namespace Grafika
             _polygon = polygon;
         }
 
-        private void Polygon_Wheel(object sender, MouseWheelEventArgs e)
+        private void PolygonWheel(object sender, MouseWheelEventArgs e)
         {
             _polygon = sender as Polygon;
             _polygon.Stroke = System.Windows.Media.Brushes.Red;
@@ -2661,7 +2603,7 @@ namespace Grafika
                         scaledPoints.Add(tempPoint);
                     }
                     points = scaledPoints;
-                    makePolygon(_polygon);
+                    MakePolygon(_polygon);
                     ps7Canvas.Children.Remove(_polygon);
                     ps7Canvas.Children.Add(_polygon);
                 }
@@ -2675,7 +2617,7 @@ namespace Grafika
                         scaledPoints.Add(tempPoint);
                     }
                     points = scaledPoints;
-                    makePolygon(_polygon);
+                    MakePolygon(_polygon);
                     ps7Canvas.Children.Remove(_polygon);
                     ps7Canvas.Children.Add(_polygon);
                 }
@@ -2683,17 +2625,17 @@ namespace Grafika
             _polygon.Stroke = System.Windows.Media.Brushes.Black;
         }
 
-        private void Moved_Polygon(object sender, MouseEventArgs e)
+        private void MovedPolygon(object sender, MouseEventArgs e)
         {
             _polygon = sender as Polygon;
             _polygon.ReleaseMouseCapture();
         }
 
-        private void Select_Polygon(object sender, MouseEventArgs e)
+        private void SelectPolygon(object sender, MouseEventArgs e)
         {
             if (PS7_MODE != 1)
             {
-                if(_polygon != null)
+                if (_polygon != null)
                     _polygon.Stroke = System.Windows.Media.Brushes.Black;
 
                 _polygon = sender as Polygon;
@@ -2704,19 +2646,18 @@ namespace Grafika
                     clickPosition = e.GetPosition(ps7Canvas);
                     _polygon.CaptureMouse();
                 }
-                if(PS7_MODE == 5)
+                if (PS7_MODE == 5)
                 {
                     _polygon.Stroke = System.Windows.Media.Brushes.Black;
                 }
             }
         }
 
-        private void Move_Polygon(object sender, MouseEventArgs e)
+        private void MovePolygon(object sender, MouseEventArgs e)
         {
             if (PS7_MODE == 2 && e.LeftButton == MouseButtonState.Pressed)
             {
-                var dragShape = sender as Polygon;
-                if (dragShape != null)
+                if (sender is Polygon dragShape)
                 {
                     System.Windows.Point currentPosition = e.GetPosition(ps7Canvas);
                     var transform = dragShape.RenderTransform as TranslateTransform ?? new TranslateTransform();
@@ -2727,7 +2668,7 @@ namespace Grafika
             }
             if (ACTION_MODE == 3 && e.LeftButton == MouseButtonState.Pressed)
             {
-                
+
             }
             if (ACTION_MODE == 4 && e.LeftButton == MouseButtonState.Pressed)
             {
@@ -2735,48 +2676,36 @@ namespace Grafika
             }
         }
 
-        private void ps7Canvas_MouseMove(object sender, MouseEventArgs e)
+        private void PS7CanvasMouseMove(object sender, MouseEventArgs e)
         {
-            if(PS7_MODE != 2)
+            if (PS7_MODE != 2)
             {
                 return;
             }
         }
 
-        private void createPolygon_Checked(object sender, RoutedEventArgs e)
-        {
-            PS7_MODE = 1;
-        }
+        private void CreatePolygonChecked(object sender, RoutedEventArgs e) => PS7_MODE = 1;
 
-        private void translatePolygon_Checked(object sender, RoutedEventArgs e)
-        {
-            PS7_MODE = 2;
-        }
+        private void TranslatePolygonChecked(object sender, RoutedEventArgs e) => PS7_MODE = 2;
 
-        private void rotatePolygon_Checked(object sender, RoutedEventArgs e)
-        {
-            PS7_MODE = 3;
-        }
+        private void RotatePolygonChecked(object sender, RoutedEventArgs e) => PS7_MODE = 3;
 
-        private void scalePolygon_Checked(object sender, RoutedEventArgs e)
-        {
-            PS7_MODE = 4;
-        }
+        private void ScalePolygonChecked(object sender, RoutedEventArgs e) => PS7_MODE = 4;
 
-        private void donePolygon_Checked(object sender, RoutedEventArgs e)
+        private void DonePolygonChecked(object sender, RoutedEventArgs e)
         {
             PS7_MODE = 5;
-            if(_polygon != null)
+            if (_polygon != null)
             {
                 allPointCollections.Add(_polygon.Points);
                 _polygon.Stroke = System.Windows.Media.Brushes.Black;
             }
-               
+
             _polygon = null;
             points = new PointCollection();
         }
 
-        private void addNewPointPolygon_Click(object sender, RoutedEventArgs e)
+        private void AddNewPointPolygonClick(object sender, RoutedEventArgs e)
         {
             if (PS7_MODE != 1)
             {
@@ -2787,18 +2716,18 @@ namespace Grafika
                 var xCorrect = Double.TryParse(xNewPointPolygon.Text, out double xValue);
                 var yCorrect = Double.TryParse(yNewPointPolygon.Text, out double yValue);
 
-                if(xCorrect == true && yCorrect == true && _polygon != null)
+                if (xCorrect == true && yCorrect == true && _polygon != null)
                 {
                     System.Windows.Point point = new System.Windows.Point(xValue, yValue);
                     points.Add(point);
-                    makePolygon(_polygon);
+                    MakePolygon(_polygon);
                     ps7Canvas.Children.Remove(_polygon);
                     ps7Canvas.Children.Add(_polygon);
                 }
             }
         }
 
-        private void rotatePolygonByValue_Click(object sender, RoutedEventArgs e)
+        private void RotatePolygonByValueClick(object sender, RoutedEventArgs e)
         {
             if (PS7_MODE != 3)
             {
@@ -2823,14 +2752,14 @@ namespace Grafika
 
                     points = scaledPoints;
 
-                    makePolygon(_polygon);
+                    MakePolygon(_polygon);
                     ps7Canvas.Children.Remove(_polygon);
                     ps7Canvas.Children.Add(_polygon);
                 }
             }
         }
 
-        private void translatePolygonByXY_Click(object sender, RoutedEventArgs e)
+        private void TranslatePolygonByXYClick(object sender, RoutedEventArgs e)
         {
             if (PS7_MODE != 2)
             {
@@ -2845,7 +2774,7 @@ namespace Grafika
                 if (xCorrect == true && yCorrect == true && _polygon != null)
                 {
                     PointCollection scaledPoints = new PointCollection();
-                    foreach(var point in _polygon.Points)
+                    foreach (var point in _polygon.Points)
                     {
                         System.Windows.Point tempPoint = point;
                         tempPoint.X += xValue;
@@ -2855,14 +2784,14 @@ namespace Grafika
 
                     points = scaledPoints;
 
-                    makePolygon(_polygon);
+                    MakePolygon(_polygon);
                     ps7Canvas.Children.Remove(_polygon);
                     ps7Canvas.Children.Add(_polygon);
                 }
             }
         }
 
-        private void scalePolygonByValue_Click(object sender, RoutedEventArgs e)
+        private void ScalePolygonByValueClick(object sender, RoutedEventArgs e)
         {
             if (PS7_MODE != 4)
             {
@@ -2887,7 +2816,7 @@ namespace Grafika
 
                     points = scaledPoints;
 
-                    makePolygon(_polygon);
+                    MakePolygon(_polygon);
                     ps7Canvas.Children.Remove(_polygon);
                     ps7Canvas.Children.Add(_polygon);
                 }
@@ -2896,7 +2825,7 @@ namespace Grafika
 
         private List<PointCollection> allPointCollections = new List<PointCollection>();
 
-        private void deserializeCanvas_Click(object sender, RoutedEventArgs e)
+        private void DeserializeCanvasClick(object sender, RoutedEventArgs e)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<PointCollection>));
             OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -2910,17 +2839,19 @@ namespace Grafika
                         openedList = (List<PointCollection>)serializer.Deserialize(stream);
                         stream.Close();
                     }
-                    
-                    foreach(var pointCollection in openedList)
+
+                    foreach (var pointCollection in openedList)
                     {
-                        Polygon polygon = new Polygon();
-                        polygon.Points = pointCollection;
-                        polygon.Stroke = System.Windows.Media.Brushes.Black;
-                        polygon.StrokeThickness = 5;
-                        polygon.MouseDown += Select_Polygon;
-                        polygon.MouseMove += Move_Polygon;
-                        polygon.MouseWheel += Polygon_Wheel;
-                        polygon.MouseUp += Moved_Polygon;
+                        Polygon polygon = new Polygon
+                        {
+                            Points = pointCollection,
+                            Stroke = System.Windows.Media.Brushes.Black,
+                            StrokeThickness = 5
+                        };
+                        polygon.MouseDown += SelectPolygon;
+                        polygon.MouseMove += MovePolygon;
+                        polygon.MouseWheel += PolygonWheel;
+                        polygon.MouseUp += MovedPolygon;
                         ps7Canvas.Children.Add(polygon);
                     }
                     allPointCollections = openedList;
@@ -2932,13 +2863,13 @@ namespace Grafika
             }
         }
 
-        private void serializeCanvas_Click(object sender, RoutedEventArgs e)
+        private void SerializeCanvasClick(object sender, RoutedEventArgs e)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<PointCollection>));
             SaveFileDialog saveFile = new SaveFileDialog();
             if (saveFile.ShowDialog() == true)
             {
-                using (FileStream stream = new FileStream(saveFile.FileName,FileMode.Create))
+                using (FileStream stream = new FileStream(saveFile.FileName, FileMode.Create))
                 {
                     serializer.Serialize(stream, allPointCollections);
                     stream.Close();
@@ -2946,7 +2877,7 @@ namespace Grafika
             }
         }
 
-        private void resetCanvasPS7_Click(object sender, RoutedEventArgs e)
+        private void ResetCanvasPS7Click(object sender, RoutedEventArgs e)
         {
             ps7Canvas.Children.Clear();
             allPointCollections.Clear();
@@ -2959,10 +2890,12 @@ namespace Grafika
         private Bitmap originalBitmapPS8;
         public bool grayScaleValuePS8 = false;
 
-        private void uploadFilePS8_Click(object sender, RoutedEventArgs e)
+        private void UploadFilePS8Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "JPEG Image|*.jpg;*.jpeg"
+            };
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -2981,19 +2914,19 @@ namespace Grafika
                 }
                 catch
                 {
-                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                    _ = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
                 }
             }
         }
 
-        private byte[,] kernelDylatacja = new byte[3, 3]
+        private readonly byte[,] kernelDylatacja = new byte[3, 3]
         {
             { 0, 1, 0},
             { 1, 1, 1},
             { 0, 1, 0}
         };
 
-        private Bitmap dilationOperation(Bitmap bitmap, byte[,] kernel)
+        private Bitmap DilationOperation(Bitmap bitmap, byte[,] kernel)
         {
             Bitmap tempBM = bitmap;
             for (int i = 1; i < tempBM.Width - 1; i++)
@@ -3028,7 +2961,7 @@ namespace Grafika
             return tempBM;
         }
 
-        private Bitmap erosionOperation(Bitmap bitmap, byte[,] kernel)
+        private Bitmap ErosionOperation(Bitmap bitmap, byte[,] kernel)
         {
             Bitmap tempBM = bitmap;
             for (int i = 1; i < tempBM.Width - 1; i++)
@@ -3063,7 +2996,7 @@ namespace Grafika
             return tempBM;
         }
 
-        private void dylatacja_Click(object sender, RoutedEventArgs e)
+        private void DylatacjaClick(object sender, RoutedEventArgs e)
         {
             if (ps8Image.Source == null)
             {
@@ -3073,10 +3006,10 @@ namespace Grafika
             Bitmap bitmap = ImageSourceToBitmap(ps8Image.Source);
             BitmapImage newBitmap = null;
             Bitmap tempBM = bitmap;
-            
+
             var task = Task.Run(() =>
             {
-                tempBM = dilationOperation(bitmap, kernelDylatacja);
+                tempBM = DilationOperation(bitmap, kernelDylatacja);
             });
 
             task.ContinueWith((t) =>
@@ -3094,7 +3027,7 @@ namespace Grafika
             });
         }
 
-        private void erozja_Click(object sender, RoutedEventArgs e)
+        private void ErozjaClick(object sender, RoutedEventArgs e)
         {
             if (ps8Image.Source == null)
             {
@@ -3107,7 +3040,7 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                tempBM = erosionOperation(bitmap, kernelDylatacja);
+                tempBM = ErosionOperation(bitmap, kernelDylatacja);
             });
 
             task.ContinueWith((t) =>
@@ -3125,7 +3058,7 @@ namespace Grafika
             });
         }
 
-        private void otwarcie_Click(object sender, RoutedEventArgs e)
+        private void OtwarcieClick(object sender, RoutedEventArgs e)
         {
             if (ps8Image.Source == null)
             {
@@ -3138,8 +3071,8 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                tempBM = erosionOperation(bitmap, kernelDylatacja);
-                tempBM = dilationOperation(tempBM, kernelDylatacja);
+                tempBM = ErosionOperation(bitmap, kernelDylatacja);
+                tempBM = DilationOperation(tempBM, kernelDylatacja);
             });
 
             task.ContinueWith((t) =>
@@ -3157,7 +3090,7 @@ namespace Grafika
             });
         }
 
-        private void domkniecie_Click(object sender, RoutedEventArgs e)
+        private void DomkniecieClick(object sender, RoutedEventArgs e)
         {
             if (ps8Image.Source == null)
             {
@@ -3170,8 +3103,8 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                tempBM = dilationOperation(bitmap, kernelDylatacja);
-                tempBM = erosionOperation(tempBM, kernelDylatacja);
+                tempBM = DilationOperation(bitmap, kernelDylatacja);
+                tempBM = ErosionOperation(tempBM, kernelDylatacja);
             });
 
             task.ContinueWith((t) =>
@@ -3189,41 +3122,46 @@ namespace Grafika
             });
         }
 
-        private byte[,] b1 = new byte[3, 3]
+        readonly private byte[,] b1 = new byte[3, 3]
         {
             { 0, 1, 0},
             { 1, 1, 1},
             { 0, 1, 0}
         };
 
-        private byte[,] b2 = new byte[3, 3]
+        readonly private byte[,] b2 = new byte[3, 3]
         {
             { 1, 0, 1},
             { 0, 0, 0},
             { 1, 0, 1}
         };
 
-        private Bitmap complementOperation(Bitmap bitmap)
+        private Bitmap ComplementOperation(Bitmap bitmap)
         {
-            System.Drawing.Color colorBlack = System.Drawing.Color.Black;
-            System.Drawing.Color colorWhite = System.Drawing.Color.White;
-            for(int i = 0; i < bitmap.Width; i++)
+            _ = System.Drawing.Color.Black;
+            _ = System.Drawing.Color.White;
+            for (int i = 0; i < bitmap.Width; i++)
             {
-                for(int j = 0; j < bitmap.Height; j++)
+                for (int j = 0; j < bitmap.Height; j++)
                 {
+
                     System.Drawing.Color color = bitmap.GetPixel(i, j);
-                    bitmap.SetPixel(i, j, System.Drawing.Color.FromArgb(implementedValue(color.R), implementedValue(color.G), implementedValue(color.B)));
+                    // if(color == colorBlack)
+                    bitmap.SetPixel(i, j, System.Drawing.Color.FromArgb(ImplementedValue(color.R), ImplementedValue(color.G), ImplementedValue(color.B)));
+
+                    // if(color == colorWhite)
+                    //     bitmap.SetPixel(i, j, System.Drawing.Color.FromArgb(implementedValue(colorBlack.R), implementedValue(colorBlack.G), implementedValue(colorBlack.B)));
                 }
             }
             return bitmap;
         }
 
-        private int implementedValue(int value)
+        private int ImplementedValue(int value)
         {
             return 255 - value;
         }
 
-        private Bitmap andOperation(Bitmap bitmap1, Bitmap bitmap2)
+        private Bitmap AndOperation(Bitmap bitmap1, Bitmap bitmap2)
         {
             Bitmap result = bitmap1;
 
@@ -3233,13 +3171,13 @@ namespace Grafika
                 {
                     System.Drawing.Color color1 = bitmap1.GetPixel(i, j);
                     System.Drawing.Color color2 = bitmap2.GetPixel(i, j);
-                    if(color1 != color2)
+                    if (color1 != color2)
                     {
                         continue;
                     }
                     else
                     {
-                        result.SetPixel(i, j, System.Drawing.Color.FromArgb(implementedValue(color1.R), implementedValue(color1.G), implementedValue(color1.B)));
+                        result.SetPixel(i, j, System.Drawing.Color.FromArgb(ImplementedValue(color1.R), ImplementedValue(color1.G), ImplementedValue(color1.B)));
                     }
                 }
             }
@@ -3247,7 +3185,7 @@ namespace Grafika
             return result;
         }
 
-        private void hitOrMiss_Click(object sender, RoutedEventArgs e)
+        private void HitOrMissClick(object sender, RoutedEventArgs e)
         {
             if (ps8Image.Source == null)
             {
@@ -3263,10 +3201,10 @@ namespace Grafika
 
             var task = Task.Run(() =>
             {
-                result1 = erosionOperation(tempBM, b1);
-                Ac = complementOperation(tempBM);
-                result2 = erosionOperation(Ac, b2);
-                tempBM = andOperation(result1, result2);
+                result1 = ErosionOperation(tempBM, b1);
+                Ac = ComplementOperation(tempBM);
+                result2 = ErosionOperation(Ac, b2);
+                tempBM = AndOperation(result1, result2);
             });
 
             task.ContinueWith((t) =>
@@ -3284,14 +3222,14 @@ namespace Grafika
             });
         }
 
-        private void getBackToOriginalPS8_Click(object sender, RoutedEventArgs e)
+        private void GetBackToOriginalPS8Click(object sender, RoutedEventArgs e)
         {
             BitmapImage bitmapImage = FromBitmapToBitmapImage(originalBitmapPS8);
             ps8Image.Source = bitmapImage;
             grayScaleValuePS8 = false;
         }
 
-        private void grayScalePS8_Click(object sender, RoutedEventArgs e)
+        private void GrayScalePS8Click(object sender, RoutedEventArgs e)
         {
             if (ps8Image.Source == null)
             {
@@ -3331,21 +3269,21 @@ namespace Grafika
             });
         }
 
-        private void originalZoomPS80_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void OriginalZoomPS8ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoom = e.NewValue;
             ScaleTransform scale = new ScaleTransform(zoom, zoom);
             ps8Image.LayoutTransform = scale;
         }
 
-        private void filteredZoomPS8_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void FilteredZoomPS8ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoom = e.NewValue;
             ScaleTransform scale = new ScaleTransform(zoom, zoom);
             ps8ImageFiltred.LayoutTransform = scale;
         }
 
-        private void Binaryzacja_Click(object sender, RoutedEventArgs e)
+        private void BinaryzacjaClick(object sender, RoutedEventArgs e)
         {
             if (ps8Image.Source == null || binaryzacjaPS8.Text == "")
             {
@@ -3396,7 +3334,7 @@ namespace Grafika
             });
         }
 
-        private void binaryzacjaPS8_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void BinaryzacjaPS8PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+-");
             e.Handled = regex.IsMatch(e.Text);
@@ -3412,10 +3350,12 @@ namespace Grafika
         //2 = green
         //3 = blue
 
-        private void uploadFilePS9_Click(object sender, RoutedEventArgs e)
+        private void UploadFilePS9Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JPEG Image|*.jpg;*.jpeg";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "JPEG Image|*.jpg;*.jpeg"
+            };
 
             if (openFileDialog.ShowDialog() == true)
             {
@@ -3434,22 +3374,22 @@ namespace Grafika
                 }
                 catch
                 {
-                    MessageBoxResult result = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
+                    _ = MessageBox.Show("Podczas próby odczytu pliku coś poszło nie tak.");
                 }
             }
         }
 
 
-        private bool isGreenPixel(System.Drawing.Color color1, int tolerancja) => 
+        private bool IsGreenPixel(System.Drawing.Color color1, int tolerancja) =>
             color1.G > color1.R + tolerancja && color1.G > color1.B + tolerancja;
 
-        private bool isRedPixel(System.Drawing.Color color1, int tolerancja) =>
+        private bool IsRedPixel(System.Drawing.Color color1, int tolerancja) =>
             color1.R > color1.G + tolerancja && color1.R > color1.B + tolerancja;
 
-        private bool isBluePixel(System.Drawing.Color color1, int tolerancja) =>
+        private bool IsBluePixel(System.Drawing.Color color1, int tolerancja) =>
             color1.B > color1.R + tolerancja && color1.B > color1.G + tolerancja;
 
-        private void greenPercent_Click(object sender, RoutedEventArgs e)
+        private void GreenPercentClick(object sender, RoutedEventArgs e)
         {
             if (originalImagePS9.Source == null)
             {
@@ -3474,7 +3414,7 @@ namespace Grafika
                         switch (COLOR_MODE)
                         {
                             case 1:
-                                if (isRedPixel(tempBM.GetPixel(i, j), 2))
+                                if (IsRedPixel(tempBM.GetPixel(i, j), 2))
                                 {
                                     tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(tempBM.GetPixel(i, j).R, tempBM.GetPixel(i, j).G, 255));
                                     countPixels++;
@@ -3482,7 +3422,7 @@ namespace Grafika
                                 break;
 
                             case 2:
-                                if (isGreenPixel(tempBM.GetPixel(i, j), 2))
+                                if (IsGreenPixel(tempBM.GetPixel(i, j), 2))
                                 {
                                     tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(255, tempBM.GetPixel(i, j).G, tempBM.GetPixel(i, j).B));
                                     countPixels++;
@@ -3490,13 +3430,13 @@ namespace Grafika
                                 break;
 
                             case 3:
-                                if (isBluePixel(tempBM.GetPixel(i, j), 2))
+                                if (IsBluePixel(tempBM.GetPixel(i, j), 2))
                                 {
                                     tempBM.SetPixel(i, j, System.Drawing.Color.FromArgb(tempBM.GetPixel(i, j).R, 255, tempBM.GetPixel(i, j).B));
                                     countPixels++;
                                 }
                                 break;
-                        }     
+                        }
                     }
                 }
             });
@@ -3517,33 +3457,33 @@ namespace Grafika
             });
         }
 
-        private void originalZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void OriginalZoomValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoom = e.NewValue;
             ScaleTransform scale = new ScaleTransform(zoom, zoom);
             originalImagePS9.LayoutTransform = scale;
         }
 
-        private void changedZoom_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ChangedZoomValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double zoom = e.NewValue;
             ScaleTransform scale = new ScaleTransform(zoom, zoom);
             changedImagePS9.LayoutTransform = scale;
         }
 
-        private void ps9Red_Checked(object sender, RoutedEventArgs e)
+        private void PS9RedChecked(object sender, RoutedEventArgs e)
         {
             COLOR_MODE = 1;
             greenPercent.IsEnabled = true;
         }
 
-        private void ps9Green_Checked(object sender, RoutedEventArgs e)
+        private void PS9GreenChecked(object sender, RoutedEventArgs e)
         {
             COLOR_MODE = 2;
             greenPercent.IsEnabled = true;
         }
 
-        private void ps9Blue_Checked(object sender, RoutedEventArgs e)
+        private void PS9BlueChecked(object sender, RoutedEventArgs e)
         {
             COLOR_MODE = 3;
             greenPercent.IsEnabled = true;
@@ -3551,6 +3491,6 @@ namespace Grafika
 
         #endregion
 
-        
+
     }
 }

@@ -35,14 +35,14 @@
                     <Border Background="Azure" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="6" Margin="1,1.2,1,1.4"/>
                     <Border Background="Azure" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.RowSpan="7" Margin="1,1,1,1.4" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Column="2" Grid.Row="0" Margin="5,7,5.4,7" VerticalAlignment="Center">
-                        <RadioButton Name="drawing" Checked="drawing_Checked">Rysowanie</RadioButton>
-                        <RadioButton Name="moving" Checked="moving_Checked">Przesuwanie</RadioButton>
-                        <RadioButton Name="changeShape" Checked="changeShape_Checked">Zmiana kształtu</RadioButton>
+                        <RadioButton Name="drawing" Checked="DrawingChecked">Rysowanie</RadioButton>
+                        <RadioButton Name="moving" Checked="MovingChecked">Przesuwanie</RadioButton>
+                        <RadioButton Name="changeShape" Checked="ChangeShapeChecked">Zmiana kształtu</RadioButton>
                     </StackPanel>
                     <StackPanel Grid.Column="3" Grid.Row="0" Margin="4.6,7,5,7" VerticalAlignment="Center">
-                        <RadioButton Name="line" Checked="line_Checked">Linia</RadioButton>
-                        <RadioButton Name="rectangle" Checked="rectangle_Checked">Prostokąt</RadioButton>
-                        <RadioButton Name="ellipse" Checked="ellipse_Checked">Okrąg</RadioButton>
+                        <RadioButton Name="line" Checked="LineChecked">Linia</RadioButton>
+                        <RadioButton Name="rectangle" Checked="RectangleChecked">Prostokąt</RadioButton>
+                        <RadioButton Name="ellipse" Checked="EllipseChecked">Okrąg</RadioButton>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1" Margin="5,14,5,13.6" VerticalAlignment="Center">
                         <DockPanel HorizontalAlignment="Stretch" Margin="1">
@@ -61,7 +61,7 @@
                             <TextBlock Text="Współrzędna y2:" Margin="1"></TextBlock>
                             <TextBox Name="y2line" Margin="1"></TextBox>
                         </DockPanel>
-                        <Button Name="drawLine" Click="drawLine_Click">Stwórz linię</Button>
+                        <Button Name="drawLine" Click="DrawLineClick">Stwórz linię</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="2" Margin="5,12.4,5,13.2" VerticalAlignment="Center">
                         <DockPanel HorizontalAlignment="Stretch" Margin="1">
@@ -80,7 +80,7 @@
                             <TextBlock Text="Wysokość:" Margin="1"></TextBlock>
                             <TextBox Name="heightRectangle" Margin="1"></TextBox>
                         </DockPanel>
-                        <Button Name="drawRectangle" Click="drawRectangle_Click" Margin="1">Stwórz prostokąt</Button>
+                        <Button Name="drawRectangle" Click="DrawRectangleClick" Margin="1">Stwórz prostokąt</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="3" Margin="5,15.8,5,16.4" VerticalAlignment="Center">
                         <DockPanel HorizontalAlignment="Stretch" Margin="1">
@@ -95,14 +95,14 @@
                             <TextBlock Text="Promień:" Margin="1"></TextBlock>
                             <TextBox Name="radiusellipse" Margin="1"></TextBox>
                         </DockPanel>
-                        <Button Name="drawEllipse" Click="drawEllipse_Click" Margin="1">Stwórz okrąg</Button>
+                        <Button Name="drawEllipse" Click="DrawEllipseClick" Margin="1">Stwórz okrąg</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="4" Margin="5,29.6,5,29.4" VerticalAlignment="Center">
                         <DockPanel HorizontalAlignment="Stretch" Margin="1">
                             <TextBlock Text="Zmiana długości linii o:" Margin="1"></TextBlock>
                             <TextBox Name="changeLineValue" Margin="1"></TextBox>
                         </DockPanel>
-                        <Button Name="lineBigger" Click="lineBigger_Click" Margin="1">Zmiana długości linii</Button>
+                        <Button Name="lineBigger" Click="LineBiggerClick" Margin="1">Zmiana długości linii</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="5" Margin="5,23.6,5,23.8" VerticalAlignment="Center">
                         <DockPanel HorizontalAlignment="Stretch" Margin="1">
@@ -113,17 +113,17 @@
                             <TextBlock Text="Wysokość zmieniona o:" Margin="1"></TextBlock>
                             <TextBox Name="changeHeight" Margin="1"></TextBox>
                         </DockPanel>
-                        <Button Name="changeRectangle" Click="changeRectangle_Click" Margin="1">Zmiana rozmiaru prostokąta</Button>
+                        <Button Name="changeRectangle" Click="ChangeRectangleClick" Margin="1">Zmiana rozmiaru prostokąta</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="6" Margin="5,28.2,5,28.4" VerticalAlignment="Center">
                         <DockPanel HorizontalAlignment="Stretch" Margin="1">
                             <TextBlock Text="Promień zmieniony o:" Margin="1"></TextBlock>
                             <TextBox Name="changeRadius" Margin="1"></TextBox>
                         </DockPanel>
-                        <Button Name="changeEllipse" Click="changeEllipse_Click" Margin="1">Zmiana rozmiaru okręgu</Button>
+                        <Button Name="changeEllipse" Click="ChangeEllipseClick" Margin="1">Zmiana rozmiaru okręgu</Button>
                     </StackPanel>
                     <Canvas Name="CanvasField" Grid.Column="0" Grid.RowSpan="7" Margin="5,5,5,5.4" Background="WhiteSmoke" 
-                            MouseDown="CanvasField_MouseDown" MouseMove="CanvasField_MouseMove" ClipToBounds="True" Grid.ColumnSpan="2"/>
+                            MouseDown="CanvasFieldMouseDown" MouseMove="CanvasFieldMouseMove" ClipToBounds="True" Grid.ColumnSpan="2"/>
                 </Grid>
             </TabItem>
             <TabItem Header="PS2" MinWidth="100">
@@ -140,8 +140,8 @@
                     <Border Background="Azure" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="5,5,5,5.4"></Border>
                     <Border Background="Azure" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Row="0" Margin="6,0,5,0" Grid.ColumnSpan="3"/>
                     <StackPanel Margin="5,5,0,5" Grid.Row="0" HorizontalAlignment="Left" Orientation="Vertical" Grid.ColumnSpan="3">
-                        <Button Name="uploadFile" Margin="5" Click="uploadFile_Click">Wczytaj plik</Button>
-                        <Button Name="saveFile" Margin="5" Click="saveFile_Click">Zapisz plik</Button>
+                        <Button Name="uploadFile" Margin="5" Click="UploadFileClick">Wczytaj plik</Button>
+                        <Button Name="saveFile" Margin="5" Click="SaveFileClick">Zapisz plik</Button>
                         <DockPanel HorizontalAlignment="Stretch" >
                             <TextBlock Text="Wybierz poziom kompresji do zapisu" Margin="5"></TextBlock>
                             <ComboBox Margin="5" MinWidth="100">
@@ -151,8 +151,8 @@
                                 <ComboBoxItem Name="compression75L">75L</ComboBoxItem>
                                 <ComboBoxItem Name="compression100L">100L</ComboBoxItem>
                             </ComboBox>
-                            <Button Name="zoomIn" Margin="5" MinWidth="20" Click="zoomIn_Click">+</Button>
-                            <Button Name="zoomOut" Margin="5" MinWidth="20" Click="zoomOut_Click">-</Button>
+                            <Button Name="zoomIn" Margin="5" MinWidth="20" Click="ZoomInClick">+</Button>
+                            <Button Name="zoomOut" Margin="5" MinWidth="20" Click="ZoomOutClick">-</Button>
                         </DockPanel>
 
                     </StackPanel>
@@ -176,16 +176,16 @@
                     <Border Background="Azure" Margin="5,5,5.4,5.4" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
                     <StackPanel Grid.Row="2" Grid.Column="2">
                         <Slider x:Name="angleSlider"  VerticalAlignment="Center" Margin="8" Minimum="0" Maximum="720" TickFrequency="0.01" Background="White" BorderBrush="Black" BorderThickness="1"
-                            ValueChanged="angleSlider_ValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Angle}" IsMoveToPointEnabled="True">
+                            ValueChanged="AngleSliderValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Angle}" IsMoveToPointEnabled="True">
                         </Slider>
                         <Slider Name="axisSliderx" VerticalAlignment="Center" Margin="8" Minimum="-1" Maximum="1" TickFrequency="1" Background="White" BorderBrush="Black" BorderThickness="1"
-                                IsMoveToPointEnabled="True" ValueChanged="axisSliderx_ValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Axis.X}">
+                                IsMoveToPointEnabled="True" ValueChanged="AxisSliderxValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Axis.X}">
                         </Slider>
                         <Slider Name="axisSlidery" VerticalAlignment="Center" Margin="8" Minimum="-1" Maximum="1" TickFrequency="1" Background="White" BorderBrush="Black" BorderThickness="1"
-                                IsMoveToPointEnabled="True" ValueChanged="axisSlidery_ValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Axis.Y}">
+                                IsMoveToPointEnabled="True" ValueChanged="AxisSlideryValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Axis.Y}">
                         </Slider>
                         <Slider Name="axisSliderz" VerticalAlignment="Center" Margin="8" Minimum="-1" Maximum="1" TickFrequency="1" Background="White" BorderBrush="Black" BorderThickness="1"
-                                IsMoveToPointEnabled="True" ValueChanged="axisSliderz_ValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Axis.Z}">
+                                IsMoveToPointEnabled="True" ValueChanged="AxisSliderzValueChanged" Value="{Binding ElementName=myAngleRotation1, Mode=OneWay, Path=Axis.Z}">
                         </Slider>
                     </StackPanel>
                     <Viewport3D Name="cubeRGB" Grid.Column="2" Grid.RowSpan="2" Grid.Row="0" Margin="4.6,5,5,5.4">
@@ -324,32 +324,32 @@
 
                     <StackPanel Name="colorsStackPanel" VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="0,0,0.4,0">
                         <DockPanel HorizontalAlignment="Center" Margin="5">
-                            <RadioButton x:Name="selectRGB" Margin="5" Checked="selectRGB_Checked">RGB</RadioButton>
-                            <RadioButton x:Name="selectCMYK" Margin="5" Checked="selectCMYK_Checked">CMYK</RadioButton>
+                            <RadioButton x:Name="selectRGB" Margin="5" Checked="SelectRgbChecked">RGB</RadioButton>
+                            <RadioButton x:Name="selectCMYK" Margin="5" Checked="SelectCmykChecked">CMYK</RadioButton>
                         </DockPanel>
                         <TextBlock HorizontalAlignment="Center" Text="RGB Colors" Margin="5"/>
                         <StackPanel HorizontalAlignment="Center" Margin="5">
                             <DockPanel HorizontalAlignment="Stretch">
                                 <TextBlock Text="R:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="redRGB" Width="40" Margin="5" PreviewTextInput="redRGB_PreviewTextInput"
+                                <TextBox x:Name="redRGB" Width="40" Margin="5" PreviewTextInput="RedRgbPreviewTextInput"
                                          Text="{Binding ElementName=redSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
-                                         TextChanged="redRGB_TextChanged"/>
+                                         TextChanged="RedRgbTextChanged"/>
                                 <Slider x:Name="redSlider" Width="450" Margin="5" Minimum="0" Maximum="255" TickFrequency="1"
                                         Value="{Binding ElementName=redRGB, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="G:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="greenRGB" Width="40" Margin="5" PreviewTextInput="greenRGB_PreviewTextInput"
+                                <TextBox x:Name="greenRGB" Width="40" Margin="5" PreviewTextInput="GreenRgbPreviewTextInput"
                                          Text="{Binding ElementName=greenSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
-                                         TextChanged="greenRGB_TextChanged"/>
+                                         TextChanged="GreenRgbTextChanged"/>
                                 <Slider x:Name="greenSlider" Width="450" Margin="5" Minimum="0" Maximum="255" TickFrequency="1"
                                         Value="{Binding ElementName=greenRGB, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="B:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="blueRGB" Width="40" Margin="5" PreviewTextInput="blueRGB_PreviewTextInput"
+                                <TextBox x:Name="blueRGB" Width="40" Margin="5" PreviewTextInput="BlueRGgbPreviewTextInput"
                                          Text="{Binding ElementName=blueSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
-                                         TextChanged="blueRGB_TextChanged"/>
+                                         TextChanged="BlueRgbTextChanged"/>
                                 <Slider x:Name="blueSlider"  Width="450" Margin="5" Minimum="0" Maximum="255" TickFrequency="1"
                                         Value="{Binding ElementName=blueRGB, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
@@ -358,33 +358,33 @@
                         <StackPanel HorizontalAlignment="Center" Margin="5">
                             <DockPanel>
                                 <TextBlock Text="C:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="cyanCMYK" Width="40" Margin="5" PreviewTextInput="cyanCMYK_PreviewTextInput"
+                                <TextBox x:Name="cyanCMYK" Width="40" Margin="5" PreviewTextInput="CyanCmykPreviewTextInput"
                                          Text="{Binding ElementName=cyanSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
-                                         TextChanged="cyanCMYK_TextChanged"/>
+                                         TextChanged="CyanCmykTextChanged"/>
                                 <Slider x:Name="cyanSlider" Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
                                         Value="{Binding ElementName=cyanCMYK, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="M:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="magentaCMYK" Width="40" Margin="5" PreviewTextInput="magentaCMYK_PreviewTextInput"
+                                <TextBox x:Name="magentaCMYK" Width="40" Margin="5" PreviewTextInput="MagentaCmykPreviewTextInput"
                                          Text="{Binding ElementName=magentaSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
-                                         TextChanged="magentaCMYK_TextChanged"/>
+                                         TextChanged="MagentaCmykTextChanged"/>
                                 <Slider x:Name="magentaSlider" Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
                                         Value="{Binding ElementName=magentaCMYK, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="Y:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="yellowCMYK" Width="40" Margin="5" PreviewTextInput="yellowCMYK_PreviewTextInput"
+                                <TextBox x:Name="yellowCMYK" Width="40" Margin="5" PreviewTextInput="YellowCmykPreviewTextInput"
                                          Text="{Binding ElementName=yellowSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
-                                         TextChanged="yellowCMYK_TextChanged"/>
+                                         TextChanged="YellowCmykTextChanged"/>
                                 <Slider x:Name="yellowSlider"  Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
                                         Value="{Binding ElementName=yellowCMYK, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
                             <DockPanel>
                                 <TextBlock Text="K:" Width="20" Margin="15,5,0,5"/>
-                                <TextBox x:Name="blackCMYK" Width="40" Margin="5" PreviewTextInput="blackCMYK_PreviewTextInput"
+                                <TextBox x:Name="blackCMYK" Width="40" Margin="5" PreviewTextInput="BlackCmykPreviewTextInput"
                                          Text="{Binding ElementName=blackSlider, Mode=TwoWay, Path=Value, StringFormat=N0}"
-                                         TextChanged="blackCMYK_TextChanged"/>
+                                         TextChanged="BlackCmykTextChanged"/>
                                 <Slider x:Name="blackSlider" Width="450" Margin="5" Minimum="0" Maximum="100" TickFrequency="1"
                                         Value="{Binding ElementName=blackCMYK, Mode=TwoWay, Path=Text}" IsMoveToPointEnabled="True"></Slider>
                             </DockPanel>
@@ -409,12 +409,12 @@
 
                         </Image>
                         <StackPanel HorizontalAlignment="Center" Grid.Column="1" Margin="10" VerticalAlignment="Center">
-                            <Button x:Name="uploadFIlePS4" Width="220" Margin="5" Click="uploadFIlePS4_Click">Wczytaj plik</Button>
-                            <Button x:Name="filtrWygladz" Width="220" Margin="5" Click="filtrWygladz_Click">Filtr wygładzający</Button>
-                            <Button x:Name="filtrMediana" Width="220" Margin="5" Click="filtrMediana_Click">Filtr medianowy</Button>
-                            <Button x:Name="filtrWykrywKraw" Width="220" Margin="5" Click="filtrWykrywKraw_Click">Filtr wykrywania krawędzi</Button>
-                            <Button x:Name="filtrGornPrzepustWyostrz" Width="220" Margin="5" Click="filtrGornPrzepustWyostrz_Click">Filtr górnoprzepustowy wyostrzający</Button>
-                            <Button x:Name="filtrGaussa" Width="220" Margin="5" Click="filtrGaussa_Click">Filtr rozmycie gaussowskie</Button>
+                            <Button x:Name="uploadFIlePS4" Width="220" Margin="5" Click="UploadFilePS4Click">Wczytaj plik</Button>
+                            <Button x:Name="filtrWygladz" Width="220" Margin="5" Click="FiltrWygladzClick">Filtr wygładzający</Button>
+                            <Button x:Name="filtrMediana" Width="220" Margin="5" Click="FiltrMedianaClick">Filtr medianowy</Button>
+                            <Button x:Name="filtrWykrywKraw" Width="220" Margin="5" Click="FiltrWykrywKrawClick">Filtr wykrywania krawędzi</Button>
+                            <Button x:Name="filtrGornPrzepustWyostrz" Width="220" Margin="5" Click="FiltrGornPrzepustWyostrzClick">Filtr górnoprzepustowy wyostrzający</Button>
+                            <Button x:Name="filtrGaussa" Width="220" Margin="5" Click="FiltrGaussaClick">Filtr rozmycie gaussowskie</Button>
 
                             <DockPanel Margin="5">
                                 <DockPanel HorizontalAlignment="Left">
@@ -422,12 +422,12 @@
                                 </DockPanel>
                                 <DockPanel HorizontalAlignment="Right">
                                     <Label VerticalContentAlignment="Center">R:</Label>
-                                    <TextBox Name="dodawanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dodawanieR_PreviewTextInput"></TextBox>
+                                    <TextBox Name="dodawanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="DodawanieRPreviewTextInput"></TextBox>
                                     <Label VerticalContentAlignment="Center">G:</Label>
-                                    <TextBox Name="dodawanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dodawanieG_PreviewTextInput"></TextBox>
+                                    <TextBox Name="dodawanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="DodawanieGPreviewTextInput"></TextBox>
                                     <Label VerticalContentAlignment="Center">B:</Label>
-                                    <TextBox Name="dodawanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dodawanieB_PreviewTextInput"></TextBox>
-                                    <Button Name="okDodawanie" Width="40" Height="27" Click="okDodawanie_Click">OK</Button>
+                                    <TextBox Name="dodawanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="DodawanieBPreviewTextInput"></TextBox>
+                                    <Button Name="okDodawanie" Width="40" Height="27" Click="OkDodawanieClick">OK</Button>
                                 </DockPanel>
                             </DockPanel>
                             <DockPanel Margin="5">
@@ -436,12 +436,12 @@
                                 </DockPanel>
                                 <DockPanel HorizontalAlignment="Right">
                                     <Label VerticalContentAlignment="Center">R:</Label>
-                                    <TextBox Name="odejmowanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="odejmowanieR_PreviewTextInput"></TextBox>
+                                    <TextBox Name="odejmowanieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="OdejmowanieRPreviewTextInput"></TextBox>
                                     <Label VerticalContentAlignment="Center">G:</Label>
-                                    <TextBox Name="odejmowanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="odejmowanieG_PreviewTextInput"></TextBox>
+                                    <TextBox Name="odejmowanieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="OdejmowanieGPreviewTextInput"></TextBox>
                                     <Label VerticalContentAlignment="Center">B:</Label>
-                                    <TextBox Name="odejmowanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="odejmowanieB_PreviewTextInput"></TextBox>
-                                    <Button Name="okOdejmowanie" Width="40" Height="27" Click="okOdejmowanie_Click">OK</Button>
+                                    <TextBox Name="odejmowanieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="OdejmowanieBPreviewTextInput"></TextBox>
+                                    <Button Name="okOdejmowanie" Width="40" Height="27" Click="OkOdejmowanieClick">OK</Button>
                                 </DockPanel>
                             </DockPanel>
                             <DockPanel Margin="5">
@@ -450,12 +450,12 @@
                                 </DockPanel>
                                 <DockPanel HorizontalAlignment="Right">
                                     <Label VerticalContentAlignment="Center">R:</Label>
-                                    <TextBox Name="mnozenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="mnozenieR_PreviewTextInput"></TextBox>
+                                    <TextBox Name="mnozenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="MnozenieRPreviewTextInput"></TextBox>
                                     <Label VerticalContentAlignment="Center">G:</Label>
-                                    <TextBox Name="mnozenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="mnozenieG_PreviewTextInput"></TextBox>
+                                    <TextBox Name="mnozenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="MnozenieGPreviewTextInput"></TextBox>
                                     <Label VerticalContentAlignment="Center">B:</Label>
-                                    <TextBox Name="mnozenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="mnozenieB_PreviewTextInput"></TextBox>
-                                    <Button Name="okMnozenie" Width="40" Height="27" Click="okMnozenie_Click">OK</Button>
+                                    <TextBox Name="mnozenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="MnozenieBPreviewTextInput"></TextBox>
+                                    <Button Name="okMnozenie" Width="40" Height="27" Click="OkMnozenieClick">OK</Button>
                                 </DockPanel>
                             </DockPanel>
                             <DockPanel Margin="5">
@@ -464,32 +464,32 @@
                                 </DockPanel>
                                 <DockPanel HorizontalAlignment="Right">
                                     <Label VerticalContentAlignment="Center">R:</Label>
-                                    <TextBox Name="dzielenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dzielenieR_PreviewTextInput"></TextBox>
+                                    <TextBox Name="dzielenieR" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="DzielenieRPreviewTextInput"></TextBox>
                                     <Label VerticalContentAlignment="Center">G:</Label>
-                                    <TextBox Name="dzielenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dzielenieG_PreviewTextInput"></TextBox>
+                                    <TextBox Name="dzielenieG" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="DzielenieGPreviewTextInput"></TextBox>
                                     <Label VerticalContentAlignment="Center">B:</Label>
-                                    <TextBox Name="dzielenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="dzielenieB_PreviewTextInput"></TextBox>
-                                    <Button Name="okDzielenie" Width="40" Height="27" Click="okDzielenie_Click">OK</Button>
+                                    <TextBox Name="dzielenieB" VerticalContentAlignment="Center" Width="30" Margin="0,5,10,5" PreviewTextInput="DzielenieBPreviewTextInput"></TextBox>
+                                    <Button Name="okDzielenie" Width="40" Height="27" Click="OkDzielenieClick">OK</Button>
                                 </DockPanel>
                             </DockPanel>
 
                             <Label>Zmiana jasności:</Label>
                             <Slider Name="brightnessSlider" Width="300" Minimum="0" Maximum="30" Margin="5" Value="0" TickFrequency="1"
-                                ValueChanged="brightnessSlider_ValueChanged">
+                                ValueChanged="BrightnessSliderValueChanged">
                             </Slider>
                             <Slider Name="lessBrightnessSlider" Width="300" Maximum="0" Minimum="-30" Margin="5" Value="0" TickFrequency="1"
-                                ValueChanged="lessBrightnessSlider_ValueChanged">
+                                ValueChanged="LessBrightnessSliderValueChanged">
                             </Slider>
 
                             <Label Margin="5">Przejście do skali szarości:</Label>
                             <DockPanel HorizontalAlignment="Center">
-                                <Button Name="grayNO1" Margin="5" Width="115" Click="grayNO1_Click">Sposób 1</Button>
-                                <Button Name="grayNO2" Margin="5" Width="115" Click="grayNO2_Click">Sposób 2</Button>
+                                <Button Name="grayNO1" Margin="5" Width="115" Click="GrayNO1Click">Sposób 1</Button>
+                                <Button Name="grayNO2" Margin="5" Width="115" Click="GrayNO2Click">Sposób 2</Button>
                             </DockPanel>
 
-                            <Button x:Name="getBackToOriginal" Width="220" Margin="5" Click="getBackToOriginal_Click">Powrót do oryginalnego obrazu</Button>
+                            <Button x:Name="getBackToOriginal" Width="220" Margin="5" Click="GetBackToOriginalClick">Powrót do oryginalnego obrazu</Button>
                             <Label  Margin="5">Zoom:</Label>
-                            <Slider Name="zoomSlider" Margin="5" TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" ValueChanged="zoomSlider_ValueChanged">
+                            <Slider Name="zoomSlider" Margin="5" TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" ValueChanged="ZoomSliderValueChanged">
 
                             </Slider>
                         </StackPanel>
@@ -512,23 +512,23 @@
 
                         </Image>
                         <StackPanel HorizontalAlignment="Center" Grid.Column="1" Margin="10" VerticalAlignment="Center">
-                            <Button x:Name="uploadFilePS5" Margin="5" Click="uploadFilePS5_Click">Wczytaj plik</Button>
-                            <Button Name="grayScalePS5" Margin="5" Click="grayScalePS5_Click">Grayscale</Button>
+                            <Button x:Name="uploadFilePS5" Margin="5" Click="UploadFilePS5Click">Wczytaj plik</Button>
+                            <Button Name="grayScalePS5" Margin="5" Click="GrayScalePS5Click">Grayscale</Button>
                             <DockPanel HorizontalAlignment="Stretch" Margin="0">
-                                <Button x:Name="binByUserValue" Margin="5" Click="binByUserValue_Click">Binaryzacja ręczna przez użytkownika</Button>
-                                <TextBox x:Name="binUserValue" Margin="5" MinWidth="40" PreviewTextInput="binUserValue_PreviewTextInput"></TextBox>
+                                <Button x:Name="binByUserValue" Margin="5" Click="BinByUserValueClick">Binaryzacja ręczna przez użytkownika</Button>
+                                <TextBox x:Name="binUserValue" Margin="5" MinWidth="40" PreviewTextInput="BinUserValuePreviewTextInput"></TextBox>
                             </DockPanel>
                             <DockPanel HorizontalAlignment="Stretch">
-                                <Button Name="percentBlack" Margin="5" Click="percentBlack_Click">Procentowa selekcja czarnego</Button>
-                                <TextBox Name="percentBlackValue" Margin="5" MinWidth="40" PreviewTextInput="percentBlackValue_PreviewTextInput"></TextBox>
+                                <Button Name="percentBlack" Margin="5" Click="PercentBlackClick">Procentowa selekcja czarnego</Button>
+                                <TextBox Name="percentBlackValue" Margin="5" MinWidth="40" PreviewTextInput="PercentBlackValuePreviewTextInput"></TextBox>
                             </DockPanel>
-                            <Button Name="binIteration" Margin="5" Click="binIteration_Click" IsEnabled="False">Selekcja iteratywna średniej</Button>
-                            <Button Name="getBackToOriginalPS5" Margin="5" Click="getBackToOriginalPS5_Click">Powrót do oryginalnego obrazu</Button>
+                            <Button Name="binIteration" Margin="5" Click="BinIterationClick" IsEnabled="False">Selekcja iteratywna średniej</Button>
+                            <Button Name="getBackToOriginalPS5" Margin="5" Click="GetBackToOriginalPS5Click">Powrót do oryginalnego obrazu</Button>
                             <Label Margin="5">Zoom</Label>
-                            <Slider Name="zoomSliderPS5" Margin="5" TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" ValueChanged="zoomSliderPS5_ValueChanged">
+                            <Slider Name="zoomSliderPS5" Margin="5" TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" ValueChanged="ZoomSliderPS5ValueChanged">
 
                             </Slider>
-                            <Button Name="histogramShow" Margin="5" Click="histogramShow_Click">Histogram</Button>
+                            <Button Name="histogramShow" Margin="5" Click="HistogramShowClick">Histogram</Button>
                         </StackPanel>
                     </Grid>
                 </wpfx:BusyIndicator>
@@ -547,14 +547,14 @@
                     </Grid.ColumnDefinitions>
                     <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="4"/>
                     <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="4"/>
-                    <Canvas Name="canvasPS5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="15" Background="white" MouseDown="canvasPS5_MouseDown" 
-                            MouseMove="canvasPS5_MouseMove" ClipToBounds="True">
-                        
+                    <Canvas Name="canvasPS5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="15" Background="white" MouseDown="CanvasPS5MouseDown" 
+                            MouseMove="CanvasPS5MouseMove" ClipToBounds="True">
+
                     </Canvas>
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <RadioButton Name="createPoint" Margin="5" Checked="createPoint_Checked">Twórz punkty</RadioButton>
-                        <RadioButton Name="movePoint" Margin="5" Checked="movePoint_Checked">Przesuwaj punkty</RadioButton>
-                        <Button Name="reset" Margin="5" Click="reset_Click">Resetuj</Button>
+                        <RadioButton Name="createPoint" Margin="5" Checked="CreatePointChecked">Twórz punkty</RadioButton>
+                        <RadioButton Name="movePoint" Margin="5" Checked="MovePointChecked">Przesuwaj punkty</RadioButton>
+                        <Button Name="reset" Margin="5" Click="ResetClick">Resetuj</Button>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                         <DockPanel>
@@ -565,7 +565,7 @@
                             <Label>Y:</Label>
                             <TextBox Name="yValue" Margin="5"></TextBox>
                         </DockPanel>
-                        <Button Name="addPointByXY" Margin="5" Click="addPointByXY_Click">Dodaj</Button>
+                        <Button Name="addPointByXY" Margin="5" Click="AddPointByXYClick">Dodaj</Button>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -586,16 +586,16 @@
                     <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="0" Grid.Row="0" Grid.RowSpan="6"/>
                     <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="1" Grid.Row="0" Grid.RowSpan="6"/>
                     <Canvas x:Name="ps7Canvas" Grid.Row="0" Grid.RowSpan="6" Grid.Column="0" Margin="15"
-                            MouseDown="ps7Canvas_MouseDown" MouseMove="ps7Canvas_MouseMove" Background="White">
-                        
+                            MouseDown="PS7CanvasMouseDown" MouseMove="PS7CanvasMouseMove" Background="White">
+
                     </Canvas>
                     <StackPanel Grid.Column="1" Grid.Row="0" Margin="15" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <RadioButton Name="createPolygon" Width="200" Checked="createPolygon_Checked">Tworzenie</RadioButton>
-                        <RadioButton Name="translatePolygon" Width="200" Checked="translatePolygon_Checked">Przesuwanie</RadioButton>
-                        <RadioButton Name="rotatePolygon" Width="200" Checked="rotatePolygon_Checked">Obrot</RadioButton>
-                        <RadioButton Name="scalePolygon" Width="200" Checked="scalePolygon_Checked">Skalowanie</RadioButton>
-                        <RadioButton Name="donePolygon" Width="200" Checked="donePolygon_Checked">Odznacz wielokąt</RadioButton>
-                        <Button Name="resetCanvasPS7" Click="resetCanvasPS7_Click" Margin="5">Resetuj</Button>
+                        <RadioButton Name="createPolygon" Width="200" Checked="CreatePolygonChecked">Tworzenie</RadioButton>
+                        <RadioButton Name="translatePolygon" Width="200" Checked="TranslatePolygonChecked">Przesuwanie</RadioButton>
+                        <RadioButton Name="rotatePolygon" Width="200" Checked="RotatePolygonChecked">Obrot</RadioButton>
+                        <RadioButton Name="scalePolygon" Width="200" Checked="ScalePolygonChecked">Skalowanie</RadioButton>
+                        <RadioButton Name="donePolygon" Width="200" Checked="DonePolygonChecked">Odznacz wielokąt</RadioButton>
+                        <Button Name="resetCanvasPS7" Click="ResetCanvasPS7Click" Margin="5">Resetuj</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Grid.Row="1" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <DockPanel Width="200">
@@ -606,7 +606,7 @@
                             <Label>Y:</Label>
                             <TextBox Name="yNewPointPolygon" Margin="5"></TextBox>
                         </DockPanel>
-                        <Button Name="addNewPointPolygon" Margin="5" Width="200" Click="addNewPointPolygon_Click">Dodaj kolejny punkt</Button>
+                        <Button Name="addNewPointPolygon" Margin="5" Width="200" Click="AddNewPointPolygonClick">Dodaj kolejny punkt</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Grid.Row="2" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <DockPanel Width="200">
@@ -621,7 +621,7 @@
                             <Label>Kąt:</Label>
                             <TextBox Name="rotationAnglePolygon" Margin="5"></TextBox>
                         </DockPanel>
-                        <Button Name="rotatePolygonByValue" Margin="5" Width="200" Click="rotatePolygonByValue_Click">Obrót o podany kąt</Button>
+                        <Button Name="rotatePolygonByValue" Margin="5" Width="200" Click="RotatePolygonByValueClick">Obrót o podany kąt</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Grid.Row="3" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <DockPanel Width="200">
@@ -632,7 +632,7 @@
                             <Label>Y:</Label>
                             <TextBox Name="yTranslatePolygon" Margin="5"></TextBox>
                         </DockPanel>
-                        <Button Name="translatePolygonByXY" Margin="5" Click="translatePolygonByXY_Click">Przesuwania o podane współrzędne</Button>
+                        <Button Name="translatePolygonByXY" Margin="5" Click="TranslatePolygonByXYClick">Przesuwania o podane współrzędne</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Grid.Row="4" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <DockPanel Width="200">
@@ -647,11 +647,11 @@
                             <Label>Skala:</Label>
                             <TextBox Name="scalePolygonValue" Margin="5"></TextBox>
                         </DockPanel>
-                        <Button Name="scalePolygonByValue" Margin="5" Width="200" Click="scalePolygonByValue_Click">Skaluj o podaną skalę</Button>
+                        <Button Name="scalePolygonByValue" Margin="5" Width="200" Click="ScalePolygonByValueClick">Skaluj o podaną skalę</Button>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Grid.Row="5" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Button Name="serializeCanvas" Margin="5" Width="200" Click="serializeCanvas_Click">Serializacja</Button>
-                        <Button Name="deserializeCanvas" Margin="5" Width="200" Click="deserializeCanvas_Click">Deserializacja</Button>
+                        <Button Name="serializeCanvas" Margin="5" Width="200" Click="SerializeCanvasClick">Serializacja</Button>
+                        <Button Name="deserializeCanvas" Margin="5" Width="200" Click="DeserializeCanvasClick">Deserializacja</Button>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -674,30 +674,30 @@
 
                         </Image>
                         <Image Name="ps8ImageFiltred" Margin="10,10,10,10" Stretch="None" Grid.Column="1" RenderOptions.BitmapScalingMode="HighQuality" Grid.Row="0">
-                            
+
                         </Image>
-                        <Slider Name="originalZoomPS80" ValueChanged="originalZoomPS80_ValueChanged" Grid.Column="0"  Width="400" VerticalAlignment="Center"
+                        <Slider Name="originalZoomPS80" ValueChanged="OriginalZoomPS8ValueChanged" Grid.Column="0"  Width="400" VerticalAlignment="Center"
                             TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" Grid.Row="1">
-                            
+
                         </Slider>
-                        <Slider Name="filteredZoomPS8" ValueChanged="filteredZoomPS8_ValueChanged" Grid.Column="1" Width="400" VerticalAlignment="Center"
+                        <Slider Name="filteredZoomPS8" ValueChanged="FilteredZoomPS8ValueChanged" Grid.Column="1" Width="400" VerticalAlignment="Center"
                             TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5" Grid.Row="1">
-                            
+
                         </Slider>
                         <StackPanel HorizontalAlignment="Center" Grid.Column="2" Margin="10" VerticalAlignment="Center">
-                            <Button Name="uploadFilePS8" Click="uploadFilePS8_Click" Margin="5">Wczytaj plik</Button>
-                            <Button Name="dylatacja" Click="dylatacja_Click" Margin="5">Dylatacja</Button>
-                            <Button Name="erozja" Click="erozja_Click" Margin="5">Erozja</Button>
-                            <Button Name="otwarcie" Click="otwarcie_Click" Margin="5">Otwarcie</Button>
-                            <Button Name="domkniecie" Click="domkniecie_Click" Margin="5">Domknięcie</Button>
-                            <Button Name="hitOrMiss" Click="hitOrMiss_Click" Margin="5">Hit-or-miss</Button>
-                            <Button Name="grayScalePS8" Click="grayScalePS8_Click" Margin="5">Filtr Odcieni szarości</Button>
-                            
+                            <Button Name="uploadFilePS8" Click="UploadFilePS8Click" Margin="5">Wczytaj plik</Button>
+                            <Button Name="dylatacja" Click="DylatacjaClick" Margin="5">Dylatacja</Button>
+                            <Button Name="erozja" Click="ErozjaClick" Margin="5">Erozja</Button>
+                            <Button Name="otwarcie" Click="OtwarcieClick" Margin="5">Otwarcie</Button>
+                            <Button Name="domkniecie" Click="DomkniecieClick" Margin="5">Domknięcie</Button>
+                            <Button Name="hitOrMiss" Click="HitOrMissClick" Margin="5">Hit-or-miss</Button>
+                            <Button Name="grayScalePS8" Click="GrayScalePS8Click" Margin="5">Filtr Odcieni szarości</Button>
+
                             <DockPanel>
-                                <Button Name="Binaryzacja" Click="Binaryzacja_Click" Margin="5" MinWidth="115">Binaryzacja</Button>
-                                <TextBox Name="binaryzacjaPS8" Margin="5" MaxWidth="50" PreviewTextInput="binaryzacjaPS8_PreviewTextInput"></TextBox>
+                                <Button Name="Binaryzacja" Click="BinaryzacjaClick" Margin="5" MinWidth="115">Binaryzacja</Button>
+                                <TextBox Name="binaryzacjaPS8" Margin="5" MaxWidth="50" PreviewTextInput="BinaryzacjaPS8PreviewTextInput"></TextBox>
                             </DockPanel>
-                            <Button Name="getBackToOriginalPS8" Click="getBackToOriginalPS8_Click" Margin="5">Powrót do oryginalnego obrazu</Button>
+                            <Button Name="getBackToOriginalPS8" Click="GetBackToOriginalPS8Click" Margin="5">Powrót do oryginalnego obrazu</Button>
                         </StackPanel>
                     </Grid>
                 </wpfx:BusyIndicator>
@@ -719,16 +719,16 @@
                         <Border Background="Azure" Margin="5" CornerRadius="5" BorderBrush="Black" BorderThickness="1" Grid.Column="2" Grid.RowSpan="2"/>
                         <Image Name="originalImagePS9" Grid.Column="0" Margin="10,10,10,10" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality"></Image>
                         <Image Name="changedImagePS9" Grid.Column="1" Margin="10,10,10,10" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality"></Image>
-                        <Slider Name="originalZoom" ValueChanged="originalZoom_ValueChanged" Grid.Column="0" Grid.Row="1" Width="400" VerticalAlignment="Center"
+                        <Slider Name="originalZoom" ValueChanged="OriginalZoomValueChanged" Grid.Column="0" Grid.Row="1" Width="400" VerticalAlignment="Center"
                             TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5"></Slider>
-                        <Slider Name="changedZoom" ValueChanged="changedZoom_ValueChanged" Grid.Column="1" Grid.Row="1" Width="400" VerticalAlignment="Center"
+                        <Slider Name="changedZoom" ValueChanged="ChangedZoomValueChanged" Grid.Column="1" Grid.Row="1" Width="400" VerticalAlignment="Center"
                             TickFrequency="0.1" Minimum="0.1" Maximum="5" AutoToolTipPrecision="1" Value="1.5"></Slider>
                         <StackPanel Margin="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Button Name="uploadFilePS9" Click="uploadFilePS9_Click" Margin="5" Width="150">Wczytaj plik</Button>
-                            <Button Name="greenPercent" Click="greenPercent_Click" Margin="5" IsEnabled="False">Oblicz procent</Button>
-                            <RadioButton Name="ps9Red" Checked="ps9Red_Checked" Margin="5">Kolor czerwony</RadioButton>
-                            <RadioButton Name="ps9Green" Checked="ps9Green_Checked" Margin="5">Kolor zielony</RadioButton>
-                            <RadioButton Name="ps9Blue" Checked="ps9Blue_Checked" Margin="5">Kolor niebieski</RadioButton>
+                            <Button Name="uploadFilePS9" Click="UploadFilePS9Click" Margin="5" Width="150">Wczytaj plik</Button>
+                            <Button Name="greenPercent" Click="GreenPercentClick" Margin="5" IsEnabled="False">Oblicz procent</Button>
+                            <RadioButton Name="ps9Red" Checked="PS9RedChecked" Margin="5">Kolor czerwony</RadioButton>
+                            <RadioButton Name="ps9Green" Checked="PS9GreenChecked" Margin="5">Kolor zielony</RadioButton>
+                            <RadioButton Name="ps9Blue" Checked="PS9BlueChecked" Margin="5">Kolor niebieski</RadioButton>
                             <DockPanel>
                                 <Label>Skład procentowy:</Label>
                                 <Label Name="resultPercentPS9" HorizontalContentAlignment="Stretch"></Label>
